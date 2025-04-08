@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Arrow</title>
+    <style>
+        .main-table {
+            display: block;
+            width: 100%;
+            height: 750px;
+            border-collapse: separate;
+            border-spacing: 0;
+            overflow-y: scroll;
+            -moz-hyphens: auto;
+            -webkit-hyphens: auto;
+            -ms-hyphens: auto;
+        }
+
+        .head {
+            position: sticky;
+            top: 0;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        /* NAVBAR */
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            background-color: rgb(0, 0, 0);
+        }
+
+        .nav-container > nav > ul {
+            display: flex;
+            list-style: none;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-container > nav > ul > li > a {
+            display: block;
+            border-style: solid;
+            border-width: 0.5px;
+        }
+
+        @media (max-width: 900px) {
+            .nav-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+<head>
+    <div class="section">
+        <div class="nav-container">
+            <nav>
+                <ul>
+                    <li>
+                        <form th:action="@{/logout}" method="post">
+                            <input type="submit" class="btn btn-danger btn-sm m-2" value="Выход">
+                        </form>
+                    </li>
+                    <li>
+                        <div class="btn-group m-2">
+
+                            <a th:href="@{/general}">
+                                <button type="button" class="btn btn-light btn-sm">Главное меню</button>
+                            </a>
+                            <button type="button" class="btn btn-light btn-sm dropdown-toggle dropdown-toggle-split"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                            </button>
+                            <ul class="dropdown-menu"
+                                style="width: 700px; justify-content: space-between; text-align: center">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-lg-12 col-md-12">
+                                            <div class="content row">
+                                                <div class="column col-lg-4 col-md-6">
+                                                    <div class="name-of-column mb-2">
+                                                        <span>ПЕРСОНАЛ</span>
+                                                    </div>
+                                                    <div
+                                                            sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE_VIEW')">
+                                                        <a th:href="@{/general/employee}">
+                                                            <button style="width: 210px; text-align: center"
+                                                                    type="button"
+                                                                    class="btn btn-outline-success btn-sm">
+                                                                Работники
+                                                            </button>
+                                                        </a>
+                                                    </div>
+                                                    <div
+                                                            sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_PROFESSION_VIEW')">
+                                                        <a th:href="@{/general/profession}">
+                                                            <button style="width: 210px; text-align: center"
+                                                                    type="button"
+                                                                    class="btn btn-outline-success btn-sm">
+                                                                Должности
+                                                            </button>
+                                                        </a>
+                                                    </div>
+                                                    <div
+                                                            sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_DEPARTMENT_VIEW')">
+                                                        <a th:href="@{/general/department}">
+                                                            <button style="width: 210px; text-align: center"
+                                                                    type="button"
+                                                                    class="btn btn-outline-success btn-sm">
+                                                                Структурные подразделения
+                                                            </button>
+                                                        </a>
+                                                    </div>
+                                                    <div
+                                                            sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_SCHEDULE_VIEW')">
+                                                        <a th:href="@{/general/schedule}">
+                                                            <button style="width: 210px; text-align: center"
+                                                                    type="button"
+                                                                    class="btn btn-outline-success btn-sm">
+                                                                Штатное расписание
+                                                            </button>
+                                                        </a>
+                                                    </div>
+                                                    <div
+                                                            sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_VOCATION_VIEW')">
+                                                        <a th:href="@{/general/vocation}">
+                                                            <button style="width: 210px; text-align: center"
+                                                                    type="button"
+                                                                    class="btn btn-outline-success btn-sm">
+                                                                График отпусков
+                                                            </button>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4 col-md-6">
+                                                    <div class="name-of-column mb-2">
+                                                        <span>АКТИВЫ</span>
+                                                    </div>
+                                                    <div
+                                                            sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STORE_PERS_INSTR_VIEW')">
+                                                        <a th:href="@{/general/p_instrument/catalog}">
+                                                            <button style="width: 210px; text-align: center"
+                                                                    type="button"
+                                                                    class="btn btn-outline-success btn-sm">
+                                                                Инструмент персональный
+                                                            </button>
+                                                        </a>
+                                                    </div>
+                                                    <div
+                                                            sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STORE_WORK_INSTR_VIEW')">
+                                                        <a th:href="@{/general/w_instrument/catalog}">
+                                                            <button style="width: 210px; text-align: center"
+                                                                    type="button"
+                                                                    class="btn btn-outline-success btn-sm">
+                                                                Инструмент строительный
+                                                            </button>
+                                                        </a>
+                                                    </div>
+                                                    <div
+                                                            sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STORE_MEAS_INSTR_VIEW')">
+                                                        <a th:href="@{/general/m_instrument/catalog}">
+                                                            <button style="width: 210px; text-align: center"
+                                                                    type="button"
+                                                                    class="btn btn-outline-success btn-sm">
+                                                                Инструмент измерительный
+                                                            </button>
+                                                        </a>
+                                                    </div>
+                                                    <div
+                                                            sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STORE_SCLOTH_VIEW')">
+                                                        <a th:href="@{/general/s_cloth/catalog}">
+                                                            <button style="width: 210px; text-align: center"
+                                                                    type="button"
+                                                                    class="btn btn-outline-success btn-sm">
+                                                                Спецодежда и СИЗ
+                                                            </button>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4 col-md-6">
+                                                    <div class="name-of-column mb-2">
+                                                        <span>ДЕЯТЕЛЬНОСТЬ</span>
+                                                    </div>
+                                                    <div
+                                                            sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_WORK_OBJECT_VIEW')">
+                                                        <a th:href="@{/general/workobject}">
+                                                            <button style="width: 210px; text-align: center"
+                                                                    type="button"
+                                                                    class="btn btn-outline-success btn-sm">
+                                                                Объекты работ
+                                                            </button>
+                                                        </a>
+                                                    </div>
+                                                    <div
+                                                            sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_CONSTR_CONTROL_VIEW')">
+                                                        <a th:href="@{/general/constr_control}">
+                                                            <button style="width: 210px; text-align: center"
+                                                                    type="button"
+                                                                    class="btn btn-outline-success btn-sm">
+                                                                Строительный контроль
+                                                            </button>
+                                                        </a>
+                                                    </div>
+                                                    <div
+                                                            sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_DOCUMENT_VIEW')">
+                                                        <a th:href="@{/general/documentCommunity}">
+                                                            <button style="width: 210px; text-align: center"
+                                                                    type="button"
+                                                                    class="btn btn-outline-success btn-sm">
+                                                                Документация общества
+                                                            </button>
+                                                        </a>
+                                                    </div>
+                                                    <div
+                                                            sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_PERSPECTIVE_VIEW')">
+                                                        <a th:href="@{/general/perspective}">
+                                                            <button style="width: 210px; text-align: center"
+                                                                    type="button"
+                                                                    class="btn btn-outline-success btn-sm">
+                                                                Перспективные объекты
+                                                            </button>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div>
+                            <a th:href="@{/general/p_instrument}">
+                                <button type="button" class="btn btn-primary btn-sm m-2">
+                                    Сводная таблица Персонального инструмента по Работникам
+                                </button>
+                            </a>
+                        </div>
+                    </li>
+                    <li>
+                        <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STORE_PERS_INSTR_CREATE')">
+                            <a th:href="@{/general/p_instrument/p_instrumentCreate}" class="btn btn-success btn-sm m-2">
+                                Создать новый Персональный инструмент</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <title></title>
+</head>
+<div class="tableContainer m-2">
+    <h5 style="font-weight: 700">Каталог Персонального инструмента</h5>
+    <hr>
+    <form th:action="@{/general/p_instrument/catalog}" th:method="get">
+        <table class="table table-hover table-sm" style="margin-bottom: 0; width: 1835px">
+            <tbody class="bodySearch">
+            <tr>
+                <td style="width: 100px">Поиск...</td>
+                <th style="width: 200px">
+                    <input type="text" style="width: 150px; height: 27px" id="byInvent"
+                           onkeyup="myFunctionINVENT()"></th>
+                <th style="width: 200px">
+                    <input type="text" style="width: 150px; height: 27px" id="bySerial"
+                           onkeyup="myFunctionSERIAL()"></th>
+                <th style="width: 200px">
+                    <input type="text" style="width: 150px; height: 27px" id="byProd"
+                           onkeyup="myFunctionPROD()"></th>
+                <th style="width: 250px">
+                    <input type="text" style="width: 150px; height: 27px" id="byName"
+                           onkeyup="myFunctionNAME()"></th>
+                <th style="width: 250px">
+                    <input type="text" style="width: 150px; height: 27px" id="byModel"
+                           onkeyup="myFunctionMODEL()"></th>
+                <th style="width: 150px"></th>
+                <th style="width: 150px"></th>
+                <th style="width: 200px">
+                    <input type="text" style="width: 150px; height: 27px" id="byIssued"
+                           onkeyup="myFunctionISSUED()"></th>
+                <th style="width: 100px; text-align: center">
+                    <button class="btn btn-outline-dark btn-sm"
+                            id="resetFilters">Сбросить
+                    </button>
+                </th>
+            </tr>
+            </tbody>
+        </table>
+    </form>
+    <div class="main-table">
+        <table class="table table-hover table-sm" id="instrument-table" style="width: 1835px">
+            <thead class="head">
+            <tr class="table-secondary" style="text-align: left; vertical-align: top">
+                <th style="width: 100px">#ID</th>
+                <th style="width: 200px">
+                    <button onclick="sortTable(0)" type="button" class="btn btn-outline-dark btn-sm"
+                            style="width: 150px;text-align: left">Инв. номер
+                    </button>
+                </th>
+                <th style="width: 200px">
+                    <button onclick="sortTable(1)" type="button" class="btn btn-outline-dark btn-sm"
+                            style="width: 150px;text-align: left">Серийный номер
+                    </button>
+                </th>
+                <th style="width: 200px">
+                    <button onclick="sortTable(2)" type="button" class="btn btn-outline-dark btn-sm"
+                            style="width: 150px;text-align: left">Изготовитель
+                    </button>
+                </th>
+                <th style="width: 250px">
+                    <button onclick="sortTable(3)" type="button" class="btn btn-outline-dark btn-sm"
+                            style="width: 150px;text-align: left">Модель
+                    </button>
+                </th>
+                <th style="width: 250px">
+                    <button onclick="sortTable(4)" type="button" class="btn btn-outline-dark btn-sm"
+                            style="width: 150px;text-align: left">Наименование
+                    </button>
+                </th>
+                <th style="width: 150px">
+                    <div class="btn-group">
+                        <button onclick="sortTable(5)" type="button" class="btn btn-outline-dark btn-sm"
+                                style="width: 100px;
+                                    text-align: left">Техн. сост.
+                        </button>
+                        <button type="button" class="btn btn-outline-dark btn-sm dropdown-toggle"
+                                data-bs-toggle="dropdown" aria-expanded="false"
+                                data-bs-auto-close="outside">
+                        </button>
+                        <ul class="dropdown-menu" style="width: 400px; justify-content:
+                                    space-between; text-align: left">
+                                    <span th:each="stat:${TechnicalConditionENUM}">
+                                        <span><label>
+                                            <input th:type="checkbox" name="TechnicalConditionENUM"
+                                                   class="techStatus-filter mx-2"
+                                                   th:value="${stat.getTitle()}"
+                                                   th:text="${stat.getTitle()}" style="font-size: 14px">
+                                        </label></span><br></span>
+                        </ul>
+                    </div>
+                </th>
+                <th style="width: 150px">
+                    <div class="btn-group">
+                        <button onclick="sortTable(6)" type="button" class="btn btn-outline-dark btn-sm"
+                                style="width: 100px;
+                                    text-align: left">Статус
+                        </button>
+                        <button type="button" class="btn btn-outline-dark btn-sm dropdown-toggle"
+                                data-bs-toggle="dropdown" aria-expanded="false"
+                                data-bs-auto-close="outside">
+                        </button>
+                        <ul class="dropdown-menu" style="width: 280px; justify-content:
+                                    space-between; text-align: left">
+                                    <span th:each="stat:${PersonalConditionENUM}">
+                                        <span><label>
+                                            <input th:type="checkbox" name="PersonalConditionENUM"
+                                                   class="persStatus-filter mx-2"
+                                                   th:value="${stat.getTitle()}"
+                                                   th:text="${stat.getTitle()}" style="font-size: 14px">
+                                        </label></span><br></span>
+                        </ul>
+                    </div>
+                </th>
+                <th style="width: 200px">
+                    <button onclick="sortTable(7)" type="button" class="btn btn-outline-dark btn-sm"
+                            style="width: 150px;text-align: left">Выдан работнику
+                    </button>
+                </th>
+                <th style="width: 100px; text-align: center">Действие</th>
+            </tr>
+            </thead>
+            <tbody class="body table-group-divider">
+            <tr th:each="persInstr:${personalInstrument}">
+                <th th:text="${persInstr.personalInstrId}">
+                <td th:text="${persInstr.personalInventNumber}">
+                <td th:text="${persInstr.personalSerialNumber}">
+                <td th:text="${persInstr.personalInstrManufacturer}">
+                <td th:text="${persInstr.personalInstrModel}">
+                <td th:text="${persInstr.personalInstrName}">
+                <td th:text="${persInstr.technicalConditionENUM.getTitle()}" style="font-size: 14px">
+                <td th:text="${persInstr.personalConditionENUM.getTitle()}" style="font-size: 14px">
+                <td><span th:with="x=${persInstr.employee != null}">
+                    <span th:if="${x}">
+                    <a th:href="@{/general/employee/employeeView/{id}(id=${persInstr.employee.empId})}">
+                        <button style="width: 190px; text-align: left" type="button"
+                                class="btn btn-outline-dark btn-sm"><span th:text="${persInstr.employee}">
+                        </span></button></a></span>
+                    <span th:unless="${x}">
+                        <span th:text="${''}"></span></span>
+                </span>
+                <td style="width: 100px; text-align: center">
+                    <a th:href="@{/general/p_instrument/p_instrumentView/{id}(id=${persInstr.personalInstrId})}">
+                        <button type="button" class="btn btn-primary btn-sm">Просмотр</button>
+                    </a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <script>
+        function sortTable(n) {
+            let table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById("instrument-table");
+            switching = true;
+            dir = "asc";
+            while (switching) {
+                switching = false;
+                rows = table.getElementsByTagName("TR");
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i + 1].getElementsByTagName("TD")[n];
+                    if (dir === "asc") {
+                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else if (dir === "desc") {
+                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchcount++;
+                } else {
+                    if (switchcount === 0 && dir === "asc") {
+                        dir = "desc";
+                        switching = true;
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+        function myFunctionINVENT() {
+            let input, filter, table, tr, td, i;
+            input = document.getElementById("byInvent");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("instrument-table");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                if (td) {
+                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+        function myFunctionSERIAL() {
+            let input, filter, table, tr, td, i;
+            input = document.getElementById("bySerial");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("instrument-table");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[1];
+                if (td) {
+                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+        function myFunctionPROD() {
+            let input, filter, table, tr, td, i;
+            input = document.getElementById("byProd");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("instrument-table");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[2];
+                if (td) {
+                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+        function myFunctionNAME() {
+            let input, filter, table, tr, td, i;
+            input = document.getElementById("byName");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("instrument-table");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[3];
+                if (td) {
+                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+        function myFunctionMODEL() {
+            let input, filter, table, tr, td, i;
+            input = document.getElementById("byModel");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("instrument-table");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[4];
+                if (td) {
+                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+        function myFunctionISSUED() {
+            let input, filter, table, tr, td, i;
+            input = document.getElementById("byIssued");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("instrument-table");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[7];
+                if (td) {
+                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+        // Восстанавливаем состояния чекбоксов
+        document.addEventListener('DOMContentLoaded', () => {
+            restoreCheckboxStates();
+            // Добавляем слушателей событий для чекбоксов
+            document.querySelectorAll('.techStatus-filter, .persStatus-filter').forEach(checkbox => {
+                checkbox.addEventListener('change', () => {
+                    updateCheckboxStates();
+                    filterTable();
+                });
+            });
+            // Слушатель для кнопки сброса фильтров
+            document.getElementById('resetFilters').addEventListener('click', () => {
+                document.querySelectorAll('.techStatus-filter, .persStatus-filter').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                updateCheckboxStates();
+                filterTable();
+            });
+
+            // Функция фильтрации таблицы
+            function filterTable() {
+                const selectedValues1 = Array.from(document.querySelectorAll('.techStatus-filter:checked')).map(cb => cb.value);
+                const selectedValues2 = Array.from(document.querySelectorAll('.persStatus-filter:checked')).map(cb => cb.value);
+                const rows = document.querySelectorAll('#instrument-table tbody tr');
+                rows.forEach(row => {
+                    const cell1 = row.cells[6].textContent;
+                    const cell2 = row.cells[7].textContent;
+                    const showRow = (selectedValues1.length === 0 || selectedValues1.includes(cell1)) &&
+                        (selectedValues2.length === 0 || selectedValues2.includes(cell2));
+                    row.style.display = showRow ? '' : 'none';
+                });
+            }
+
+            // Функция обновления состояния чекбоксов в localStorage
+            function updateCheckboxStates() {
+                const filterStates = {};
+                document.querySelectorAll('.techStatus-filter, .persStatus-filter').forEach(checkbox => {
+                    filterStates[checkbox.value] = checkbox.checked;
+                });
+                localStorage.setItem('filterStates', JSON.stringify(filterStates));
+            }
+
+            // Функция восстановления состояния чекбоксов из localStorage
+            function restoreCheckboxStates() {
+                const filterStates = JSON.parse(localStorage.getItem('filterStates') || '{}');
+                document.querySelectorAll('.techStatus-filter, .persStatus-filter').forEach(checkbox => {
+                    checkbox.checked = !!filterStates[checkbox.value];
+                });
+                filterTable();
+            }
+        });
+    </script>
+</div>
+<!-- Bootstrap 5.3 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+</html>

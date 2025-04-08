@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen.jquery.min.js"></script>
+    <title>Arrow</title>
+</head>
+<body>
+<div class="tableContainer m-4" style="font-size: 15px">
+    <div class="pageName">
+        <h4>Меню создания нового Пользователя</h4>
+    </div>
+    <br>
+    <form th:action="@{/general/users/userCreate}" th:method="post">
+        <div>
+            <table class="table total-infom" style="width: 900px">
+                <thead>
+                <tr>
+                    <th style="width: 50px; text-align: left">#</th>
+                    <th style="width: 250px; text-align: left">Атрибут</th>
+                    <th style="width: 600px; text-align: left">Параметр</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th style="text-align: left">001</th>
+                    <td style="text-align: left">#ID</td>
+                    <td style="text-align: left"><span>(Задается автоматически)</span></td>
+                </tr>
+                <tr>
+                    <th style="text-align: left">002</th>
+                    <td style="text-align: left"><label>Пользователь</label></td>
+                    <td>
+                        <select class="livesearch" style="width:600px;" name="employee" required>
+                            <option th:each="emp:${employeeList}"
+                                    th:field="${users.employee}"
+                                    th:value="${emp.empId}"
+                                    th:text="${'ID #' + emp.empId + ' | '} + ${emp} +
+                                    ${', ' + emp.profession.professionName}">
+                            </option>
+                        </select>
+                        <span style="font-size: 13px; color: #112970">* если список "Пользователь" пуст,
+                            означает что связку "логин - пароль" имеют все работники</span><br>
+                        <span th:text="${error}" style="font-size: 13px; color: brown"></span>
+                        <script>
+                            $(".livesearch").chosen();
+                        </script>
+                    </td>
+                </tr>
+                <tr>
+                    <th style="text-align: left">003</th>
+                    <td style="text-align: left"><label>Пароль</label></td>
+                    <td style="text-align: left">
+                        <input readonly style="width: 600px; text-align: left;" type="text" th:field="${users.password}"
+                               placeholder="Генерируется и зашифровывается автоматически (bcrypt)">
+                </tr>
+                <tr>
+                    <th style="text-align: left">004</th>
+                    <td style="text-align: left"><label>Статус</label></td>
+                    <td style="text-align: left">
+                        <select style="width: 200px; text-align: left;" class="form-select form-select-sm"
+                                name="userStatusENUM">
+                            <option th:each="usrStat:${statusList}"
+                                    th:field="${users.userStatusENUM}"
+                                    th:value="${usrStat}"
+                                    th:text="${usrStat.getTitle()}">
+                            </option>
+                        </select>
+                </tr>
+                </tbody>
+            </table>
+            <style>
+                .mainTable {
+                    display: block;
+                    width: 100%;
+                    height: 450px;
+                    border-collapse: separate;
+                    border-spacing: 0;
+                    overflow-y: scroll;
+                    -moz-hyphens: auto;
+                    -webkit-hyphens: auto;
+                    -ms-hyphens: auto;
+                }
+
+                .head {
+                    position: sticky;
+                    top: 0;
+                    text-align: left;
+                    vertical-align: top;
+                }
+            </style>
+            <div class="mainTable">
+                <table class="table table-hover table-sm" style="width: 1500px">
+                    <thead class="head">
+                    <tr>
+                        <th style="width: 300px; text-align: left">ПЕРСОНАЛ
+                        <th>
+                        <th style="width: 300px; text-align: left">АКТИВЫ
+                        <th>
+                        <th style="width: 300px; text-align: left">ДЕЯТЕЛЬНОСТЬ
+                        <th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td style="width: 490px; text-align: left"><br>
+                            <span th:each="role:${employee}">
+                        <span><label>
+                            <input th:type="checkbox" name="rolesSet"
+                                   th:field="${users.rolesSet}"
+                                   th:value="${role.roleId}"
+                                   th:text="${role.annotation}" style="font-size: 14px">
+                        </label></span><br></span>
+                            <hr>
+                            <span th:each="role:${profession}">
+                        <span><label>
+                            <input th:type="checkbox" name="rolesSet"
+                                   th:field="${users.rolesSet}"
+                                   th:value="${role.roleId}"
+                                   th:text="${role.annotation}" style="font-size: 14px">
+                        </label></span><br></span>
+                            <hr>
+                            <span th:each="role:${department}">
+                        <span><label>
+                            <input th:type="checkbox" name="rolesSet"
+                                   th:field="${users.rolesSet}"
+                                   th:value="${role.roleId}"
+                                   th:text="${role.annotation}" style="font-size: 14px">
+                        </label></span><br></span>
+                            <hr>
+                            <span th:each="role:${schedule}">
+                        <span><label>
+                            <input th:type="checkbox" name="rolesSet"
+                                   th:field="${users.rolesSet}"
+                                   th:value="${role.roleId}"
+                                   th:text="${role.annotation}" style="font-size: 14px">
+                        </label></span><br></span>
+                            <hr>
+                            <span th:each="role:${vocation}">
+                        <span><label>
+                            <input th:type="checkbox" name="rolesSet"
+                                   th:field="${users.rolesSet}"
+                                   th:value="${role.roleId}"
+                                   th:text="${role.annotation}" style="font-size: 14px">
+                        </label></span><br></span>
+
+                        <td>
+                        <td style="width: 490px; text-align: left"><br>
+                            <span th:each="role:${store_personal}">
+                        <span><label>
+                            <input th:type="checkbox" name="rolesSet"
+                                   th:field="${users.rolesSet}"
+                                   th:value="${role.roleId}"
+                                   th:text="${role.annotation}" style="font-size: 14px">
+                        </label></span><br></span>
+                            <hr>
+                            <span th:each="role:${store_work}">
+                        <span><label>
+                            <input th:type="checkbox" name="rolesSet"
+                                   th:field="${users.rolesSet}"
+                                   th:value="${role.roleId}"
+                                   th:text="${role.annotation}" style="font-size: 14px">
+                        </label></span><br></span>
+                            <hr>
+                            <span th:each="role:${store_meas}">
+                        <span><label>
+                            <input th:type="checkbox" name="rolesSet"
+                                   th:field="${users.rolesSet}"
+                                   th:value="${role.roleId}"
+                                   th:text="${role.annotation}" style="font-size: 14px">
+                        </label></span><br></span>
+                            <hr>
+                            <span th:each="role:${store_scloth}">
+                        <span><label>
+                            <input th:type="checkbox" name="rolesSet"
+                                   th:field="${users.rolesSet}"
+                                   th:value="${role.roleId}"
+                                   th:text="${role.annotation}" style="font-size: 14px">
+                        </label></span><br></span>
+
+                        <td>
+                        <td style="width: 490px; text-align: left"><br>
+                            <span th:each="role:${activity_work}">
+                        <span><label>
+                            <input th:type="checkbox" name="rolesSet"
+                                   th:field="${users.rolesSet}"
+                                   th:value="${role.roleId}"
+                                   th:text="${role.annotation}" style="font-size: 14px">
+                        </label></span><br></span>
+                            <hr>
+                            <span th:each="role:${activity_control}">
+                        <span><label>
+                            <input th:type="checkbox" name="rolesSet"
+                                   th:field="${users.rolesSet}"
+                                   th:value="${role.roleId}"
+                                   th:text="${role.annotation}" style="font-size: 14px">
+                        </label></span><br></span>
+                            <hr>
+                            <span th:each="role:${activity_doc}">
+                        <span><label>
+                            <input th:type="checkbox" name="rolesSet"
+                                   th:field="${users.rolesSet}"
+                                   th:value="${role.roleId}"
+                                   th:text="${role.annotation}" style="font-size: 14px">
+                        </label></span><br></span>
+                        <hr>
+                        <span th:each="role:${perspective_doc}">
+                        <span><label>
+                            <input th:type="checkbox" name="rolesSet"
+                                   th:field="${users.rolesSet}"
+                                   th:value="${role.roleId}"
+                                   th:text="${role.annotation}" style="font-size: 14px">
+                        </label></span><br></span>
+                        <td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <hr>
+        </div>
+        <div>
+            <button class="btn btn-outline-primary btn-sm" type="submit">OK</button>
+            <a th:href="@{/general/users}">
+                <button type="button" class="btn btn-outline-danger btn-sm">Отмена</button>
+            </a>
+        </div>
+    </form>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+</html>

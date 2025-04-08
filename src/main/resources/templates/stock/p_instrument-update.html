@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen.jquery.min.js"></script>
+    <title>Arrow</title>
+    <style>
+        .table {
+            display: block;
+            width: 100%;
+            height: 750px;
+            border-collapse: separate;
+            border-spacing: 0;
+            overflow-y: scroll;
+            /*-moz-hyphens: auto;*/
+            -webkit-hyphens: auto;
+            -ms-hyphens: auto;
+        }
+
+        .head {
+            position: sticky;
+            top: 0;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        /* NAVBAR */
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            background-color: rgb(0, 0, 0);
+        }
+
+        .nav-container > nav > ul {
+            display: flex;
+            list-style: none;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-container > nav > ul > li > a {
+            display: block;
+            border-style: solid;
+            border-width: 0.5px;
+        }
+
+        @media (max-width: 900px) {
+            .nav-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+<form th:action="@{/general/p_instrument/p_instrumentUpdate}" th:method="post">
+    <div>
+        <head>
+            <div class="section">
+                <div class="nav-container">
+                    <nav>
+                        <ul>
+                            <li>
+                                <div class="btn-group m-2">
+                                    <a th:href="@{/general}">
+                                        <button type="button" class="btn btn-light btn-sm">Главное меню</button>
+                                    </a>
+                                    <button type="button"
+                                            class="btn btn-light btn-sm dropdown-toggle dropdown-toggle-split"
+                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                    </button>
+                                    <ul class="dropdown-menu"
+                                        style="width: 700px; justify-content: space-between; text-align: center">
+                                        <div class="container-fluid">
+                                            <div class="row">
+                                                <div class="col-lg-12 col-md-12">
+                                                    <div class="content row">
+                                                        <div class="column col-lg-4 col-md-6">
+                                                            <div class="name-of-column mb-2">
+                                                                <span>ПЕРСОНАЛ</span>
+                                                            </div>
+                                                            <div
+                                                                    sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE_VIEW')">
+                                                                <a th:href="@{/general/employee}">
+                                                                    <button style="width: 210px; text-align: center"
+                                                                            type="button"
+                                                                            class="btn btn-outline-success btn-sm">
+                                                                        Работники
+                                                                    </button>
+                                                                </a>
+                                                            </div>
+                                                            <div
+                                                                    sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_PROFESSION_VIEW')">
+                                                                <a th:href="@{/general/profession}">
+                                                                    <button style="width: 210px; text-align: center"
+                                                                            type="button"
+                                                                            class="btn btn-outline-success btn-sm">
+                                                                        Должности
+                                                                    </button>
+                                                                </a>
+                                                            </div>
+                                                            <div
+                                                                    sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_DEPARTMENT_VIEW')">
+                                                                <a th:href="@{/general/department}">
+                                                                    <button style="width: 210px; text-align: center"
+                                                                            type="button"
+                                                                            class="btn btn-outline-success btn-sm">
+                                                                        Структурные подразделения
+                                                                    </button>
+                                                                </a>
+                                                            </div>
+                                                            <div
+                                                                    sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_SCHEDULE_VIEW')">
+                                                                <a th:href="@{/general/schedule}">
+                                                                    <button style="width: 210px; text-align: center"
+                                                                            type="button"
+                                                                            class="btn btn-outline-success btn-sm">
+                                                                        Штатное расписание
+                                                                    </button>
+                                                                </a>
+                                                            </div>
+                                                            <div
+                                                                    sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_VOCATION_VIEW')">
+                                                                <a th:href="@{/general/vocation}">
+                                                                    <button style="width: 210px; text-align: center"
+                                                                            type="button"
+                                                                            class="btn btn-outline-success btn-sm">
+                                                                        График отпусков
+                                                                    </button>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-4 col-md-6">
+                                                            <div class="name-of-column mb-2">
+                                                                <span>АКТИВЫ</span>
+                                                            </div>
+                                                            <div
+                                                                    sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STORE_PERS_INSTR_VIEW')">
+                                                                <a th:href="@{/general/p_instrument/catalog}">
+                                                                    <button style="width: 210px; text-align: center"
+                                                                            type="button"
+                                                                            class="btn btn-outline-success btn-sm">
+                                                                        Инструмент персональный
+                                                                    </button>
+                                                                </a>
+                                                            </div>
+                                                            <div
+                                                                    sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STORE_WORK_INSTR_VIEW')">
+                                                                <a th:href="@{/general/w_instrument/catalog}">
+                                                                    <button style="width: 210px; text-align: center"
+                                                                            type="button"
+                                                                            class="btn btn-outline-success btn-sm">
+                                                                        Инструмент строительный
+                                                                    </button>
+                                                                </a>
+                                                            </div>
+                                                            <div
+                                                                    sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STORE_MEAS_INSTR_VIEW')">
+                                                                <a th:href="@{/general/m_instrument/catalog}">
+                                                                    <button style="width: 210px; text-align: center"
+                                                                            type="button"
+                                                                            class="btn btn-outline-success btn-sm">
+                                                                        Инструмент измерительный
+                                                                    </button>
+                                                                </a>
+                                                            </div>
+                                                            <div
+                                                                    sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STORE_SCLOTH_VIEW')">
+                                                                <a th:href="@{/general/s_cloth/catalog}">
+                                                                    <button style="width: 210px; text-align: center"
+                                                                            type="button"
+                                                                            class="btn btn-outline-success btn-sm">
+                                                                        Спецодежда и СИЗ
+                                                                    </button>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-4 col-md-6">
+                                                            <div class="name-of-column mb-2">
+                                                                <span>ДЕЯТЕЛЬНОСТЬ</span>
+                                                            </div>
+                                                            <div
+                                                                    sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_WORK_OBJECT_VIEW')">
+                                                                <a th:href="@{/general/workobject}">
+                                                                    <button style="width: 210px; text-align: center"
+                                                                            type="button"
+                                                                            class="btn btn-outline-success btn-sm">
+                                                                        Объекты работ
+                                                                    </button>
+                                                                </a>
+                                                            </div>
+                                                            <div
+                                                                    sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_CONSTR_CONTROL_VIEW')">
+                                                                <a th:href="@{/general/constr_control}">
+                                                                    <button style="width: 210px; text-align: center"
+                                                                            type="button"
+                                                                            class="btn btn-outline-success btn-sm">
+                                                                        Строительный контроль
+                                                                    </button>
+                                                                </a>
+                                                            </div>
+                                                            <div
+                                                                    sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_DOCUMENT_VIEW')">
+                                                                <a th:href="@{/general/documentCommunity}">
+                                                                    <button style="width: 210px; text-align: center"
+                                                                            type="button"
+                                                                            class="btn btn-outline-success btn-sm">
+                                                                        Документация общества
+                                                                    </button>
+                                                                </a>
+                                                            </div>
+                                                            <div
+                                                                    sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_PERSPECTIVE_VIEW')">
+                                                                <a th:href="@{/general/perspective}">
+                                                                    <button style="width: 210px; text-align: center"
+                                                                            type="button"
+                                                                            class="btn btn-outline-success btn-sm">
+                                                                        Перспективные объекты
+                                                                    </button>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li>
+                                <div>
+                                    <button onclick="return confirm('Вы действительно хотите внести изменения?');"
+                                            class="btn btn-success btn-sm m-2" type="submit">Обновить
+                                    </button>
+                                </div>
+                            </li>
+                            <li>
+                                <div>
+                                    <a th:href="@{/general/p_instrument/p_instrumentView/{id}(id=${personalInstrument.personalInstrId})}">
+                                        <button type="button" class="btn btn-primary btn-sm m-2">Назад</button>
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <title></title>
+        </head>
+        <div class="tableContainer m-2">
+            <h5 style="font-weight: 700;">Обновление данных персонального инструмента</h5>
+            <hr>
+            <table class="table table-hover table-sm m-2" style="width: 950px">
+                <thead class="head">
+                <tr class="table-secondary" style="text-align: left; vertical-align: top">
+                    <th style="width: 50px; text-align: left;" scope="col">#</th>
+                    <th style="width: 250px; text-align: left;" scope="col">Атрибут</th>
+                    <th style="width: 600px; text-align: left;" scope="col">Параметр</th>
+                </tr>
+                </thead>
+                <tbody class="body">
+                <tr>
+                    <th style="text-align: left"></th>
+                    <th style="text-align: left"><label>Техн. состояние:</label></th>
+                    <td style="text-align: left">
+                        <select class="form-select form-select-sm" name="technicalConditionENUM"
+                                id="status" onchange="i()" style="width: 400px">
+                            <option th:each="condTechn:${conditionForTechn}"
+                                    th:field="${personalInstrument.technicalConditionENUM}"
+                                    th:value="${condTechn}"
+                                    th:text="${condTechn.getTitle()}">
+                            </option>
+                        </select>
+                        <br>
+                        <div style="display: none; text-align: right" id="brokenDate">
+                            <p style=" text-align: right">
+                                Дата выявления неисправности: <input type="date"
+                                                                     th:field="${personalInstrument.brokenDate}"
+                                                                     id="date2"><br>
+                                Комментарий: <textarea rows="1" cols="40" type="text"
+                                                       th:field="${personalInstrument.brokenAnnotation}"></textarea></p>
+                            <p if="${#fields.hasErrors('brokenDate')}" th:errors="${personalInstrument.brokenDate}"
+                               style="font-size: 13px; color: brown"></p>
+                            <script th:inline="javascript">
+                                const inputDate2 = String([[${personalInstrument.brokenDate}]]);
+                                document.getElementById("date2").valueAsDate = new Date(inputDate2);
+                                let brokenDateMax = document.getElementById('date2');
+                                brokenDateMax.max = new Date().toISOString().split('T')[0];
+                            </script>
+                        </div>
+                        <div style="display: none; text-align: right" id="repairDates">
+                            <p style=" text-align: right">
+                                Дата сдачи в ремонт: <input type="date" th:field="${personalInstrument.startRepairDate}"
+                                                            id="date3"><br>
+                                Дата план. получения из ремонта: <input type="date"
+                                                                        th:field="${personalInstrument.endRepairDate}"
+                                                                        id="date4"><br>
+                                Комментарий: <textarea rows="1" cols="40" type="text"
+                                                       th:field="${personalInstrument.repairAnnotation}"></textarea></p>
+                            <p if="${#fields.hasErrors('startRepairDate')}"
+                               th:errors="${personalInstrument.startRepairDate}"
+                               style="font-size: 13px; color: brown"></p>
+                            <p if="${#fields.hasErrors('endRepairDate')}"
+                               th:errors="${personalInstrument.endRepairDate}"
+                               style="font-size: 13px; color: brown"></p>
+                            <script th:inline="javascript">
+                                const inputDate3 = String([[${personalInstrument.startRepairDate}]]);
+                                document.getElementById("date3").valueAsDate = new Date(inputDate3);
+                                let startRepairDateMax = document.getElementById('date3');
+                                startRepairDateMax.max = new Date().toISOString().split('T')[0];
+                            </script>
+                            <script th:inline="javascript">
+                                const inputDate4 = String([[${personalInstrument.endRepairDate}]]);
+                                document.getElementById("date4").valueAsDate = new Date(inputDate4);
+                                let startRepairDateMin = document.getElementById('date4');
+                                startRepairDateMin.min = new Date().toISOString().split('T')[0];
+                            </script>
+                        </div>
+                        <div style="display: none; text-align: right" id="closeDate">
+                            <p style="text-align: right">
+                                Дата списания: <input type="date" th:field="${personalInstrument.closeDate}" id="date1"><br>
+                                Акт списания: <textarea rows="1" cols="40" type="text"
+                                                        th:field="${personalInstrument.deleteAct}"
+                                                        id="deleteAct"></textarea></p>
+                            <p if="${#fields.hasErrors('closeDate')}" th:errors="${personalInstrument.closeDate}"
+                               style="font-size: 13px; color: brown"></p>
+                            <script th:inline="javascript">
+                                const inputDate1 = String([[${personalInstrument.closeDate}]]);
+                                document.getElementById("date1").valueAsDate = new Date(inputDate1);
+                                let closeDateMax = document.getElementById('date1');
+                                closeDateMax.max = new Date().toISOString().split('T')[0];
+                            </script>
+                        </div>
+                    <td>
+                </tr>
+                <tr>
+                    <th style="text-align: left"></th>
+                    <th style="text-align: left"><label>Статус:</label></th>
+                    <td style="text-align: left">
+                        <div id="issuePanel">
+                            <select class="form-select form-select-sm"
+                                    name="personalConditionENUM" style="width: 400px"
+                                    id="statusIssue" onchange="j()">
+                                <option th:each="condPers:${conditionForPersonal}"
+                                        th:field="${personalInstrument.personalConditionENUM}"
+                                        th:value="${condPers}"
+                                        th:text="${condPers.getTitle()}">
+                                </option>
+                            </select>
+                            <p style="font-size: 13px; color: #112970">
+                                * при пустом списке 'Действующих' pаботников инструмент выдать нельзя</p>
+                            <div id="issuePanelEmp">
+                                <hr>
+                                <select class="livesearch" style="width:400px" name="employee">
+                                    <option th:each="emp:${employeeList}"
+                                            th:field="${personalInstrument.employee}"
+                                            th:value="${emp.empId}"
+                                            th:text="${emp} + ${', ' + emp.profession.professionName}">
+                                    </option>
+                                </select>
+                                <script type="text/javascript">
+                                    $(".livesearch").chosen();
+                                </script>
+                            </div>
+                            <div style="display: none; text-align: right" id="issueDate">
+                                <hr>
+                                <p style="text-align: right">
+                                    Дата выдачи: <input type="date" th:field="${personalInstrument.issueDate}"
+                                                        id="date5"></p>
+                                <p if="${#fields.hasErrors('issueDate')}" th:errors="${personalInstrument.issueDate}"
+                                   style="font-size: 13px; color: brown"></p>
+                                <script th:inline="javascript">
+                                    const inputDate5 = String([[${personalInstrument.issueDate}]]);
+                                    document.getElementById("date5").valueAsDate = new Date(inputDate5);
+                                </script>
+                            </div>
+                        </div>
+                        <script>
+                            function i() {
+                                let status = document.getElementById("status");
+                                let selectStatus = status.options[status.selectedIndex].textContent;
+
+                                let isBroken = selectStatus === "Не исправен (на складе, не в ремонте)"
+                                let brokenDate = document.getElementById("brokenDate");
+                                if (isBroken) {
+                                    brokenDate.style.display = 'block';
+                                    document.getElementById('date2').setAttribute('required', 'true');
+                                    document.getElementById('date2').removeAttribute('disabled');
+                                    document.getElementById('date5').removeAttribute('required');
+                                } else {
+                                    brokenDate.style.display = 'none';
+                                    document.getElementById('date2').removeAttribute('required');
+                                    document.getElementById('date2').setAttribute('disabled', 'true');
+                                }
+
+                                let inRepair = selectStatus === "В ремонте (текущем или гарантийном)"
+                                let repairDates = document.getElementById("repairDates");
+                                if (inRepair) {
+                                    repairDates.style.display = 'block';
+                                    document.getElementById('date3').setAttribute('required', 'true');
+                                    document.getElementById('date4').setAttribute('required', 'true');
+                                    document.getElementById('date3').removeAttribute('disabled');
+                                    document.getElementById('date4').removeAttribute('disabled');
+                                    document.getElementById('date5').removeAttribute('required');
+                                } else {
+                                    repairDates.style.display = 'none';
+                                    document.getElementById('date3').setAttribute('disabled', 'true');
+                                    document.getElementById('date4').setAttribute('disabled', 'true');
+                                    document.getElementById('date3').removeAttribute('required');
+                                    document.getElementById('date4').removeAttribute('required');
+                                }
+
+                                let isClosed = selectStatus === "Списан (выведен из строя)"
+                                let closeDate = document.getElementById("closeDate");
+                                if (isClosed) {
+                                    closeDate.style.display = 'block';
+                                    document.getElementById('date1').setAttribute('required', 'true');
+                                    document.getElementById('deleteAct').setAttribute('required', 'true');
+                                    document.getElementById('date1').removeAttribute('disabled');
+                                    document.getElementById('deleteAct').removeAttribute('disabled');
+                                    document.getElementById('date5').removeAttribute('required');
+                                } else {
+                                    closeDate.style.display = 'none';
+                                    document.getElementById('date1').removeAttribute('required');
+                                    document.getElementById('deleteAct').removeAttribute('required');
+                                    document.getElementById('date1').setAttribute('disabled', 'true');
+                                    document.getElementById('deleteAct').setAttribute('disabled', 'true');
+                                }
+                            }
+                        </script>
+                        <script>
+                            let status = document.getElementById("status");
+                            let selectStatus = status.options[status.selectedIndex].textContent;
+
+                            let isBroken = selectStatus === "Не исправен (на складе, не в ремонте)"
+                            let brokenDate = document.getElementById("brokenDate");
+                            if (isBroken) {
+                                brokenDate.style.display = 'block';
+                                document.getElementById('date2').setAttribute('required', 'true');
+                                document.getElementById('date5').removeAttribute('required');
+                            } else {
+                                brokenDate.style.display = 'none';
+                                document.getElementById('date2').removeAttribute('required');
+                            }
+
+                            let inRepair = selectStatus === "В ремонте (текущем или гарантийном)"
+                            let repairDates = document.getElementById("repairDates");
+                            if (inRepair) {
+                                repairDates.style.display = 'block';
+                                document.getElementById('date3').setAttribute('required', 'true');
+                                document.getElementById('date4').setAttribute('required', 'true');
+                                document.getElementById('date5').removeAttribute('required');
+                            } else {
+                                repairDates.style.display = 'none';
+                                document.getElementById('date3').removeAttribute('required');
+                                document.getElementById('date4').removeAttribute('required');
+                            }
+
+                            let isClosed = selectStatus === "Списан (выведен из строя)"
+                            let closeDate = document.getElementById("closeDate");
+                            if (isClosed) {
+                                closeDate.style.display = 'block';
+                                document.getElementById('date1').setAttribute('required', 'true');
+                                document.getElementById('deleteAct').setAttribute('required', 'true');
+                                document.getElementById('date1').removeAttribute('disabled');
+                                document.getElementById('deleteAct').removeAttribute('disabled');
+                                document.getElementById('date5').removeAttribute('required');
+                            } else {
+                                closeDate.style.display = 'none';
+                                document.getElementById('date1').removeAttribute('required');
+                                document.getElementById('deleteAct').removeAttribute('required');
+                                document.getElementById('date1').setAttribute('disabled', 'true');
+                                document.getElementById('deleteAct').setAttribute('disabled', 'true');
+                            }
+                        </script>
+                    <td>
+                </tr>
+                <script>
+                    function j() {
+                        let statusIssue = document.getElementById("statusIssue");
+                        let selectStatusIssue = statusIssue.options[statusIssue.selectedIndex].textContent;
+                        let isIssued = selectStatusIssue === "Выдан (на руки работнику)"
+                        let issueDate = document.getElementById("issueDate");
+                        let issuePanelEmp = document.getElementById("issuePanelEmp");
+                        if (isIssued) {
+                            issueDate.style.display = 'block';
+                            document.getElementById('date5').setAttribute('required', 'true');
+                            issuePanelEmp.style.display = 'block';
+                        } else {
+                            issueDate.style.display = 'none';
+                            document.getElementById('date5').removeAttribute('required');
+                            issuePanelEmp.style.display = 'none';
+                        }
+                    }
+                </script>
+                <script>
+                    let statusIssue = document.getElementById("statusIssue");
+                    let selectStatusIssue = statusIssue.options[statusIssue.selectedIndex].textContent;
+                    let isIssued = selectStatusIssue === "Выдан (на руки работнику)"
+                    let issueDate = document.getElementById("issueDate");
+                    let issuePanelEmp = document.getElementById("issuePanelEmp");
+                    if (isIssued) {
+                        issueDate.style.display = 'block';
+                        document.getElementById('date5').setAttribute('required', 'true');
+                        issuePanelEmp.style.display = 'block';
+                    } else {
+                        issueDate.style.display = 'none';
+                        document.getElementById('date5').removeAttribute('required');
+                        issuePanelEmp.style.display = 'none';
+                    }
+                </script>
+                <script>
+                    $('#status').change(function () {
+                        if ($('#status').val() === "OK") {
+                            $('#issuePanel').css('display', 'block');
+                        } else {
+                            $('#issuePanel').css('display', 'none');
+                        }
+                    });
+                </script>
+                <script>
+                    if ($('#status').val() === "OK") {
+                        $('#issuePanel').css('display', 'block');
+                    } else {
+                        $('#issuePanel').css('display', 'none');
+                    }
+                </script>
+                <tr>
+                    <th style="text-align: left">001</th>
+                    <td style="text-align: left">#ID (изм. не подлежит)</td>
+                    <td style="text-align: left">
+                        <input readonly type="text" th:field="${personalInstrument.personalInstrId}">
+                </tr>
+                <tr>
+                    <th style="text-align: left">002</th>
+                    <td style="text-align: left"><label>№ ТИ 1С</label></td>
+                    <td style="text-align: left">
+                        <input type="text" th:field="${personalInstrument.personalOneCNumber}" placeholder="СТ-000...">
+                        <p if="${#fields.hasErrors('personalOneCNumber')}"
+                           th:errors="${personalInstrument.personalOneCNumber}"
+                           style="font-size: 13px; color: brown"></p>
+                </tr>
+                <tr>
+                    <th style="text-align: left">003</th>
+                    <td style="text-align: left"><label>Инвентарный номер</label></td>
+                    <td style="text-align: left">
+                        <input style="width: 400px; text-align: left;" type="text"
+                               th:field="${personalInstrument.personalInventNumber}">
+                        <p if="${#fields.hasErrors('personalInventNumber')}"
+                           th:errors="${personalInstrument.personalInventNumber}"
+                           style="font-size: 13px; color: brown"></p>
+                        <p th:text="${errorInv}" style="font-size: 13px; color: brown"></p>
+                </tr>
+                <tr>
+                    <th style="text-align: left">004</th>
+                    <td style="text-align: left"><label>Серийный номер</label></td>
+                    <td style="text-align: left">
+                        <input style="width: 400px; text-align: left;" type="text"
+                               th:field="${personalInstrument.personalSerialNumber}">
+                        <p if="${#fields.hasErrors('personalSerialNumber')}"
+                           th:errors="${personalInstrument.personalSerialNumber}"
+                           style="font-size: 13px; color: brown"></p>
+                </tr>
+                <tr>
+                    <th style="text-align: left">005</th>
+                    <td style="text-align: left"><label>Завод изготовитель</label></td>
+                    <td style="text-align: left">
+                        <input style="width: 400px; text-align: left;" type="text"
+                               th:field="${personalInstrument.personalInstrManufacturer}">
+                        <p if="${#fields.hasErrors('personalInstrManufacturer')}"
+                           th:errors="${personalInstrument.personalInstrManufacturer}"
+                           style="font-size: 13px; color: brown"></p>
+                </tr>
+                <tr>
+                    <th style="text-align: left">006</th>
+                    <td style="text-align: left"><label>Модель</label></td>
+                    <td style="text-align: left">
+                        <input style="width: 400px; text-align: left;" type="text"
+                               th:field="${personalInstrument.personalInstrModel}">
+                        <p if="${#fields.hasErrors('personalInstrModel')}"
+                           th:errors="${personalInstrument.personalInstrModel}"
+                           style="font-size: 13px; color: brown"></p>
+                </tr>
+                <tr>
+                    <th style="text-align: left">007</th>
+                    <td style="text-align: left"><label>Наименование</label></td>
+                    <td style="text-align: left">
+                        <input style="width: 400px; text-align: left;" type="text"
+                               th:field="${personalInstrument.personalInstrName}">
+                        <p if="${#fields.hasErrors('personalInstrName')}"
+                           th:errors="${personalInstrument.personalInstrName}"
+                           style="font-size: 13px; color: brown"></p>
+                </tr>
+                <tr>
+                    <th style="text-align: left">008</th>
+                    <td style="text-align: left"><label>Дата приобретения</label></td>
+                    <td style="text-align: left">
+                        <input type="date" th:field="${personalInstrument.personalDateOfPurchase}" id="date">
+                        <script th:inline="javascript">
+                            const inputDate = String([[${personalInstrument.personalDateOfPurchase}]]);
+                            document.getElementById("date").valueAsDate = new Date(inputDate);
+                            let inputDateMax = document.getElementById('date');
+                            inputDateMax.max = new Date().toISOString().split('T')[0];
+                        </script>
+                        <p if="${#fields.hasErrors('personalDateOfPurchase')}"
+                           th:errors="${personalInstrument.personalDateOfPurchase}"
+                           style="font-size: 13px; color: brown"></p>
+                </tr>
+                <tr>
+                    <th style="text-align: left">009</th>
+                    <td style="text-align: left"><label>Стоимость</label></td>
+                    <td style="text-align: left">
+                        <input type="text" th:field="${personalInstrument.personalInstrumentPrice}"
+                               id="personalInstrumentPrice">
+                        <p if="${#fields.hasErrors('personalInstrumentPrice')}"
+                           th:errors="${personalInstrument.personalInstrumentPrice}"
+                           style="font-size: 13px; color: brown"></p>
+                        <script>
+                            const amountInput = document.getElementById('personalInstrumentPrice');
+                            amountInput.addEventListener('input', function (e) {
+                                let value = e.target.value.replace(/[^0-9,]/g, '');
+                                let parts = value.split(',');
+                                if (parts[1]) {
+                                    parts[1] = parts[1].substring(0, 2);
+                                }
+                                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+                                value = parts.join(',');
+                                e.target.value = value;
+                            });
+                        </script>
+                </tr>
+                <tr>
+                    <th style="text-align: left">010</th>
+                    <td style="text-align: left"><label>Гарантийный период, мес</label></td>
+                    <td style="text-align: left">
+                        <input type="number" th:field="${personalInstrument.personalGuaranteePeriod}"
+                               min="1" max="100" style="width: 100px">
+                        <p if="${#fields.hasErrors('personalGuaranteePeriod')}"
+                           th:errors="${personalInstrument.personalGuaranteePeriod}"
+                           style="font-size: 13px; color: brown"></p>
+                </tr>
+                <tr>
+                    <th style="text-align: left">011</th>
+                    <td style="text-align: left"><label>Срок службы, лет</label></td>
+                    <td style="text-align: left">
+                        <input type="number" th:field="${personalInstrument.personalServicePeriod}"
+                               min="1" max="50" style="width: 100px">
+                        <p if="${#fields.hasErrors('personalServicePeriod')}"
+                           th:errors="${personalInstrument.personalServicePeriod}"
+                           style="font-size: 13px; color: brown"></p>
+                </tr>
+                <tr>
+                    <th style="text-align: left">012</th>
+                    <td style="text-align: left"><label>Комментарий</label></td>
+                    <td style="text-align: left">
+                        <textarea rows="4" cols="50" type="text"
+                                  th:field="${personalInstrument.personalInstrComment}"
+                                  placeholder="только - алфавит: Кириллица, Латинский; цифры; символы: <>|/-_.,;:«»'()#{}№"></textarea>
+                        <p if="${#fields.hasErrors('personalInstrComment')}"
+                           th:errors="${personalInstrument.personalInstrComment}"
+                           style="font-size: 13px; color: brown"></p>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</form>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen.jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+</html>

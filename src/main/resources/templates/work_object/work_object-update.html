@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen.min.css">
+    <title>Arrow</title>
+</head>
+<body>
+<div class="tableContainer m-4" style="font-size: 15px">
+    <div class="pageName">
+        <h4>Обновление данных объекта строительства</h4>
+    </div>
+    <form th:action="@{/general/workobject/workobjectUpdate}" th:method="post" th:object="${workObject}">
+        <div>
+            <style>
+                table {
+                    width: 100%;
+                }
+                thead, tbody {
+                    display: table;
+                    width: 100%;
+                }
+                tbody {
+                    display: block;
+                    width: 100%;
+                    height: 700px;
+                    overflow: auto;
+                }
+            </style>
+            <table class="table table-hover table-sm" style="width: 1000px">
+                <thead>
+                <tr>
+                    <th style="width: 50px; text-align: left">#</th>
+                    <th style="width: 300px; text-align: left">Атрибут</th>
+                    <th style="width: 600px; text-align: left">Параметр</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th style="text-align: left"></th>
+                    <th style="text-align: left"><label>Статус: </label></th>
+                    <td style="text-align: left">
+                        <select style="width: 300px" class="form-select form-select-sm"
+                                name="workObjectStatusENUM" id="1">
+                            <option th:each="wObjStat:${workObjectStatusList}"
+                                    th:field="*{workObjectStatusENUM}"
+                                    th:value="${wObjStat}"
+                                    th:text="${wObjStat.getTitle()}">
+                        </select>
+                    <td>
+                </tr>
+                <tr>
+                    <th style="text-align: left">001</th>
+                    <td style="text-align: left">#ID (изм. не подлежит)</td>
+                    <td style="text-align: left">
+                        <input readonly type="text" th:field="${workObject.workObjectId}" placeholder="#ID">
+                </tr>
+                <tr>
+                    <th style="text-align: left">002</th>
+                    <td style="text-align: left"><label>№ Заказа (внутр.)</label></td>
+                    <td style="text-align: left">
+                        <input type="text" style="width: 300px" ; th:field="${workObject.workObjectOrder}">
+                        <p if="${#fields.hasErrors('workObjectOrder')}" th:errors="${workObject.workObjectOrder}"
+                           style="font-size: 13px; color: brown"></p>
+                        <p th:text="${errorName}" style="font-size: 13px; color: brown"></p>
+                </tr>
+                <tr>
+                    <th style="text-align: left">003</th>
+                    <td style="text-align: left"><label>№ Лота</label></td>
+                    <td style="text-align: left">
+                        <input type="text" style="width: 300px" ; th:field="${workObject.workObjectLot}">
+                        <p if="${#fields.hasErrors('workObjectLot')}" th:errors="${workObject.workObjectLot}"
+                           style="font-size: 13px; color: brown"></p>
+                        <p th:text="${errorName}" style="font-size: 13px; color: brown"></p>
+                </tr>
+                <tr>
+                    <th style="text-align: left">004</th>
+                    <td style="text-align: left"><label>Объект</label></td>
+                    <td style="text-align: left">
+                        <textarea rows="4" cols="40" type="text" style="width: 600px" ;
+                                  th:field="${workObject.workObjectName}"></textarea>
+                        <p if="${#fields.hasErrors('workObjectName')}" th:errors="${workObject.workObjectName}"
+                           style="font-size: 13px; color: brown"></p>
+                        <p th:text="${errorName}" style="font-size: 13px; color: brown"></p>
+                </tr>
+                <tr>
+                    <th style="text-align: left">005</th>
+                    <td style="text-align: left"><label>Заказчик</label></td>
+                    <td style="text-align: left">
+                        <input type="text" style="width: 600px" ; th:field="${workObject.workObjectCustomer}">
+                        <p if="${#fields.hasErrors('workObjectCustomer')}"
+                           th:errors="${workObject.workObjectCustomer}" style="font-size: 13px; color: brown"></p>
+                </tr>
+                <tr>
+                    <th style="text-align: left">006</th>
+                    <td style="text-align: left"><label>Номер договора Заказчик - Генподрядчик (Заказчик - ТИК)</label>
+                    </td>
+                    <td style="text-align: left">
+                        <textarea rows="2" cols="40" type="text" style="width: 600px"
+                                  th:field="${workObject.workObjectContractCustomerTotGeneralContractor}"></textarea>
+                        <p if="${#fields.hasErrors('workObjectContractCustomerTotGeneralContractor')}"
+                           th:errors="${workObject.workObjectContractCustomerTotGeneralContractor}"
+                           style="font-size: 13px; color: brown"></p>
+                </tr>
+                <tr>
+                    <th style="text-align: left">007</th>
+                    <td style="text-align: left"><label>Генподрядчик</label></td>
+                    <td style="text-align: left">
+                        <textarea rows="2" cols="40" type="text" style="width: 600px"
+                                  th:field="${workObject.workObjectGeneralContractor}"></textarea>
+                        <p if="${#fields.hasErrors('workObjectGeneralContractor')}"
+                           th:errors="${workObject.workObjectGeneralContractor}"
+                           style="font-size: 13px; color: brown"></p>
+                </tr>
+                <tr>
+                    <th style="text-align: left">008</th>
+                    <td style="text-align: left"><label>Номер договора ТИК - Генподрядчик</label></td>
+                    <td style="text-align: left">
+                        <textarea rows="2" cols="40" type="text" style="width: 600px"
+                                  th:field="${workObject.workObjectContractContractorTotGeneralContractor}"></textarea>
+                        <p if="${#fields.hasErrors('workObjectContractContractorTotGeneralContractor')}"
+                           th:errors="${workObject.workObjectContractContractorTotGeneralContractor}"
+                           style="font-size: 13px; color: brown"></p>
+                </tr>
+                <tr>
+                    <th style="text-align: left">009</th>
+                    <td style="text-align: left"><label>Предмет договора</label></td>
+                    <td style="text-align: left">
+                        <textarea rows="2" cols="40" type="text" style="width: 600px"
+                                  th:field="${workObject.valueOfContract}"></textarea>
+                        <p if="${#fields.hasErrors('valueOfContract')}" th:errors="${workObject.valueOfContract}"
+                           style="font-size: 13px; color: brown"></p>
+                </tr>
+                <tr>
+                    <th style="text-align: left">010</th>
+                    <td style="text-align: left"><label>Сумма контракта ТИК - Генподрядчик (Заказчик), с НДС
+                        (20%)</label></td>
+                    <td style="text-align: left">
+                        <input type="text" style="width: 300px" th:field="${workObject.priceOfContract}"
+                               id="priceOfContract">
+                        <p if="${#fields.hasErrors('priceOfContract')}" th:errors="${workObject.priceOfContract}"
+                           style="font-size: 13px; color: brown"></p>
+                        <script src="https://unpkg.com/imask"></script>
+                        <script>
+                            const amountInput = document.getElementById('priceOfContract');
+                            amountInput.addEventListener('input', function (e) {
+                                let value = e.target.value.replace(/[^0-9,]/g, '');
+                                let parts = value.split(',');
+                                if (parts[1]) {
+                                    parts[1] = parts[1].substring(0, 2);
+                                }
+                                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+                                value = parts.join(',');
+                                e.target.value = value;
+                            });
+                        </script>
+                </tr>
+                <tr>
+                    <th style="text-align: left">011</th>
+                    <td style="text-align: left">Аванс, %</td>
+                    <th style="text-align: left"><input type="number" style="width: 100px;"
+                                                        th:field="${workObject.valueOfDeposit}" min="0" max="100"
+                                                        required>
+                        <p if="${#fields.hasErrors('valueOfDeposit')}" th:errors="${workObject.valueOfDeposit}"
+                           style="font-size: 13px; color: brown"></p>
+                </tr>
+                <tr>
+                    <th style="text-align: left">012</th>
+                    <td style="text-align: left"><label>Срок контракта</label></td>
+                    <td style="text-align: left">
+                        <span>Начало </span><input type="date" style="width: 150px;"
+                                                   th:field="${workObject.dateOfStart}" id="dateOfStart" required>
+                        <script th:inline="javascript">
+                            const dateOfStart = String([[${workObject.dateOfStart}]]);
+                            document.getElementById("dateOfStart").valueAsDate = new Date(dateOfStart);
+                        </script>
+                        <p if="${#fields.hasErrors('dateOfStart')}" th:errors="${workObject.dateOfStart}"
+                           style="font-size: 13px; color: brown"></p>
+                        <span> Окончание </span><input type="date" style="width: 150px;"
+                                                       th:field="${workObject.dateOfEnd}" id="dateOfEnd" required>
+                        <script th:inline="javascript">
+                            const dateOfEnd = String([[${workObject.dateOfEnd}]]);
+                            document.getElementById("dateOfEnd").valueAsDate = new Date(dateOfEnd);
+                        </script>
+                        <p if="${#fields.hasErrors('dateOfEnd')}" th:errors="${workObject.dateOfEnd}"
+                           style="font-size: 13px; color: brown"></p>
+                    </td>
+                </tr>
+                <tr>
+                    <th style="text-align: left">013</th>
+                    <td style="text-align: left"><label>Руководитель проекта</label></td>
+                    <td style="text-align: left">
+                        <select class="livesearch" style="width:400px" name="workObjectChief">
+                            <option th:value="null"
+                                    th:text="${'Не назначен'}">
+                            </option>
+                            <option th:each="emp:${employeeList}"
+                                    th:field="*{workObjectChief}"
+                                    th:value="${emp.empId}"
+                                    th:text="${emp} + ${', ' + emp.profession.professionName}">
+                            </option>
+                        </select>
+                    <td>
+                </tr>
+                <tr>
+                    <th style="text-align: left">014</th>
+                    <td style="text-align: left"><label>Ответственные ПТО</label></td>
+                    <td style="text-align: left">
+                        <select class="livesearch" style="width:400px" name="PTOList" multiple>
+                            <option th:each="emp:${employeeList}"
+                                    th:field="*{PTOList}"
+                                    th:value="${emp.empId}"
+                                    th:text="${emp} + ${', ' + emp.profession.professionName}">
+                            </option>
+                        </select>
+                    <td>
+                </tr>
+                <tr>
+                    <th style="text-align: left">015</th>
+                    <td style="text-align: left"><label>Куратор от Заказчика</label></td>
+                    <td style="text-align: left">
+                        <textarea rows="3" cols="40" type="text" style="width: 600px"
+                                  th:field="${workObject.chiefOfCustomer}"
+                                  placeholder="> Ф.И.О.&#10;> Должность&#10;> Контакты"></textarea>
+                        <p if="${#fields.hasErrors('chiefOfCustomer')}" th:errors="${workObject.chiefOfCustomer}"
+                           style="font-size: 13px; color: brown"></p>
+                </tr>
+
+                <tr>
+                    <th style="text-align: left">017</th>
+                    <td style="text-align: left"><label>Адрес/локация производства работ</label></td>
+                    <td style="text-align: left">
+                        <textarea rows="2" cols="40" type="text" style="width: 600px"
+                                  th:field="${workObject.workObjectLocalAddress}"></textarea>
+                        <p if="${#fields.hasErrors('workObjectLocalAddress')}"
+                           th:errors="${workObject.workObjectLocalAddress}" style="font-size: 13px; color: brown"></p>
+                </tr>
+                <tr>
+                    <th style="text-align: left">018</th>
+                    <td style="text-align: left"><label>Адрес склада</label></td>
+                    <td style="text-align: left">
+                        <textarea rows="2" cols="40" type="text" style="width: 600px"
+                                  th:field="${workObject.workObjectStorageAddress}"></textarea>
+                        <p if="${#fields.hasErrors('workObjectStorageAddress')}"
+                           th:errors="${workObject.workObjectStorageAddress}" style="font-size: 13px; color: brown"></p>
+                </tr>
+                <tr>
+                    <th style="text-align: left">019</th>
+                    <td style="text-align: left"><label>Ответственный за склад/инструмент</label></td>
+                    <td style="text-align: left">
+                        <select class="livesearch" style="width:400px" name="storeKeeperList" multiple>
+                            <option th:each="emp:${employeeList}"
+                                    th:field="*{storeKeeperList}"
+                                    th:value="${emp.empId}"
+                                    th:text="${emp} + ${', ' + emp.profession.professionName}">
+                            </option>
+                        </select>
+                    <td>
+                </tr>
+                <tr>
+                    <th style="text-align: left">020</th>
+                    <td style="text-align: left"><label>Ответственные ОМТР</label></td>
+                    <td style="text-align: left">
+                        <select class="livesearch" style="width:400px" name="supplierList" multiple>
+                            <option th:each="emp:${employeeList}"
+                                    th:field="*{supplierList}"
+                                    th:value="${emp.empId}"
+                                    th:text="${emp} + ${', ' + emp.profession.professionName}">
+                            </option>
+                        </select>
+                    <td>
+                </tr>
+                <tr>
+                    <th style="text-align: left">021</th>
+                    <td style="text-align: left"><label>Сетевая папка с проектом</label></td>
+                    <td style="text-align: left">
+                        <textarea type="text"rows="2" cols="60" style="width: 600px" maxlength="1000"
+                                  placeholder="Указать только точное имя папки в которой содержится документация"
+                                  th:field="${workObject.filePath}"></textarea>
+                        <p if="${#fields.hasErrors('filePath')}"
+                           th:errors="${workObject.filePath}"
+                           style="font-size: 13px; color: brown"></p></td>
+                </tr>
+                <tr>
+                    <th style="text-align: left">022</th>
+                    <td style="text-align: left"><label>Комментарий</label></td>
+                    <td style="text-align: left">
+                        <textarea rows="4" cols="40" type="text" style="width: 600px"
+                                  th:field="${workObject.workObjectComment}"></textarea>
+                        <p if="${#fields.hasErrors('workObjectComment')}"
+                           th:errors="${workObject.workObjectComment}" style="font-size: 13px; color: brown"></p>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <button onclick="return confirm('Вы действительно хотите внести изменения?');"
+                    class="btn btn-outline-primary btn-sm" type="submit">OK
+            </button>
+            <a th:href="@{/general/workobject/workobjectView/{id}(id=${workObject.workObjectId})}">
+                <button type="button" class="btn btn-outline-danger btn-sm">Отмена</button>
+            </a>
+        </div>
+    </form>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen.jquery.min.js"></script>
+<script type="text/javascript">
+    $(".livesearch").chosen();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+</html>

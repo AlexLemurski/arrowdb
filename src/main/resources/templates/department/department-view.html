@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>Arrow</title>
+    <style>
+        .table {
+            display: block;
+            width: 100%;
+            height: 750px;
+            border-collapse: separate;
+            border-spacing: 0;
+            overflow-y: scroll;
+            /*-moz-hyphens: auto;*/
+            -webkit-hyphens: auto;
+            -ms-hyphens: auto;
+        }
+
+        .head {
+            position: sticky;
+            top: 0;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        /* NAVBAR */
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            background-color: rgb(0, 0, 0);
+        }
+
+        .nav-container > nav > ul {
+            display: flex;
+            list-style: none;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-container > nav > ul > li > a {
+            display: block;
+            border-style: solid;
+            border-width: 0.5px;
+        }
+
+        @media (max-width: 900px) {
+            .nav-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+<head>
+    <div class="section">
+        <div class="nav-container">
+            <nav>
+                <ul>
+                    <li>
+                        <form th:action="@{/logout}" method="post">
+                            <input type="submit" class="btn btn-danger btn-sm m-2" value="Выход">
+                        </form>
+                    </li>
+                    <li>
+                        <div class="btn-group m-2">
+
+                            <a th:href="@{/general}">
+                                <button type="button" class="btn btn-light btn-sm">Главное меню</button>
+                            </a>
+                            <button type="button" class="btn btn-light btn-sm dropdown-toggle dropdown-toggle-split"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                            </button>
+                            <ul class="dropdown-menu"
+                                style="width: 700px; justify-content: space-between; text-align: center">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-lg-12 col-md-12">
+                                            <div class="content row">
+                                                <div class="column col-lg-4 col-md-6">
+                                                    <div class="name-of-column mb-2">
+                                                        <span>ПЕРСОНАЛ</span>
+                                                    </div>
+                                                    <div
+                                                            sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE_VIEW')">
+                                                        <a th:href="@{/general/employee}">
+                                                            <button style="width: 210px; text-align: center"
+                                                                    type="button"
+                                                                    class="btn btn-outline-success btn-sm">
+                                                                Работники
+                                                            </button>
+                                                        </a>
+                                                    </div>
+                                                    <div
+                                                            sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_PROFESSION_VIEW')">
+                                                        <a th:href="@{/general/profession}">
+                                                            <button style="width: 210px; text-align: center"
+                                                                    type="button"
+                                                                    class="btn btn-outline-success btn-sm">
+                                                                Должности
+                                                            </button>
+                                                        </a>
+                                                    </div>
+                                                    <div
+                                                            sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_DEPARTMENT_VIEW')">
+                                                        <a th:href="@{/general/department}">
+                                                            <button style="width: 210px; text-align: center"
+                                                                    type="button"
+                                                                    class="btn btn-outline-success btn-sm">
+                                                                Структурные подразделения
+                                                            </button>
+                                                        </a>
+                                                    </div>
+                                                    <div
+                                                            sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_SCHEDULE_VIEW')">
+                                                        <a th:href="@{/general/schedule}">
+                                                            <button style="width: 210px; text-align: center"
+                                                                    type="button"
+                                                                    class="btn btn-outline-success btn-sm">
+                                                                Штатное расписание
+                                                            </button>
+                                                        </a>
+                                                    </div>
+                                                    <div
+                                                            sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_VOCATION_VIEW')">
+                                                        <a th:href="@{/general/vocation}">
+                                                            <button style="width: 210px; text-align: center"
+                                                                    type="button"
+                                                                    class="btn btn-outline-success btn-sm">
+                                                                График отпусков
+                                                            </button>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4 col-md-6">
+                                                    <div class="name-of-column mb-2">
+                                                        <span>АКТИВЫ</span>
+                                                    </div>
+                                                    <div
+                                                            sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STORE_PERS_INSTR_VIEW')">
+                                                        <a th:href="@{/general/p_instrument/catalog}">
+                                                            <button style="width: 210px; text-align: center"
+                                                                    type="button"
+                                                                    class="btn btn-outline-success btn-sm">
+                                                                Инструмент персональный
+                                                            </button>
+                                                        </a>
+                                                    </div>
+                                                    <div
+                                                            sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STORE_WORK_INSTR_VIEW')">
+                                                        <a th:href="@{/general/w_instrument/catalog}">
+                                                            <button style="width: 210px; text-align: center"
+                                                                    type="button"
+                                                                    class="btn btn-outline-success btn-sm">
+                                                                Инструмент строительный
+                                                            </button>
+                                                        </a>
+                                                    </div>
+                                                    <div
+                                                            sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STORE_MEAS_INSTR_VIEW')">
+                                                        <a th:href="@{/general/m_instrument/catalog}">
+                                                            <button style="width: 210px; text-align: center"
+                                                                    type="button"
+                                                                    class="btn btn-outline-success btn-sm">
+                                                                Инструмент измерительный
+                                                            </button>
+                                                        </a>
+                                                    </div>
+                                                    <div
+                                                            sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STORE_SCLOTH_VIEW')">
+                                                        <a th:href="@{/general/s_cloth/catalog}">
+                                                            <button style="width: 210px; text-align: center"
+                                                                    type="button"
+                                                                    class="btn btn-outline-success btn-sm">
+                                                                Спецодежда и СИЗ
+                                                            </button>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4 col-md-6">
+                                                    <div class="name-of-column mb-2">
+                                                        <span>ДЕЯТЕЛЬНОСТЬ</span>
+                                                    </div>
+                                                    <div
+                                                            sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_WORK_OBJECT_VIEW')">
+                                                        <a th:href="@{/general/workobject}">
+                                                            <button style="width: 210px; text-align: center"
+                                                                    type="button"
+                                                                    class="btn btn-outline-success btn-sm">
+                                                                Объекты работ
+                                                            </button>
+                                                        </a>
+                                                    </div>
+                                                    <div
+                                                            sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_CONSTR_CONTROL_VIEW')">
+                                                        <a th:href="@{/general/constr_control}">
+                                                            <button style="width: 210px; text-align: center"
+                                                                    type="button"
+                                                                    class="btn btn-outline-success btn-sm">
+                                                                Строительный контроль
+                                                            </button>
+                                                        </a>
+                                                    </div>
+                                                    <div
+                                                            sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_DOCUMENT_VIEW')">
+                                                        <a th:href="@{/general/documentCommunity}">
+                                                            <button style="width: 210px; text-align: center"
+                                                                    type="button"
+                                                                    class="btn btn-outline-success btn-sm">
+                                                                Документация общества
+                                                            </button>
+                                                        </a>
+                                                    </div>
+                                                    <div
+                                                            sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_PERSPECTIVE_VIEW')">
+                                                        <a th:href="@{/general/perspective}">
+                                                            <button style="width: 210px; text-align: center"
+                                                                    type="button"
+                                                                    class="btn btn-outline-success btn-sm">
+                                                                Перспективные объекты
+                                                            </button>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ul>
+                        </div>
+                    </li>
+                    </li>
+                    <div>
+                        <a th:href="@{/general/department}">
+                            <button type="button" class="btn btn-warning btn-sm m-2">Назад</button>
+                        </a>
+                    </div>
+                    <li>
+                    <li>
+                        <div>
+                            <a th:href="@{/general/department/departmentJournal/{id}(id=${department.depId})}">
+                                <button type="button" class="btn btn-success btn-sm m-2">Журнал изменений</button>
+                            </a>
+                        </div>
+                    </li>
+                    <li>
+                        <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_PROFESSION_UPDATE')">
+                            <a th:href="@{/general/department/departmentUpdate/{id}(id=${department.depId})}"
+                               th:unless="${department.profAndDepStatusENUM.getTitle() == 'Закрыт'}">
+                                <button type="button" class="btn btn-primary btn-sm m-2">Править</button>
+                            </a>
+                        </div>
+                    </li>
+                    <li>
+                        <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_PROFESSION_DELETE')">
+                            <a th:href="@{/general/department/departmentDelete/{id}(id=${department.depId})}">
+                                <button
+                                        onclick="return confirm('Вы действительно хотите безвозвратно удалить эти данные?');"
+                                        type="button" class="btn btn-danger btn-sm m-2">Удалить
+                                </button>
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <title></title>
+</head>
+<div class="tableContainer m-2">
+    <h5 style="font-weight: 700;">Просмотр данных структурного подразделения</h5>
+    <hr>
+    <table>
+        <td>
+            <table class="table table-hover table-sm m-2" style="width: 900px; text-align: center">
+                <thead class="head">
+                <tr class="table-secondary" style="text-align: left; vertical-align: top">
+                    <th style="width: 100px; text-align: left">#</th>
+                    <th style="width: 250px; text-align: left">Атрибут</th>
+                    <th style="width: 550px; text-align: left">Параметр</th>
+                </tr>
+                </thead>
+                <tbody class="body">
+                <tr>
+                    <th style="text-align: left">
+                    <th style="text-align: left"><label>Статус:</label></th>
+                    <td style="text-align: left">
+                    <span th:text="${department.profAndDepStatusENUM.getTitle()}"
+                          th:if="${department.profAndDepStatusENUM.getTitle() == 'Действующий'}"></span>
+                        <span th:text="${department.profAndDepStatusENUM.getTitle() + ' ' + department.closeDate}"
+                              th:if="${department.profAndDepStatusENUM.getTitle() == 'Закрыт'}"></span>
+                </tr>
+                <tr>
+                    <th style="text-align: left">001</th>
+                    <td style="text-align: left">#ID</td>
+                    <td style="text-align: left"><span th:text="${department.depId}"></span>
+                </tr>
+                <tr>
+                    <th style="text-align: left">002</th>
+                    <td style="text-align: left">Наименование</td>
+                    <td style="text-align: left"><span th:text="${department.depName}"></span>
+                </tr>
+                <tr>
+                    <th style="text-align: left">003</th>
+                    <td style="text-align: left">Руководитель подразделения</td>
+                    <td style="text-align: left">
+                    <span th:if="${department.departmentChief}">
+                    <a th:href="@{/general/employee/employeeView/{id}(id=${department.departmentChief.empId})}">
+                    <button style="width: 500px; text-align: left" type="button" class="btn btn-outline-dark btn-sm">
+                        <span th:text="${department.departmentChief} +
+                        ${', ' + department.departmentChief.profession.professionName}">
+                        </span></button></a></span></td>
+                </tr>
+                <tr>
+                    <th style="text-align: left">004</th>
+                    <td style="text-align: left">Основная деятельность</td>
+                    <td style="text-align: left">
+                    <span th:with="x=${department.depActivity != null}">
+                        <span th:if="${x}">
+                            <span style="white-space: pre-wrap" th:text="${department.depActivity}"></span>
+                        </span>
+                        <span th:unless="${x}">
+                            <span style="color: rgba(0,0,0,0.5)" th:text="${'не указана'}"></span>
+                        </span>
+                    </span>
+                </tr>
+                <tr>
+                    <th style="text-align: left">005</th>
+                    <td style="text-align: left">Цели и задачи</td>
+                    <td style="text-align: left">
+                    <span th:with="x=${department.depTarget != null}">
+                        <span th:if="${x}">
+                    <span style="white-space: pre-wrap" th:text="${department.depTarget}"></span>
+                        </span>
+                        <span th:unless="${x}">
+                            <span style="color: rgba(0,0,0,0.5)" th:text="${'не указаны'}"></span>
+                        </span>
+                    </span>
+                </tr>
+                <tr>
+                    <th style="text-align: left">006</th>
+                    <td style="text-align: left">Работники подразделения</td>
+                    <td style="text-align: left">
+                    <span th:with="x=${department.personalActiveOfDepartment.size() != 0}">
+                        <span th:if="${x}">
+                    <span th:each="emp:${department.personalActiveOfDepartment}">
+                    <a th:href="@{/general/employee/employeeView/{id}(id=${emp.empId})}">
+                        <button style="text-align: left; width: 500px" type="button"
+                                class="btn btn-outline-dark btn-sm"><span
+                                th:text="${emp} + ${', ' + emp.profession.professionName}"></span>
+                        </button></a><br></span>
+                        </span>
+                        <span th:unless="${x}">
+                            <span style="color: rgba(0,0,0,0.5)" th:text="${'отсутствуют'}"></span>
+                        </span>
+                    </span>
+                </tr>
+                <tr>
+                    <th style="text-align: left">006</th>
+                    <td style="text-align: left">Бывшие работники подразделения</td>
+                    <td style="text-align: left">
+                    <span th:with="x=${department.personalCloseOfDepartment.size() != 0}">
+                        <span th:if="${x}">
+                    <span th:each="emp:${department.personalCloseOfDepartment}">
+                    <a th:href="@{/general/employee/employeeView/{id}(id=${emp.empId})}">
+                        <button style="text-align: left; width: 500px" type="button"
+                                class="btn btn-outline-dark btn-sm"><span
+                                th:text="${emp} + ${', ' + emp.profession.professionName}"></span>
+                        </button></a><br></span>
+                        </span>
+                        <span th:unless="${x}">
+                            <span style="color: rgba(0,0,0,0.5)" th:text="${'отсутствуют'}"></span>
+                        </span>
+                    </span>
+                </tr>
+                <tr>
+                    <th style="text-align: left">007</th>
+                    <td style="text-align: left">Закрепленный инструмент</td>
+                    <td style="text-align: left">
+                    <span th:with="x=${department.workInstrumentList.size() != 0 ||
+                    department.measInstrumentList.size() != 0}">
+                        <span th:if="${x}">
+                            <div>
+                                <span th:each="w_instr:${department.workInstrumentList}">
+                    <a th:href="@{/general/w_instrument/w_instrumentView/{id}(id=${w_instr.workInstrId})}">
+                        <button style="text-align: left; width: 500px" type="button"
+                                class="btn btn-outline-dark btn-sm"><span
+                                th:text="${w_instr}"></span></button></a><br></span>
+                            </div>
+                            <div>
+                                <span th:each="m_instr:${department.measInstrumentList}">
+                    <a th:href="@{/general/m_instrument/m_instrumentView/{id}(id=${m_instr.measInstrId})}">
+                        <button style="text-align: left; width: 500px" type="button"
+                                class="btn btn-outline-dark btn-sm"><span
+                                th:text="${m_instr}"></span></button></a><br></span>
+                            </div>
+                        </span>
+                        <span th:unless="${x}">
+                            <span style="color: rgba(0,0,0,0.5)" th:text="${'отсутствует'}"></span>
+                        </span>
+                    </span>
+                </tr>
+                <tr>
+                    <th style="text-align: left">008</th>
+                    <td style="text-align: left">Закрепленная техника</td>
+                    <td style="text-align: left">
+                    <span th:with="x=${department.measInstrumentList.size() != 0}">
+                        <span th:if="${x}">
+                    <span th:each="m_instr:${department.measInstrumentList}">
+                    <a th:href="@{/general/m_instrument/m_instrumentView/{id}(id=${m_instr.measInstrId})}">
+                        <button style="text-align: left; width: 500px" type="button"
+                                class="btn btn-outline-dark btn-sm"><span
+                                th:text="${m_instr}"></span></button></a><br></span>
+                        </span>
+                        <span th:unless="${x}">
+                            <span style="color: rgba(0,0,0,0.5)" th:text="${'отсутствует'}"></span>
+                        </span>
+                    </span>
+                </tr>
+            </table>
+        </td>
+        <td>
+
+            <table class="table table-hover table-sm m-2" style="width: 900px">
+                <thead class="head">
+                <tr class="table-secondary" style="text-align: left; vertical-align: top">
+                    <th style="width: 900px; text-align: left">Документация структурного подразделения</th>
+                </tr>
+                </thead>
+                <tbody class="body">
+                <tr>
+                    <td style="text-align: left">
+                        <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_DEPARTMENT_DOCUMENTS')">
+                            <form id="uploadFiles" name="uploadFiles" method="post"
+                                  th:action="@{/general/department/departmentView/{id}(id=${department.depId})}"
+                                  encType="multipart/form-data">
+                                <span th:text="${error}" style="font-size: 13px; color: brown"></span>
+                                <input type="file" name="files" multiple required/>
+                                <button type="submit" class="btn btn-outline-success btn-sm">Загрузить</button>
+                                <hr>
+                            </form>
+                        </div>
+                        <table class="table-hover table-sm">
+                            <thead>
+                            <td style="width: 450px; text-align: left; font-size: 13px">Наименование документа</td>
+                            <td style="width: 200px; text-align: left; font-size: 13px">Автор загрузки</td>
+                            <td style="width: 150px; text-align: left; font-size: 13px">Дата и время</td>
+                            <td style="width: 50px; text-align: center"></td>
+                            </thead>
+                            <tbody>
+                            <tr th:each="doc:${department.documentDepartmentList}">
+                                <td style="width: 450px">
+                                    <span th:if="${doc.docName}">
+                                        <a th:href="@{/general/documentDepartment/downloadFile/{id}(id=${doc.docId})}">
+                                            <button style="text-align: left; width: 450px" type="button"
+                                                    class="btn btn-outline-dark btn-sm"><span
+                                                    th:text="${doc.docName}"></span></button>
+                                        </a></span>
+                                </td>
+                                <td style="width: 150px"><span th:if="${doc.author.employee}">
+                                    <a th:href="@{/general/employee/employeeView/{id}(id=${doc.author.employee.empId})}">
+                                        <button style="width: 200px; text-align: left" type="button"
+                                                class="btn btn-outline-dark btn-sm">
+                                            <span th:text="(${doc.author.employee})"></span></button></a></span></td>
+                                <td style="width: 150px; font-size: 14px"
+                                    th:text="${#temporals.format(doc.dateAndTimeLastChange,'dd-MM-yyyy HH:mm:ss')}"></td>
+                                <td style="width: 50px; text-align: center">
+                                    <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_DEPARTMENT_DOCUMENTS')">
+                                        <a th:href="@{/general/documentDepartment/documentDelete/{id}(id=${doc.docId})}">
+                                            <button type="button"
+                                                    class="btn btn-outline-danger btn-sm"
+                                                    style="height: 25px; vertical-align: center">X
+                                            </button>
+                                        </a>
+                                    </div>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </table>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+</html>

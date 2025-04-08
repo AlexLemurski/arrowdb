@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>Arrow</title>
+</head>
+<body>
+<div class="tableContainer m-4" style="font-size: 15px">
+    <div>
+        <a th:href="@{/general}">
+            <button type="button" class="btn btn-outline-warning btn-sm">Главное меню</button>
+        </a>
+    </div>
+    <hr>
+    <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_PERSPECTIVE_CREATE')">
+        <a th:href="@{/general/perspective/perspectiveCreate}" class="btn btn-outline-success btn-sm">
+            Создать новый перспективный объект</a>
+    </div>
+    <br>
+    <div class="pageName">
+        <h4>Перспективные объекты</h4>
+    </div>
+    <div>
+        <style>
+            .mainTable{
+                display: block;
+                width: 100%;
+                height: 650px;
+                border-collapse: separate;
+                border-spacing: 0;
+                overflow-y: scroll;
+                -moz-hyphens: auto;
+                -webkit-hyphens: auto;
+                -ms-hyphens: auto;
+            }
+            .head{
+                position: sticky;
+                top: 0;
+                text-align: left; vertical-align: top;
+            }
+        </style>
+        <form th:action="@{/general/perspective}" th:method="get">
+        <table class="table-sm " style="width: 1800px">
+            <tbody class="bodySearch">
+            <td style="width: 100px; text-align: left">Поиск...
+            <th style="width: 200px; text-align: left">
+                <input type="text" style="width: 120px; height: 27px" id="byLot" onkeyup="myFunctionLOT()">
+            </th>
+            <th style="width: 400px; text-align: left">
+                <input type="text" style="width: 250px; height: 27px" id="byObject" onkeyup="myFunctionOBJECT()">
+            </th>
+            <th style="width: 200px; text-align: left">
+                <input type="text" style="width: 120px; height: 27px" id="byCustomer" onkeyup="myFunctionCUSTOMER()">
+            </th>
+            <th style="width: 250px; text-align: left">
+                <input type="text" style="width: 120px; height: 27px" id="byObserve" onkeyup="myFunctionOBSERVE()">
+            </th>
+            <th style="width: 250px; text-align: left">
+                <input type="text" style="width: 120px; height: 27px" id="byExec" onkeyup="myFunctionEXEC()">
+            </th>
+            <th style="width: 150px; text-align: left">
+                <input type="text" style="width: 120px; height: 27px" id="byStat" onkeyup="myFunctionSTAT()">
+            </th>
+            <th style="width: 100px">
+            <th style="width: 100px; text-align: center">
+                <button class="btn btn-outline-dark btn-sm" id="resetButton">Очистить</button>
+            </tbody>
+        </table>
+        </form>
+        <div class="mainTable">
+            <table class="table table-hover table-sm" style="width: 1800px;" id="prof-table">
+                <thead class="head table-group-divider">
+                <tr class="table-secondary" style="width: 150px; text-align: left; vertical-align: top">
+                    <th style="width: 100px; text-align: left">#ID</th>
+                    <th onclick="sortTable(0)" style="width: 200px; text-align: left">Лот №</th>
+                    <th onclick="sortTable(1)" style="width: 400px; text-align: left">Наименование объекта</th>
+                    <th onclick="sortTable(2)" style="width: 200px; text-align: left">Заказчик</th>
+                    <th style="width: 250px; text-align: left">Наблюдатели</th>
+                    <th style="width: 250px; text-align: left">Исполнители</th>
+                    <th onclick="sortTable(5)" style="width: 150px; text-align: left">Статус задания</th>
+                    <th onclick="sortTable(6)" style="width: 100px; text-align: left">Срок выполнения</th>
+                    <th style="width: 100px; text-align: center">Действие</th>
+                </tr>
+                </thead>
+                <tbody class="body table-group-divider">
+                <tr th:each="pers:${perspectiveList}">
+                    <th th:text="${pers.perspectiveId}"/>
+                    <td th:text="${pers.perspectiveLot}"/>
+                    <td th:text="${pers.perspectiveName}"/>
+                    <td th:text="${pers.generalContractor}"/>
+                    <td><span th:with="x=${pers.employeeObserverList.size() != 0}">
+                        <span th:if="${x}">
+                    <span th:each="emp:${pers.employeeObserverList}">
+                    <a th:href="@{/general/employee/employeeView/{id}(id=${emp.empId})}">
+                        <button style="text-align: left; width: 230px" type="button"
+                                class="btn btn-outline-dark btn-sm"><span
+                                th:text="${emp}"></span>
+                        </button></a><br></span>
+                        </span>
+                        <span th:unless="${x}">
+                            <span style="color: rgba(0,0,0,0.5)" th:text="${'не назначены'}"></span>
+                        </span>
+                    </span>
+                    </td>
+                    <td>
+                        <span th:with="x=${pers.employeeEquipmentList.size() != 0 || pers.employeeWorkList.size() != 0}">
+                            <span th:each="emp:${pers.employeeEquipmentList}">
+                                <a th:href="@{/general/employee/employeeView/{id}(id=${emp.empId})}">
+                                    <button style="text-align: left; width: 230px" type="button"
+                                            class="btn btn-outline-dark btn-sm">
+                                        <span th:text="${emp}"></span></button></a><br></span>
+                            <span th:each="emp:${pers.employeeWorkList}">
+                                <a th:href="@{/general/employee/employeeView/{id}(id=${emp.empId})}">
+                                    <button style="text-align: left; width: 230px" type="button"
+                                            class="btn btn-outline-dark btn-sm">
+                                        <span th:text="${emp}"></span></button></a><br></span>
+                            <span th:unless="${x}">
+                                <span style="color: rgba(0,0,0,0.5)" th:text="${'не назначены'}"></span>
+                            </span>
+                        </span>
+                    </td>
+                    <td><span th:with="x=${pers.perspectiveObjectENUM.getTitle().equals('Завершено')}">
+                        <span th:if="${x}">
+                            <span th:text="${pers.perspectiveObjectENUM.getTitle()} +
+                            ${#temporals.format(pers.dateOfEnd, ' dd-MM-yyyy HH:mm:ss')}"></span>
+                        </span>
+                        <span th:unless="${x}">
+                            <span th:text="${pers.perspectiveObjectENUM.getTitle()}"></span>
+                        </span>
+                    </span>
+                    <td><span th:with="x=${pers.dateOfDeadline!= null}">
+                        <span th:if="${x}">
+                    <span th:text="${#temporals.format(pers.dateOfDeadline, 'dd-MM-yyyy')}"></span>
+                        </span>
+                        <span th:unless="${x}">
+                            <span style="color: rgba(0,0,0,0.5)" th:text="${'не задана'}"></span>
+                        </span>
+                    </span></td>
+                    <td style="width: 100px; text-align: center">
+                        <a th:href="@{/general/perspective/perspectiveView/{id}(id=${pers.perspectiveId})}">
+                        <button type="button" class="btn btn-outline-primary btn-sm">Просмотр</button>
+                    </a>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        function sortTable(n) {
+            let table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById("prof-table");
+            switching = true;
+            dir = "asc";
+            while (switching) {
+                switching = false;
+                rows = table.getElementsByTagName("TR");
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i + 1].getElementsByTagName("TD")[n];
+                    if (dir === "asc") {
+                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else if (dir === "desc") {
+                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchcount++;
+                } else {
+                    if (switchcount === 0 && dir === "asc") {
+                        dir = "desc";
+                        switching = true;
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+        function myFunctionLOT() {
+            let input, filter, table, tr, td, i;
+            input = document.getElementById("byLot");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("prof-table");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                if (td) {
+                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+        function myFunctionOBJECT() {
+            let input, filter, table, tr, td, i;
+            input = document.getElementById("byObject");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("prof-table");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[1];
+                if (td) {
+                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+        function myFunctionCUSTOMER() {
+            let input, filter, table, tr, td, i;
+            input = document.getElementById("byCustomer");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("prof-table");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[2];
+                if (td) {
+                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+        function myFunctionOBSERVE() {
+            let input, filter, table, tr, td, i;
+            input = document.getElementById("byObserve");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("prof-table");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[3];
+                if (td) {
+                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+        function myFunctionEXEC() {
+            let input, filter, table, tr, td, i;
+            input = document.getElementById("byExec");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("prof-table");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[4];
+                if (td) {
+                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+        function myFunctionSTAT() {
+            let input, filter, table, tr, td, i;
+            input = document.getElementById("byStat");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("prof-table");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[5];
+                if (td) {
+                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+        document.getElementById("resetButton").reset();
+    </script>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+</html>

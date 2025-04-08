@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>Arrow</title>
+</head>
+<body>
+<div class="tableContainer m-4" style="font-size: 15px">
+    <div>
+        <a th:href="@{/general/workobject/workobjectView/{id}(id=${workObject.workObjectId})}">
+            <button type="button" class="btn btn-outline-warning btn-sm">Назад</button>
+        </a>
+    </div>
+    <hr>
+    <div class="pageName">
+        <h4 th:text="${'Документация объекта работ № Заказа (внутр.): ' +
+        workObject.workObjectOrder + ' Лот №' + workObject.workObjectLot}"></h4>
+        Сетевая папка с полным проектом
+        <span th:with="x=${workObject.filePath != null}">
+            <span th:if="${x}">
+                <a th:href="@{/general/workObject/workObjectDocument/path/{id}(id=${workObject.workObjectId})}">
+                    <button type="button" class="btn btn-outline-primary btn-sm">Перейти</button></a></span>
+            <span th:unless="${x}">
+                <span style="color: rgba(0,0,0,0.5)" th:text="${' : путь не указан'}"></span>
+            </span>
+        </span>
+    </div>
+    <br>
+    <div>
+        <style>
+            .table {
+                width: 100%;
+            }
+
+            thead, tbody {
+                display: table;
+                width: 100%;
+            }
+
+            .body {
+                display: block;
+                width: 100%;
+                height: 650px;
+                overflow: auto;
+            }
+        </style>
+        <table class="table table-hover table-sm" style="width: 1150px; text-align: center">
+            <thead>
+            <tr>
+                <th style="width: 100px; text-align: left">#</th>
+                <th style="width: 250px; text-align: left">Атрибут</th>
+                <th style="width: 800px; text-align: left">Параметр</th>
+            </tr>
+            </thead>
+            <tbody class="body">
+            <tr>
+                <th style="text-align: left">001</th>
+                <td style="text-align: left">Проектная документация</td>
+                <td style="text-align: left">
+                    <div th:unless="${workObject.workObjectStatusENUM.getTitle() == 'Закрыт'}">
+                        <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_WORK_OBJECT_DOCUMENTS')">
+                            <form id="uploadFilesEquip" name="uploadFilesEquip" method="post"
+                                  th:action="@{/general/workObject/workObjectViewProject/{id}
+                              (id=${workObject.workObjectId})}"
+                                  encType="multipart/form-data">
+                                <span th:text="${error}" style="font-size: 13px; color: brown"></span>
+                                <input type="file" name="files" multiple required/>
+                                <button type="submit" class="btn btn-outline-success btn-sm">Загрузить</button>
+                                <hr>
+                            </form>
+                        </div>
+                    </div>
+                    <table class="table table-hover table-sm" style="width: 800px;">
+                        <thead>
+                        <td style="width: 450px; text-align: left; font-size: 13px">Наименование документа</td>
+                        <td style="width: 150px; text-align: left; font-size: 13px">Автор загрузки</td>
+                        <td style="width: 150px; text-align: left; font-size: 13px">Дата и время</td>
+                        <td style="width: 50px; text-align: center"></td>
+                        </thead>
+                        <tbody>
+                        <tr th:each="doc:${documentListProject}">
+                            <td style="width: 450px">
+            <span th:if="${doc.docName}">
+                <a th:href="@{/general/documentWorkObject/downloadFile/{id}(id=${doc.docId})}">
+                    <button style="text-align: left; width: 440px" type="button"
+                            class="btn btn-outline-dark btn-sm"><span
+                            th:text="${doc.docName}"></span></button>
+                </a></span>
+                            </td>
+                            <td style="width: 150px"><span th:if="${doc.author.employee}">
+                    <a th:href="@{/general/employee/employeeView/{id}(id=${doc.author.employee.empId})}">
+                    <button style="width: 150px; text-align: left" type="button" class="btn btn-outline-dark btn-sm">
+                        <span th:text="(${doc.author.employee})">
+                        </span></button></a></span></td>
+                            <td style="width: 150px; font-size: 14px"
+                                th:text="${#temporals.format(doc.dateAndTimeLastChange,'dd-MM-yyyy HH:mm:ss')}"></td>
+                            <td style="width: 50px; text-align: center">
+                                <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_WORK_OBJECT_DOCUMENTS')">
+                                    <a th:href="@{/general/documentWorkObject/documentDeleteProject/{id}(id=${doc.docId})}"
+                                       th:unless="${workObject.workObjectStatusENUM.getTitle() == 'Закрыт'}">
+                                        <button type="button"
+                                                class="btn btn-outline-danger btn-sm"
+                                                style="height: 25px; vertical-align: center">X
+                                        </button>
+                                    </a>
+                                </div>
+                        </tr>
+                        </tbody>
+                    </table>
+            </tr>
+            <tr>
+                <th style="text-align: left">002</th>
+                <td style="text-align: left">Рабочая документация</td>
+                <td style="text-align: left">
+                    <div th:unless="${workObject.workObjectStatusENUM.getTitle() == 'Закрыт'}">
+                        <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_WORK_OBJECT_DOCUMENTS')">
+                            <form id="uploadFilesWork" name="uploadFilesWork" method="post"
+                                  th:action="@{/general/workObject/workObjectViewWork/{id}
+                              (id=${workObject.workObjectId})}"
+                                  encType="multipart/form-data">
+                                <span th:text="${error}" style="font-size: 13px; color: brown"></span>
+                                <input type="file" name="files" multiple required/>
+                                <button type="submit" class="btn btn-outline-success btn-sm">Загрузить</button>
+                                <hr>
+                            </form>
+                        </div>
+                    </div>
+                    <table class="table table-hover table-sm" style="width: 800px;">
+                        <thead>
+                        <td style="width: 450px; text-align: left; font-size: 13px">Наименование документа</td>
+                        <td style="width: 150px; text-align: left; font-size: 13px">Автор загрузки</td>
+                        <td style="width: 150px; text-align: left; font-size: 13px">Дата и время</td>
+                        <td style="width: 50px; text-align: center"></td>
+                        </thead>
+                        <tbody>
+                        <tr th:each="doc:${documentListWork}">
+                            <td style="width: 450px">
+            <span th:if="${doc.docName}">
+                <a th:href="@{/general/documentWorkObject/downloadFile/{id}(id=${doc.docId})}">
+                    <button style="text-align: left; width: 440px" type="button"
+                            class="btn btn-outline-dark btn-sm"><span
+                            th:text="${doc.docName}"></span></button>
+                </a></span>
+                            </td>
+                            <td style="width: 150px"><span th:if="${doc.author.employee}">
+                    <a th:href="@{/general/employee/employeeView/{id}(id=${doc.author.employee.empId})}">
+                    <button style="width: 150px; text-align: left" type="button" class="btn btn-outline-dark btn-sm">
+                        <span th:text="(${doc.author.employee})">
+                        </span></button></a></span></td>
+                            <td style="width: 150px; font-size: 14px"
+                                th:text="${#temporals.format(doc.dateAndTimeLastChange,'dd-MM-yyyy HH:mm:ss')}"></td>
+                            <td style="width: 50px; text-align: center">
+                                <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_WORK_OBJECT_DOCUMENTS')">
+                                    <a th:href="@{/general/documentWorkObject/documentDeleteWork/{id}(id=${doc.docId})}"
+                                       th:unless="${workObject.workObjectStatusENUM.getTitle() == 'Закрыт'}">
+                                        <button type="button"
+                                                class="btn btn-outline-danger btn-sm"
+                                                style="height: 25px; vertical-align: center">X
+                                        </button>
+                                    </a>
+                                </div>
+                        </tr>
+                        </tbody>
+                    </table>
+            </tr>
+            <tr>
+                <th style="text-align: left">003</th>
+                <td style="text-align: left">Исполнительная документация</td>
+                <td style="text-align: left">
+                    <div th:unless="${workObject.workObjectStatusENUM.getTitle() == 'Закрыт'}">
+                        <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_WORK_OBJECT_DOCUMENTS')">
+                            <form id="uploadFilesExec" name="uploadFilesExec" method="post"
+                                  th:action="@{/general/workObject/workObjectViewExec/{id}
+                              (id=${workObject.workObjectId})}"
+                                  encType="multipart/form-data">
+                                <span th:text="${error}" style="font-size: 13px; color: brown"></span>
+                                <input type="file" name="files" multiple required/>
+                                <button type="submit" class="btn btn-outline-success btn-sm">Загрузить</button>
+                                <hr>
+                            </form>
+                        </div>
+                    </div>
+                    <table class="table table-hover table-sm" style="width: 800px;">
+                        <thead>
+                        <td style="width: 450px; text-align: left; font-size: 13px">Наименование документа</td>
+                        <td style="width: 150px; text-align: left; font-size: 13px">Автор загрузки</td>
+                        <td style="width: 150px; text-align: left; font-size: 13px">Дата и время</td>
+                        <td style="width: 50px; text-align: center"></td>
+                        </thead>
+                        <tbody>
+                        <tr th:each="doc:${documentListExec}">
+                            <td style="width: 450px">
+            <span th:if="${doc.docName}">
+                <a th:href="@{/general/documentWorkObject/downloadFile/{id}(id=${doc.docId})}">
+                    <button style="text-align: left; width: 440px" type="button"
+                            class="btn btn-outline-dark btn-sm"><span
+                            th:text="${doc.docName}"></span></button>
+                </a></span>
+                            </td>
+                            <td style="width: 150px"><span th:if="${doc.author.employee}">
+                    <a th:href="@{/general/employee/employeeView/{id}(id=${doc.author.employee.empId})}">
+                    <button style="width: 150px; text-align: left" type="button" class="btn btn-outline-dark btn-sm">
+                        <span th:text="(${doc.author.employee})">
+                        </span></button></a></span></td>
+                            <td style="width: 150px; font-size: 14px"
+                                th:text="${#temporals.format(doc.dateAndTimeLastChange,'dd-MM-yyyy HH:mm:ss')}"></td>
+                            <td style="width: 50px; text-align: center">
+                                <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_WORK_OBJECT_DOCUMENTS')">
+                                    <a th:href="@{/general/documentWorkObject/documentDeleteExec/{id}(id=${doc.docId})}"
+                                       th:unless="${workObject.workObjectStatusENUM.getTitle() == 'Закрыт'}">
+                                        <button type="button"
+                                                class="btn btn-outline-danger btn-sm"
+                                                style="height: 25px; vertical-align: center">X
+                                        </button>
+                                    </a>
+                                </div>
+                        </tr>
+                        </tbody>
+                    </table>
+            </tr>
+        </table>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+</html>
