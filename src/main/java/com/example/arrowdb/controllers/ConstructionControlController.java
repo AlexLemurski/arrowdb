@@ -40,12 +40,18 @@ public class ConstructionControlController {
 
     @GetMapping("/general/constr_control")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_CONSTR_CONTROL_VIEW')")
-    public String findAllConstructionControl(Model model) {
-        List<WorkObject> workObjectList = workObjectService.findAllConstructionControlFoMainMenu()
-                .stream()
+    public String findAllConstructionControl(@AuthenticationPrincipal UserDetails userDetails,
+                                             Model model) {
+        List<WorkObject> workObjectList = workObjectService.findAllConstructionControlFoMainMenu().stream()
                 .filter(e -> !e.getWorkObjectStatusENUM().equals(WorkObjectStatusENUM.NOT_STARTED))
                 .toList();
         model.addAttribute("workObjectList", workObjectList);
+        model.addAttribute("adminAccept",
+                userDetails.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")));
+        model.addAttribute("roleDraft",
+                userDetails.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_CONSTR_CONTROL_DRAFT")));
+        model.addAttribute("roleUpdate",
+                userDetails.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_CONSTR_CONTROL_UPDATE")));
         return "constr_control/constr_control-menu";
     }
 
@@ -111,7 +117,8 @@ public class ConstructionControlController {
             try {
                 constructionControl.setAuthor(userDetails.getUsername());
                 constructionControlService.saveConstructionControl(constructionControl);
-                return "redirect:/general/constr_control";
+                return "redirect:/general/constr_control/constr_controlWarnings/%d"
+                        .formatted(constructionControl.getWorkObject().getWorkObjectId());
             } catch (Exception e) {
                 model.addAttribute("employeeList", employeeList);
                 model.addAttribute("workObjectsList", workObjectsList);

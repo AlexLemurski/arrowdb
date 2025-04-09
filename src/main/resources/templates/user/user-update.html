@@ -7,220 +7,436 @@
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen.min.css">
     <title>Arrow</title>
+    <style>
+        .main-table {
+            display: block;
+            width: 100%;
+            height: 630px;
+            border-collapse: separate;
+            border-spacing: 0;
+            overflow-y: scroll;
+            /*-moz-hyphens: auto;*/
+            -webkit-hyphens: auto;
+            -ms-hyphens: auto;
+        }
+
+        .head {
+            position: sticky;
+            top: 0;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        /* NAVBAR */
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            background-color: rgb(0, 0, 0);
+        }
+
+        .nav-container > nav > ul {
+            display: flex;
+            list-style: none;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-container > nav > ul > li > a {
+            display: block;
+            border-style: solid;
+            border-width: 0.5px;
+        }
+
+        @media (max-width: 900px) {
+            .nav-container {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 <body>
-<div class="tableContainer m-4" style="font-size: 15px">
-    <div class="pageName">
-        <h4>Меню обновления Пользователя <span th:text="${'«' + users.userName + '» '} + ${users.employee}
-+ ${', ' + users.employee.profession.professionName}"></span></h4>
-    </div>
-    <br>
-    <form th:action="@{/general/users/userUpdate}" th:method="post" th:object="${users}">
-        <table class="table table-hover table-sm" style="width: 660px">
-            <thead>
-            <tr>
-                <th style="width: 30px; text-align: left">#</th>
-                <th style="width: 230px; text-align: left">Атрибут</th>
-                <th style="width: 400px; text-align: left">Параметр</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <th style="text-align: left">001</th>
-                <td style="text-align: left">#ID (изм. не подлежит)</td>
-                <td style="text-align: left">
-                    <input readonly style="width: 200px; text-align: left;" type="text"
-                           th:field="${users.userId}">
-            </tr>
-            <tr style="display: none">
-                <th style="text-align: left">000</th>
-                <td style="text-align: left"><label>Логин (изм. не подлежит)</label></td>
-                <td style="text-align: left">
-                    <input style="width: 200px; text-align: left;" type="text"
-                           th:field="${users.userName}">
-            </tr>
-            <tr style="display: none">
-                <th style="text-align: left">000</th>
-                <td style="text-align: left"><label>Пользователь (изм. не подлежит)</label></td>
-                <td style="text-align: left">
-                    <input readonly style="width: 400px; text-align: left;" type="text"
-                           th:field="${users.employee}">
-            </tr>
-            <tr style="display: none">
-                <th style="text-align: left">000</th>
-                <td style="text-align: left"><label>Пароль</label></td>
-                <td style="text-align: left">
-                    <input readonly style="width: 400px; text-align: left;" type="text"
-                           th:field="${users.password}" placeholder="">
-            </tr>
-            <tr>
-                <th style="text-align: left">002</th>
-                <td style="text-align: left"><label>Статус</label></td>
-                <td style="text-align: left">
-                    <select style="width: 200px; text-align: left;"
-                            class="form-select form-select-sm" name="userStatusENUM">
-                        <option th:each="usrStat:${statusList}"
-                                th:field="*{userStatusENUM}"
-                                th:value="${usrStat}"
-                                th:text="${usrStat.getTitle()}">
-                        </option>
-                    </select>
-            </tr>
-            </tbody>
-        </table>
-        <style>
-            .mainTable{
-                display: block;
-                width: 100%;
-                height: 600px;
-                border-collapse: separate;
-                border-spacing: 0;
-                overflow-y: scroll;
-                -moz-hyphens: auto;
-                -webkit-hyphens: auto;
-                -ms-hyphens: auto;
-            }
-            .head{
-                position: sticky;
-                top: 0;
-                text-align: left; vertical-align: top;
-            }
-        </style>
-        <div class="mainTable">
-            <table class="table table-hover table-sm" style="width: 1500px">
-                <thead class="head">
+<form th:action="@{/general/users/userUpdate}" th:method="post" th:object="${users}">
+    <div>
+        <head>
+            <div class="section">
+                <div class="nav-container">
+                    <nav>
+                        <ul>
+                            <li>
+                                <div class="btn-group m-2">
+                                    <a th:href="@{/general}">
+                                        <button type="button" class="btn btn-light btn-sm">Главное меню</button>
+                                    </a>
+                                    <button type="button"
+                                            class="btn btn-light btn-sm dropdown-toggle dropdown-toggle-split"
+                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                    </button>
+                                    <ul class="dropdown-menu"
+                                        style="width: 700px; justify-content: space-between; text-align: center">
+                                        <div class="container-fluid">
+                                            <div class="row">
+                                                <div class="col-lg-12 col-md-12">
+                                                    <div class="content row">
+                                                        <div class="column col-lg-4 col-md-6">
+                                                            <div class="name-of-column mb-2">
+                                                                <span>ПЕРСОНАЛ</span>
+                                                            </div>
+                                                            <div
+                                                                    sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE_VIEW')">
+                                                                <a th:href="@{/general/employee}">
+                                                                    <button style="width: 210px; text-align: center"
+                                                                            type="button"
+                                                                            class="btn btn-outline-success btn-sm">
+                                                                        Работники
+                                                                    </button>
+                                                                </a>
+                                                            </div>
+                                                            <div
+                                                                    sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_PROFESSION_VIEW')">
+                                                                <a th:href="@{/general/profession}">
+                                                                    <button style="width: 210px; text-align: center"
+                                                                            type="button"
+                                                                            class="btn btn-outline-success btn-sm">
+                                                                        Должности
+                                                                    </button>
+                                                                </a>
+                                                            </div>
+                                                            <div
+                                                                    sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_DEPARTMENT_VIEW')">
+                                                                <a th:href="@{/general/department}">
+                                                                    <button style="width: 210px; text-align: center"
+                                                                            type="button"
+                                                                            class="btn btn-outline-success btn-sm">
+                                                                        Структурные подразделения
+                                                                    </button>
+                                                                </a>
+                                                            </div>
+                                                            <div
+                                                                    sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_SCHEDULE_VIEW')">
+                                                                <a th:href="@{/general/schedule}">
+                                                                    <button style="width: 210px; text-align: center"
+                                                                            type="button"
+                                                                            class="btn btn-outline-success btn-sm">
+                                                                        Штатное расписание
+                                                                    </button>
+                                                                </a>
+                                                            </div>
+                                                            <div
+                                                                    sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_VOCATION_VIEW')">
+                                                                <a th:href="@{/general/vocation}">
+                                                                    <button style="width: 210px; text-align: center"
+                                                                            type="button"
+                                                                            class="btn btn-outline-success btn-sm">
+                                                                        График отпусков
+                                                                    </button>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-4 col-md-6">
+                                                            <div class="name-of-column mb-2">
+                                                                <span>АКТИВЫ</span>
+                                                            </div>
+                                                            <div
+                                                                    sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STORE_PERS_INSTR_VIEW')">
+                                                                <a th:href="@{/general/p_instrument/catalog}">
+                                                                    <button style="width: 210px; text-align: center"
+                                                                            type="button"
+                                                                            class="btn btn-outline-success btn-sm">
+                                                                        Инструмент персональный
+                                                                    </button>
+                                                                </a>
+                                                            </div>
+                                                            <div
+                                                                    sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STORE_WORK_INSTR_VIEW')">
+                                                                <a th:href="@{/general/w_instrument/catalog}">
+                                                                    <button style="width: 210px; text-align: center"
+                                                                            type="button"
+                                                                            class="btn btn-outline-success btn-sm">
+                                                                        Инструмент строительный
+                                                                    </button>
+                                                                </a>
+                                                            </div>
+                                                            <div
+                                                                    sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STORE_MEAS_INSTR_VIEW')">
+                                                                <a th:href="@{/general/m_instrument/catalog}">
+                                                                    <button style="width: 210px; text-align: center"
+                                                                            type="button"
+                                                                            class="btn btn-outline-success btn-sm">
+                                                                        Инструмент измерительный
+                                                                    </button>
+                                                                </a>
+                                                            </div>
+                                                            <div
+                                                                    sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STORE_SCLOTH_VIEW')">
+                                                                <a th:href="@{/general/s_cloth/catalog}">
+                                                                    <button style="width: 210px; text-align: center"
+                                                                            type="button"
+                                                                            class="btn btn-outline-success btn-sm">
+                                                                        Спецодежда и СИЗ
+                                                                    </button>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-4 col-md-6">
+                                                            <div class="name-of-column mb-2">
+                                                                <span>ДЕЯТЕЛЬНОСТЬ</span>
+                                                            </div>
+                                                            <div
+                                                                    sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_WORK_OBJECT_VIEW')">
+                                                                <a th:href="@{/general/workobject}">
+                                                                    <button style="width: 210px; text-align: center"
+                                                                            type="button"
+                                                                            class="btn btn-outline-success btn-sm">
+                                                                        Объекты работ
+                                                                    </button>
+                                                                </a>
+                                                            </div>
+                                                            <div
+                                                                    sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_CONSTR_CONTROL_VIEW')">
+                                                                <a th:href="@{/general/constr_control}">
+                                                                    <button style="width: 210px; text-align: center"
+                                                                            type="button"
+                                                                            class="btn btn-outline-success btn-sm">
+                                                                        Строительный контроль
+                                                                    </button>
+                                                                </a>
+                                                            </div>
+                                                            <div
+                                                                    sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_DOCUMENT_VIEW')">
+                                                                <a th:href="@{/general/documentCommunity}">
+                                                                    <button style="width: 210px; text-align: center"
+                                                                            type="button"
+                                                                            class="btn btn-outline-success btn-sm">
+                                                                        Документация общества
+                                                                    </button>
+                                                                </a>
+                                                            </div>
+                                                            <div
+                                                                    sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_PERSPECTIVE_VIEW')">
+                                                                <a th:href="@{/general/perspective}">
+                                                                    <button style="width: 210px; text-align: center"
+                                                                            type="button"
+                                                                            class="btn btn-outline-success btn-sm">
+                                                                        Перспективные объекты
+                                                                    </button>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li>
+                                <div>
+                                    <button onclick="return confirm('Вы действительно хотите внести изменения?');"
+                                            class="btn btn-success btn-sm m-2" type="submit">Обновить
+                                    </button>
+                                </div>
+                            </li>
+                            <li>
+                                <div>
+                                    <a th:href="@{/general/users}">
+                                        <button type="button" class="btn btn-primary btn-sm m-2">Назад</button>
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <title></title>
+        </head>
+        <div class="tableContainer m-2">
+            <h5 style="font-weight: 700">Меню обновления Пользователя
+                <span th:text="${'«' + users.userName + '» '} + ${users.employee}
+                + ${', ' + users.employee.profession.professionName}"></span></h5>
+            <hr>
+            <table class="table table-hover table-sm" style="width: 700px">
+                <thead>
                 <tr>
-                    <th style="width: 300px; text-align: left">ПЕРСОНАЛ<th>
-                    <th style="width: 300px; text-align: left">АКТИВЫ<th>
-                    <th style="width: 300px; text-align: left">ДЕЯТЕЛЬНОСТЬ<th>
+                    <th style="width: 50px; text-align: left">#</th>
+                    <th style="width: 250px; text-align: left">Атрибут</th>
+                    <th style="width: 400px; text-align: left">Параметр</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
-                    <td style="width: 490px; text-align: left"><br>
-                        <span th:each="role:${employee}">
-                        <span><label>
-                            <input th:type="checkbox" name="rolesSet"
-                                   th:field="${users.rolesSet}"
-                                   th:value="${role.roleId}"
-                                   th:text="${role.annotation}" style="font-size: 14px">
-                        </label></span><br></span>
-                        <hr>
-                        <span th:each="role:${profession}">
-                        <span><label>
-                            <input th:type="checkbox" name="rolesSet"
-                                   th:field="${users.rolesSet}"
-                                   th:value="${role.roleId}"
-                                   th:text="${role.annotation}" style="font-size: 14px">
-                        </label></span><br></span>
-                        <hr>
-                        <span th:each="role:${department}">
-                        <span><label>
-                            <input th:type="checkbox" name="rolesSet"
-                                   th:field="${users.rolesSet}"
-                                   th:value="${role.roleId}"
-                                   th:text="${role.annotation}" style="font-size: 14px">
-                        </label></span><br></span>
-                        <hr>
-                        <span th:each="role:${schedule}">
-                        <span><label>
-                            <input th:type="checkbox" name="rolesSet"
-                                   th:field="${users.rolesSet}"
-                                   th:value="${role.roleId}"
-                                   th:text="${role.annotation}" style="font-size: 14px">
-                        </label></span><br></span>
-                        <hr>
-                        <span th:each="role:${vocation}">
-                        <span><label>
-                            <input th:type="checkbox" name="rolesSet"
-                                   th:field="${users.rolesSet}"
-                                   th:value="${role.roleId}"
-                                   th:text="${role.annotation}" style="font-size: 14px">
-                        </label></span><br></span>
-
-                    <td>
-                    <td style="width: 490px; text-align: left"><br>
-                        <span th:each="role:${store_personal}">
-                        <span><label>
-                            <input th:type="checkbox" name="rolesSet"
-                                   th:field="${users.rolesSet}"
-                                   th:value="${role.roleId}"
-                                   th:text="${role.annotation}" style="font-size: 14px">
-                        </label></span><br></span>
-                        <hr>
-                        <span th:each="role:${store_work}">
-                        <span><label>
-                            <input th:type="checkbox" name="rolesSet"
-                                   th:field="${users.rolesSet}"
-                                   th:value="${role.roleId}"
-                                   th:text="${role.annotation}" style="font-size: 14px">
-                        </label></span><br></span>
-                        <hr>
-                        <span th:each="role:${store_meas}">
-                        <span><label>
-                            <input th:type="checkbox" name="rolesSet"
-                                   th:field="${users.rolesSet}"
-                                   th:value="${role.roleId}"
-                                   th:text="${role.annotation}" style="font-size: 14px">
-                        </label></span><br></span>
-                        <hr>
-                        <span th:each="role:${store_scloth}">
-                        <span><label>
-                            <input th:type="checkbox" name="rolesSet"
-                                   th:field="${users.rolesSet}"
-                                   th:value="${role.roleId}"
-                                   th:text="${role.annotation}" style="font-size: 14px">
-                        </label></span><br></span>
-
-                    <td>
-                    <td style="width: 490px; text-align: left"><br>
-                        <span th:each="role:${activity_work}">
-                        <span><label>
-                            <input th:type="checkbox" name="rolesSet"
-                                   th:field="${users.rolesSet}"
-                                   th:value="${role.roleId}"
-                                   th:text="${role.annotation}" style="font-size: 14px">
-                        </label></span><br></span>
-                        <hr>
-                        <span th:each="role:${activity_control}">
-                        <span><label>
-                            <input th:type="checkbox" name="rolesSet"
-                                   th:field="${users.rolesSet}"
-                                   th:value="${role.roleId}"
-                                   th:text="${role.annotation}" style="font-size: 14px">
-                        </label></span><br></span>
-                        <hr>
-                        <span th:each="role:${activity_doc}">
-                        <span><label>
-                            <input th:type="checkbox" name="rolesSet"
-                                   th:field="${users.rolesSet}"
-                                   th:value="${role.roleId}"
-                                   th:text="${role.annotation}" style="font-size: 14px">
-                        </label></span><br></span>
-                    <hr>
-                    <span th:each="role:${perspective_doc}">
-                        <span><label>
-                            <input th:type="checkbox" name="rolesSet"
-                                   th:field="${users.rolesSet}"
-                                   th:value="${role.roleId}"
-                                   th:text="${role.annotation}" style="font-size: 14px">
-                        </label></span><br></span>
-                    <td>
+                    <th style="text-align: left">001</th>
+                    <td style="text-align: left">#ID (изм. не подлежит)</td>
+                    <td style="text-align: left">
+                        <input readonly style="width: 200px; text-align: left;" type="text"
+                               th:field="${users.userId}">
+                </tr>
+                <tr style="display: none">
+                    <th style="text-align: left">000</th>
+                    <td style="text-align: left"><label>Логин (изм. не подлежит)</label></td>
+                    <td style="text-align: left">
+                        <input style="width: 200px; text-align: left;" type="text"
+                               th:field="${users.userName}">
+                </tr>
+                <tr style="display: none">
+                    <th style="text-align: left">000</th>
+                    <td style="text-align: left"><label>Пользователь (изм. не подлежит)</label></td>
+                    <td style="text-align: left">
+                        <input readonly style="width: 400px; text-align: left;" type="text"
+                               th:field="${users.employee}">
+                </tr>
+                <tr style="display: none">
+                    <th style="text-align: left">000</th>
+                    <td style="text-align: left"><label>Пароль</label></td>
+                    <td style="text-align: left">
+                        <input readonly style="width: 400px; text-align: left;" type="text"
+                               th:field="${users.password}" placeholder="">
+                </tr>
+                <tr>
+                    <th style="text-align: left">002</th>
+                    <td style="text-align: left"><label>Статус</label></td>
+                    <td style="text-align: left">
+                        <select style="width: 200px; text-align: left;"
+                                class="form-select form-select-sm" name="userStatusENUM">
+                            <option th:each="usrStat:${statusList}"
+                                    th:field="*{userStatusENUM}"
+                                    th:value="${usrStat}"
+                                    th:text="${usrStat.getTitle()}">
+                            </option>
+                        </select>
                 </tr>
                 </tbody>
             </table>
+            <div class="main-table">
+                <table class="table table-hover table-sm" style="width: 1500px">
+                    <thead class="head">
+                    <tr>
+                        <th style="width: 300px; text-align: left">ПЕРСОНАЛ
+                        <th>
+                        <th style="width: 300px; text-align: left">АКТИВЫ
+                        <th>
+                        <th style="width: 300px; text-align: left">ДЕЯТЕЛЬНОСТЬ
+                        <th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td style="width: 490px; text-align: left"><br>
+                            <span th:each="role:${employee}">
+                        <span><label>
+                            <input th:type="checkbox" name="rolesSet"
+                                   th:field="${users.rolesSet}"
+                                   th:value="${role.roleId}"
+                                   th:text="${role.annotation}" style="font-size: 14px">
+                        </label></span><br></span>
+                            <hr>
+                            <span th:each="role:${profession}">
+                        <span><label>
+                            <input th:type="checkbox" name="rolesSet"
+                                   th:field="${users.rolesSet}"
+                                   th:value="${role.roleId}"
+                                   th:text="${role.annotation}" style="font-size: 14px">
+                        </label></span><br></span>
+                            <hr>
+                            <span th:each="role:${department}">
+                        <span><label>
+                            <input th:type="checkbox" name="rolesSet"
+                                   th:field="${users.rolesSet}"
+                                   th:value="${role.roleId}"
+                                   th:text="${role.annotation}" style="font-size: 14px">
+                        </label></span><br></span>
+                            <hr>
+                            <span th:each="role:${schedule}">
+                        <span><label>
+                            <input th:type="checkbox" name="rolesSet"
+                                   th:field="${users.rolesSet}"
+                                   th:value="${role.roleId}"
+                                   th:text="${role.annotation}" style="font-size: 14px">
+                        </label></span><br></span>
+                            <hr>
+                            <span th:each="role:${vocation}">
+                        <span><label>
+                            <input th:type="checkbox" name="rolesSet"
+                                   th:field="${users.rolesSet}"
+                                   th:value="${role.roleId}"
+                                   th:text="${role.annotation}" style="font-size: 14px">
+                        </label></span><br></span>
+
+                        <td>
+                        <td style="width: 490px; text-align: left"><br>
+                            <span th:each="role:${store_personal}">
+                        <span><label>
+                            <input th:type="checkbox" name="rolesSet"
+                                   th:field="${users.rolesSet}"
+                                   th:value="${role.roleId}"
+                                   th:text="${role.annotation}" style="font-size: 14px">
+                        </label></span><br></span>
+                            <hr>
+                            <span th:each="role:${store_work}">
+                        <span><label>
+                            <input th:type="checkbox" name="rolesSet"
+                                   th:field="${users.rolesSet}"
+                                   th:value="${role.roleId}"
+                                   th:text="${role.annotation}" style="font-size: 14px">
+                        </label></span><br></span>
+                            <hr>
+                            <span th:each="role:${store_meas}">
+                        <span><label>
+                            <input th:type="checkbox" name="rolesSet"
+                                   th:field="${users.rolesSet}"
+                                   th:value="${role.roleId}"
+                                   th:text="${role.annotation}" style="font-size: 14px">
+                        </label></span><br></span>
+                            <hr>
+                            <span th:each="role:${store_scloth}">
+                        <span><label>
+                            <input th:type="checkbox" name="rolesSet"
+                                   th:field="${users.rolesSet}"
+                                   th:value="${role.roleId}"
+                                   th:text="${role.annotation}" style="font-size: 14px">
+                        </label></span><br></span>
+
+                        <td>
+                        <td style="width: 490px; text-align: left"><br>
+                            <span th:each="role:${activity_work}">
+                        <span><label>
+                            <input th:type="checkbox" name="rolesSet"
+                                   th:field="${users.rolesSet}"
+                                   th:value="${role.roleId}"
+                                   th:text="${role.annotation}" style="font-size: 14px">
+                        </label></span><br></span>
+                            <hr>
+                            <span th:each="role:${activity_control}">
+                        <span><label>
+                            <input th:type="checkbox" name="rolesSet"
+                                   th:field="${users.rolesSet}"
+                                   th:value="${role.roleId}"
+                                   th:text="${role.annotation}" style="font-size: 14px">
+                        </label></span><br></span>
+                            <hr>
+                            <span th:each="role:${activity_doc}">
+                        <span><label>
+                            <input th:type="checkbox" name="rolesSet"
+                                   th:field="${users.rolesSet}"
+                                   th:value="${role.roleId}"
+                                   th:text="${role.annotation}" style="font-size: 14px">
+                        </label></span><br></span>
+                            <hr>
+                            <span th:each="role:${perspective_doc}">
+                        <span><label>
+                            <input th:type="checkbox" name="rolesSet"
+                                   th:field="${users.rolesSet}"
+                                   th:value="${role.roleId}"
+                                   th:text="${role.annotation}" style="font-size: 14px">
+                        </label></span><br></span>
+                        <td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <hr>
-        <div>
-            <button onclick="return confirm('Вы действительно хотите внести изменения?');"
-                    class="btn btn-outline-primary btn-sm" type="submit">OK
-            </button>
-            <a th:href="@{/general/users}">
-                <button type="button" class="btn btn-outline-danger btn-sm" aria-pressed="true">Отмена</button>
-            </a>
-        </div>
-    </form>
-</div>
+    </div>
+</form>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen.jquery.min.js"></script>
 <script type="text/javascript">

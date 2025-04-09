@@ -300,10 +300,11 @@
                             <span th:if="${employee.employeeStatusENUM.getTitle() == 'В отпуске'}">
                                         <span th:text="${employee.employeeStatusENUM.getTitle()}
                                     + ${' с ' + #temporals.format(startOfVocation, 'dd-MM-yyyy') + ' по '
-                                    + #temporals.format(endOfVocation, 'dd-MM-yyyy') + ' (' + daysOfVocation + ' дн.), заместитель '}"></span>
+                                    + #temporals.format(endOfVocation, 'dd-MM-yyyy') + ' ('
+                                    + daysOfVocation + ' дн.), заместитель '}"></span>
                                         <span th:with="x=${duringEmployee != null}">
                                             <span th:if="${x}">
-                                                <a th:href="@{/general/employee/employeeView/{id}(id=${duringEmployee.employeeId})}">
+                                                <a th:href="@{/general/employee/employeeView/{id}(id=${duringEmployee.empId})}">
                                             <button style="width: 250px; text-align: left"
                                                     type="button" class="btn btn-outline-dark btn-sm">
                                         <span th:text="${duringEmployee.surName + ' ' +

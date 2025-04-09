@@ -13,7 +13,10 @@ public interface ConstructionControlAUDRepository extends JpaRepository<Construc
 
     @Query("""
             select cc from ConstructionControlAUD cc
-            where cc.id=:id
+            left join fetch cc.responsibleFromContractor
+            left join fetch cc.responsibleFromContractor
+            left join fetch cc.workObject
+            where cc.constrControlId=:id
             order by cc.exampleRevEntity.id desc
             """)
     List<ConstructionControlAUD> findAllConstructionControlsAUDById(Integer id);

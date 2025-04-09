@@ -14,6 +14,7 @@ public interface RoleRepository extends JpaRepository<Roles, Integer> {
     @Query("""
             select r from Roles r
             where r.menuName=:name
+            order by r.localId
             """)
     List<Roles> findRolesByMenuName(String name);
 

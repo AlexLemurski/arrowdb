@@ -19,6 +19,7 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
             select u from Users u
             left join fetch u.employee emp
             left join fetch emp.profession
+            except where u.userName != 'admin'
             order by u.userId
             """)
     List<Users> findAll();

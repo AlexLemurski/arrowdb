@@ -1,5 +1,6 @@
 package com.example.arrowdb.entity;
 
+import com.example.arrowdb.enums.ConstructionControlStatusENUM;
 import com.example.arrowdb.enums.WorkObjectStatusENUM;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -145,6 +146,9 @@ public class WorkObject {
 
     @Transient
     private Integer constructionControlClosed;
+
+    @Transient
+    private Integer constructionControlDraft;
 
     @Transient
     private Integer totalCount;
@@ -302,14 +306,21 @@ public class WorkObject {
 
     public Integer getConstructionControlActive() {
         return constructionControlActive = constructionControlList.stream()
-                .filter(e -> e.getConstructionControlStatusENUM().getTitle().contains("Действующий"))
+                .filter(e -> e.getConstructionControlStatusENUM().equals(ConstructionControlStatusENUM.ACTIVE))
                 .toList()
                 .size();
     }
 
     public Integer getConstructionControlClosed() {
         return constructionControlClosed = constructionControlList.stream()
-                .filter(e -> e.getConstructionControlStatusENUM().getTitle().contains("Закрыт"))
+                .filter(e -> e.getConstructionControlStatusENUM().equals(ConstructionControlStatusENUM.CLOSED))
+                .toList()
+                .size();
+    }
+
+    public Integer getConstructionControlDraft() {
+        return constructionControlDraft = constructionControlList.stream()
+                .filter(e -> e.getConstructionControlStatusENUM().equals(ConstructionControlStatusENUM.DRAFT))
                 .toList()
                 .size();
     }

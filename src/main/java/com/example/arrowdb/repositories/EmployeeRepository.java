@@ -35,12 +35,14 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
             and e.employeeStatusENUM != 5
             and e.account is null
             and e.email is not null
+            order by e.empId
             """)
     List<Employee> findEmployeeForCreateAccount();
 
     @Query(value = """
             select e from Employee e
             where e.email is not null
+            order by e.empId
             """)
     List<Employee> findEmployeeMailSend();
 
@@ -78,6 +80,9 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
             left join fetch e.workObjectSupplierList
             left join fetch e.responsibleFromContractorList
             left join fetch e.responsibleFromSKContractorList
+            left join fetch e.employeeEquipmentList
+            left join fetch e.employeeWorkList
+            left join fetch e.employeeObserverList
             where e.empId=:id
             """)
     Employee findEmployeeByIdForView(int id);

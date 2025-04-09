@@ -4,6 +4,7 @@ import com.example.arrowdb.auxiliary.MailSenderService;
 import com.example.arrowdb.entity.Employee;
 import com.example.arrowdb.entity.Roles;
 import com.example.arrowdb.entity.Users;
+import com.example.arrowdb.enums.EmployeeStatusENUM;
 import com.example.arrowdb.enums.UserStatusENUM;
 import com.example.arrowdb.services.EmployeeService;
 import com.example.arrowdb.services.RoleService;
@@ -38,49 +39,29 @@ public class UsersController {
     @GetMapping("/general/users")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String getAllUsers(Model model) {
-        model.addAttribute("users", usersService.findAllUsers().stream()
-                .filter(e -> !e.getUserName().equals("admin"))
-                .sorted(Comparator.comparingInt(Users::getUserId))
-                .toList());
+        model.addAttribute("users", usersService.findAllUsers());
+        model.addAttribute("userStatusList", UserStatusENUM.values());
         return "user/user-menu";
     }
 
     @GetMapping("/general/users/userCreate")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public String createUserForm(@ModelAttribute Users users,
+    public String createUserForm(@ModelAttribute(value = "users") Users users,
                                  Model model) {
-        model.addAttribute("employeeList", employeeService.findEmployeeForCreateAccount().stream()
-                .sorted(Comparator.comparingInt(Employee::getEmpId))
-                .toList());
-        model.addAttribute("employee", roleService.findRolesByMenuName("employee").stream()
-                .sorted(Comparator.comparingInt(Roles::getLocalId)));
-        model.addAttribute("profession", roleService.findRolesByMenuName("profession").stream()
-                .sorted(Comparator.comparingInt(Roles::getLocalId)));
-        model.addAttribute("department", roleService.findRolesByMenuName("department").stream()
-                .sorted(Comparator.comparingInt(Roles::getLocalId)));
-        model.addAttribute("schedule", roleService.findRolesByMenuName("schedule").stream()
-                .sorted(Comparator.comparingInt(Roles::getLocalId)));
-        model.addAttribute("vocation", roleService.findRolesByMenuName("vocation").stream()
-                .sorted(Comparator.comparingInt(Roles::getLocalId)));
-
-        model.addAttribute("store_personal", roleService.findRolesByMenuName("store_personal").stream()
-                .sorted(Comparator.comparingInt(Roles::getLocalId)));
-        model.addAttribute("store_work", roleService.findRolesByMenuName("store_work").stream()
-                .sorted(Comparator.comparingInt(Roles::getLocalId)));
-        model.addAttribute("store_meas", roleService.findRolesByMenuName("store_meas").stream()
-                .sorted(Comparator.comparingInt(Roles::getLocalId)));
-        model.addAttribute("store_scloth", roleService.findRolesByMenuName("store_scloth").stream()
-                .sorted(Comparator.comparingInt(Roles::getLocalId)));
-
-        model.addAttribute("activity_work", roleService.findRolesByMenuName("activity_work").stream()
-                .sorted(Comparator.comparingInt(Roles::getLocalId)));
-        model.addAttribute("activity_control", roleService.findRolesByMenuName("activity_control").stream()
-                .sorted(Comparator.comparingInt(Roles::getLocalId)));
-        model.addAttribute("activity_doc", roleService.findRolesByMenuName("activity_doc").stream()
-                .sorted(Comparator.comparingInt(Roles::getLocalId)));
-        model.addAttribute("perspective_doc", roleService.findRolesByMenuName("perspective_doc").stream()
-                .sorted(Comparator.comparingInt(Roles::getLocalId)));
-
+        model.addAttribute("employeeList", employeeService.findEmployeeForCreateAccount());
+        model.addAttribute("employee", roleService.findRolesByMenuName("employee"));
+        model.addAttribute("profession", roleService.findRolesByMenuName("profession"));
+        model.addAttribute("department", roleService.findRolesByMenuName("department"));
+        model.addAttribute("schedule", roleService.findRolesByMenuName("schedule"));
+        model.addAttribute("vocation", roleService.findRolesByMenuName("vocation"));
+        model.addAttribute("store_personal", roleService.findRolesByMenuName("store_personal"));
+        model.addAttribute("store_work", roleService.findRolesByMenuName("store_work"));
+        model.addAttribute("store_meas", roleService.findRolesByMenuName("store_meas"));
+        model.addAttribute("store_scloth", roleService.findRolesByMenuName("store_scloth"));
+        model.addAttribute("activity_work", roleService.findRolesByMenuName("activity_work"));
+        model.addAttribute("activity_control", roleService.findRolesByMenuName("activity_control"));
+        model.addAttribute("activity_doc", roleService.findRolesByMenuName("activity_doc"));
+        model.addAttribute("perspective_doc", roleService.findRolesByMenuName("perspective_doc"));
         model.addAttribute("statusList", UserStatusENUM.values());
         return "user/user-create";
     }
@@ -112,38 +93,20 @@ public class UsersController {
             users.setPassword(null);
             users.getEmployee().setAccount(null);
             usersService.deleteUser(users.getUserId());
-            model.addAttribute("employeeList", employeeService.findEmployeeForCreateAccount().stream()
-                    .sorted(Comparator.comparingInt(Employee::getEmpId))
-                    .toList());
-            model.addAttribute("employee", roleService.findRolesByMenuName("employee").stream()
-                    .sorted(Comparator.comparingInt(Roles::getLocalId)));
-            model.addAttribute("profession", roleService.findRolesByMenuName("profession").stream()
-                    .sorted(Comparator.comparingInt(Roles::getLocalId)));
-            model.addAttribute("department", roleService.findRolesByMenuName("department").stream()
-                    .sorted(Comparator.comparingInt(Roles::getLocalId)));
-            model.addAttribute("schedule", roleService.findRolesByMenuName("schedule").stream()
-                    .sorted(Comparator.comparingInt(Roles::getLocalId)));
-            model.addAttribute("vocation", roleService.findRolesByMenuName("vocation").stream()
-                    .sorted(Comparator.comparingInt(Roles::getLocalId)));
-
-            model.addAttribute("store_personal", roleService.findRolesByMenuName("store_personal").stream()
-                    .sorted(Comparator.comparingInt(Roles::getLocalId)));
-            model.addAttribute("store_work", roleService.findRolesByMenuName("store_work").stream()
-                    .sorted(Comparator.comparingInt(Roles::getLocalId)));
-            model.addAttribute("store_meas", roleService.findRolesByMenuName("store_meas").stream()
-                    .sorted(Comparator.comparingInt(Roles::getLocalId)));
-            model.addAttribute("store_scloth", roleService.findRolesByMenuName("store_scloth").stream()
-                    .sorted(Comparator.comparingInt(Roles::getLocalId)));
-
-            model.addAttribute("activity_work", roleService.findRolesByMenuName("activity_work").stream()
-                    .sorted(Comparator.comparingInt(Roles::getLocalId)));
-            model.addAttribute("activity_control", roleService.findRolesByMenuName("activity_control").stream()
-                    .sorted(Comparator.comparingInt(Roles::getLocalId)));
-            model.addAttribute("activity_doc", roleService.findRolesByMenuName("activity_doc").stream()
-                    .sorted(Comparator.comparingInt(Roles::getLocalId)));
-            model.addAttribute("perspective_doc", roleService.findRolesByMenuName("perspective_doc").stream()
-                    .sorted(Comparator.comparingInt(Roles::getLocalId)));
-
+            model.addAttribute("employeeList", employeeService.findEmployeeForCreateAccount());
+            model.addAttribute("employee", roleService.findRolesByMenuName("employee"));
+            model.addAttribute("profession", roleService.findRolesByMenuName("profession"));
+            model.addAttribute("department", roleService.findRolesByMenuName("department"));
+            model.addAttribute("schedule", roleService.findRolesByMenuName("schedule"));
+            model.addAttribute("vocation", roleService.findRolesByMenuName("vocation"));
+            model.addAttribute("store_personal", roleService.findRolesByMenuName("store_personal"));
+            model.addAttribute("store_work", roleService.findRolesByMenuName("store_work"));
+            model.addAttribute("store_meas", roleService.findRolesByMenuName("store_meas"));
+            model.addAttribute("store_scloth", roleService.findRolesByMenuName("store_scloth"));
+            model.addAttribute("activity_work", roleService.findRolesByMenuName("activity_work"));
+            model.addAttribute("activity_control", roleService.findRolesByMenuName("activity_control"));
+            model.addAttribute("activity_doc", roleService.findRolesByMenuName("activity_doc"));
+            model.addAttribute("perspective_doc", roleService.findRolesByMenuName("perspective_doc"));
             model.addAttribute("statusList", UserStatusENUM.values());
             model.addAttribute("error", ERROR_CREATE_NEW_USER);
             return "user/user-create";
@@ -166,38 +129,22 @@ public class UsersController {
                                  Model model) {
         Users users = usersService.findUserById(id);
         model.addAttribute("users", users);
-        model.addAttribute("employee", roleService.findRolesByMenuName("employee").stream()
-                .sorted(Comparator.comparingInt(Roles::getLocalId)));
-        model.addAttribute("profession", roleService.findRolesByMenuName("profession").stream()
-                .sorted(Comparator.comparingInt(Roles::getLocalId)));
-        model.addAttribute("department", roleService.findRolesByMenuName("department").stream()
-                .sorted(Comparator.comparingInt(Roles::getLocalId)));
-        model.addAttribute("schedule", roleService.findRolesByMenuName("schedule").stream()
-                .sorted(Comparator.comparingInt(Roles::getLocalId)));
-        model.addAttribute("vocation", roleService.findRolesByMenuName("vocation").stream()
-                .sorted(Comparator.comparingInt(Roles::getLocalId)));
-
-        model.addAttribute("store_personal", roleService.findRolesByMenuName("store_personal").stream()
-                .sorted(Comparator.comparingInt(Roles::getLocalId)));
-        model.addAttribute("store_work", roleService.findRolesByMenuName("store_work").stream()
-                .sorted(Comparator.comparingInt(Roles::getLocalId)));
-        model.addAttribute("store_meas", roleService.findRolesByMenuName("store_meas").stream()
-                .sorted(Comparator.comparingInt(Roles::getLocalId)));
-        model.addAttribute("store_scloth", roleService.findRolesByMenuName("store_scloth").stream()
-                .sorted(Comparator.comparingInt(Roles::getLocalId)));
-
-        model.addAttribute("activity_work", roleService.findRolesByMenuName("activity_work").stream()
-                .sorted(Comparator.comparingInt(Roles::getLocalId)));
-        model.addAttribute("activity_control", roleService.findRolesByMenuName("activity_control").stream()
-                .sorted(Comparator.comparingInt(Roles::getLocalId)));
-        model.addAttribute("activity_doc", roleService.findRolesByMenuName("activity_doc").stream()
-                .sorted(Comparator.comparingInt(Roles::getLocalId)));
-        model.addAttribute("perspective_doc", roleService.findRolesByMenuName("perspective_doc").stream()
-                .sorted(Comparator.comparingInt(Roles::getLocalId)));
-        assert users != null;
-        if (users.getEmployee().getEmployeeStatusENUM().getTitle().equals("Закрыт")) {
+        model.addAttribute("employee", roleService.findRolesByMenuName("employee"));
+        model.addAttribute("profession", roleService.findRolesByMenuName("profession"));
+        model.addAttribute("department", roleService.findRolesByMenuName("department"));
+        model.addAttribute("schedule", roleService.findRolesByMenuName("schedule"));
+        model.addAttribute("vocation", roleService.findRolesByMenuName("vocation"));
+        model.addAttribute("store_personal", roleService.findRolesByMenuName("store_personal"));
+        model.addAttribute("store_work", roleService.findRolesByMenuName("store_work"));
+        model.addAttribute("store_meas", roleService.findRolesByMenuName("store_meas"));
+        model.addAttribute("store_scloth", roleService.findRolesByMenuName("store_scloth"));
+        model.addAttribute("activity_work", roleService.findRolesByMenuName("activity_work"));
+        model.addAttribute("activity_control", roleService.findRolesByMenuName("activity_control"));
+        model.addAttribute("activity_doc", roleService.findRolesByMenuName("activity_doc"));
+        model.addAttribute("perspective_doc", roleService.findRolesByMenuName("perspective_doc"));
+        if (users.getEmployee().getEmployeeStatusENUM().equals(EmployeeStatusENUM.CLOSED)) {
             model.addAttribute("statusList", Arrays.stream(UserStatusENUM.values())
-                    .filter(e -> !e.getTitle().equals("Действует")));
+                    .filter(e -> !e.equals(UserStatusENUM.ON)));
         } else {
             model.addAttribute("statusList", UserStatusENUM.values());
         }
@@ -208,7 +155,7 @@ public class UsersController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String updateUser(Users users) {
         usersService.updateUser(users);
-        return "redirect:/general/users";
+        return "redirect:/general/users/userUpdate/%d".formatted(users.getUserId());
     }
 
     @GetMapping("/general/users/recovery/{id}")

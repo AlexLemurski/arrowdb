@@ -264,6 +264,7 @@
                 <td style="width: 150px"></td>
                 <td style="width: 150px"></td>
                 <td style="width: 150px"></td>
+                <td th:if="${adminAccept} OR ${roleDraft} OR ${roleUpdate}" style="width: 150px"></td>
                 <th style="width: 100px">
                     <button class="btn btn-outline-dark btn-sm" id="resetButton">Очистить</button>
                 </th>
@@ -300,6 +301,10 @@
                     <button onclick="sortTable(5)" type="button" class="btn btn-outline-dark btn-sm"
                             style="width: 140px; text-align: left">Общее кол-во
                     </button></th>
+                <th th:if="${adminAccept} OR ${roleDraft} OR ${roleUpdate}" style="width: 150px">
+                    <button onclick="sortTable(6)" type="button" class="btn btn-outline-dark btn-sm"
+                            style="width: 140px; text-align: left">Черновики
+                    </button></th>
                 <th style="width: 100px; text-align: center">Действие</th>
             </tr>
             </thead>
@@ -316,6 +321,8 @@
                 <td th:text="${w_obj.constructionControlActive}">
                 <td th:text="${w_obj.constructionControlClosed}">
                 <td th:text="${w_obj.totalCount}">
+                <td th:if="${adminAccept} OR ${roleDraft} OR ${roleUpdate}"
+                    th:text="${w_obj.constructionControlDraft}">
                 <td style="width: 100px">
                     <a th:href="@{/general/constr_control/constr_controlWarnings/{id}(id=${w_obj.workObjectId})}">
                         <button type="button" class="btn btn-primary btn-sm">Просмотр</button>

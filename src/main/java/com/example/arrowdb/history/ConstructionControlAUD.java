@@ -21,6 +21,9 @@ public class ConstructionControlAUD {
     @Column(name = "id", nullable = false, unique = true)
     private Integer id;
 
+    @Column(name = "constr_control_id")
+    private Integer constrControlId;
+
     @Column(name = "num_of_warning")
     private String numOfWarning;
 

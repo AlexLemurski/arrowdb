@@ -48,29 +48,22 @@
             <table class="table table-hover table-sm" style="width: 1800px;">
                 <thead class="head">
                 <tr class="table-secondary" style="width: 150px; text-align: left; vertical-align: top">
-                    <th style="width: 200px;">Пользователь</th>
-                    <th style="width: 100px;">Дата и время изм.</th>
-                    <th style="width: 150px;">Объект строительства</th>
-                    <th style="width: 200px;">№ предупр.</th>
-                    <th style="width: 100px;">Дата выдачи</th>
-                    <th style="width: 400px;">Выявленные несоответствия</th>
-                    <th style="width: 100px;">Срок устранения</th>
-                    <th style="width: 150px;">СК Заказчика</th>
-                    <th style="width: 150px;">Ответственные за устранение замечания</th>
-                    <th style="width: 100px;">Срок продл., до</th>
-                    <th style="width: 150px;">Статус предупр.</th>
+                    <th style="width: 200px">Пользователь</th>
+                    <th style="width: 100px">Дата и время изм.</th>
+                    <th style="width: 150px">Объект строительства</th>
+                    <th style="width: 200px">№ предупр.</th>
+                    <th style="width: 100px">Дата выдачи</th>
+                    <th style="width: 400px">Выявленные несоответствия</th>
+                    <th style="width: 100px">Срок устранения</th>
+                    <th style="width: 150px">СК Заказчика</th>
+                    <th style="width: 150px">Ответственные за устранение замечания</th>
+                    <th style="width: 100px">Срок продл., до</th>
+                    <th style="width: 150px">Статус предупр.</th>
                 </tr>
                 </thead>
                 <tbody class="body">
                 <tr th:each="c_contr:${constructionControlAUDList}">
                     <td th:text="${c_contr.exampleRevEntity.userName}">
-
-<!--                        <td>-->
-<!--                    <a th:href="@{/general/employee/employeeView/{id}(id=${employee.empId})}">-->
-<!--                        <button style="text-align: left; width: 180px" type="button" class="btn btn-outline-dark btn-sm">-->
-<!--                            <span th:text="${c_contr.exampleRevEntity.userName}"></span></button></a>-->
-<!--                </td>-->
-
                     <td th:text="${#temporals.format(c_contr.exampleRevEntity.localDateTimeModified,
                     'dd-MM-yyyy HH:mm:ss')}">
                     <td th:text="${c_contr.workObject}">
@@ -79,11 +72,9 @@
                     <td th:text="${c_contr.warningName}" style="white-space: pre-wrap">
                     <td th:text="${#temporals.format(c_contr.deadLine, 'dd-MM-yyyy')}">
                     <td th:text="${c_contr.responsibleFromCustomer}">
-                    <td>
-                    <p th:text="${c_contr.responsibleFromContractor}"></p>
+                    <td><p th:text="${c_contr.responsibleFromContractor}"></p>
                     <p th:text="${c_contr.responsibleFromSKContractor}"></p>
-                    <p th:text="${c_contr.responsibleFromSubContractor}"></p>
-                </td>
+                    <p th:text="${c_contr.responsibleFromSubContractor}"></p></td>
                     <td th:text="${#temporals.format(c_contr.dateOfExtension, 'dd-MM-yyyy')}">
                     <td th:text="${c_contr.constructionControlStatusENUM.getTitle()}">
                 </tr>
