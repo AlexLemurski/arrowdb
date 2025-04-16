@@ -17,7 +17,6 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
-import static com.example.arrowdb.auxiliary.FilePathResource.FILES_DIRECTORY;
 import static com.example.arrowdb.auxiliary.FilePathResource.PERSPECTIVE_DIRECTORY;
 
 @Service

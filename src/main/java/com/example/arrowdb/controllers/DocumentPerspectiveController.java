@@ -34,7 +34,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 
-import static com.example.arrowdb.auxiliary.FilePathResource.FILES_DIRECTORY;
 import static com.example.arrowdb.auxiliary.FilePathResource.PERSPECTIVE_DIRECTORY;
 import static com.example.arrowdb.auxiliary.KeyGenerator.generateKey;
 

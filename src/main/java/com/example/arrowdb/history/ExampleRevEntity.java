@@ -1,7 +1,6 @@
 package com.example.arrowdb.history;
 
 import com.example.arrowdb.entity.Employee;
-import com.example.arrowdb.entity.Users;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.envers.RevisionEntity;

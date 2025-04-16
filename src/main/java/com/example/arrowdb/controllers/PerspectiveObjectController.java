@@ -1,7 +1,6 @@
 package com.example.arrowdb.controllers;
 
 import com.example.arrowdb.auxiliary.FileNode;
-import com.example.arrowdb.entity.Employee;
 import com.example.arrowdb.entity.PerspectiveObject;
 import com.example.arrowdb.enums.PerspectiveObjectENUM;
 import com.example.arrowdb.enums.ProfAndDepStatusENUM;
@@ -16,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,7 +28,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import static com.example.arrowdb.auxiliary.FilePathResource.BASE_DIRECTORY_PERSPECTIVE;
