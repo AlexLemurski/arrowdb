@@ -137,6 +137,7 @@ public class WorkObject {
     @Column(name = "work_object_comment")
     private String workObjectComment;
 
+    @Audited
     @Column(name = "file_path")
     @Size(max = 1000)
     private String filePath;

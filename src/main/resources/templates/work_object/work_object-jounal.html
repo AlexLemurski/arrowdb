@@ -42,32 +42,32 @@
             }
         </style>
         <div class="mainTable">
-            <table class="table table-hover table-sm" style="width: 4300px;">
+            <table class="table table-hover table-sm" style="width: 4300px">
                 <thead class="head">
                 <tr class="table-secondary" style="width: 150px; text-align: left; vertical-align: top">
-                    <th style="width: 150px;">Пользователь</th>
-                    <th style="width: 100px;">Дата и время изм.</th>
-                    <th style="width: 150px;">Статус:</th>
-                    <th style="width: 150px;">№ Заказа (внутр.)</th>
-                    <th style="width: 150px;">№ Лота</th>
-                    <th style="width: 300px;">Наименование объекта строительства</th>
-                    <th style="width: 200px;">Заказчик</th>
-                    <th style="width: 200px;">Номер договора Заказчик - Генподрядчик (Заказчик - ТИК)</th>
-                    <th style="width: 250px;">Генподрядчик</th>
-                    <th style="width: 200px;">Номер договора ТИК - Генподрядчик</th>
-                    <th style="width: 300px;">Предмет договора</th>
-                    <th style="width: 150px;">Сумма контракта ТИК - Генподрядчик (Заказчик), с НДС (20%)</th>
-                    <th style="width: 100px;">Аванс</th>
-                    <th style="width: 100px;">Срок контракта</th>
-                    <th style="width: 200px;">Руководитель проекта</th>
-                    <th style="width: 200px;">Ответственные ПТО</th>
-                    <th style="width: 300px;">Куратор от Заказчика</th>
-                    <th style="width: 300px;">Адрес/локация производства работ</th>
-                    <th style="width: 300px;">Адрес склада</th>
-                    <th style="width: 200px;">Ответственный за склад/инструмент</th>
-                    <th style="width: 200px;">Ответственные ОМТР</th>
-                    <th style="width: 300px;">Комментарий</th>
-
+                    <th style="width: 150px">Пользователь</th>
+                    <th style="width: 100px">Дата и время изм.</th>
+                    <th style="width: 150px">Статус:</th>
+                    <th style="width: 150px">№ Заказа (внутр.)</th>
+                    <th style="width: 150px">№ Лота</th>
+                    <th style="width: 300px">Наименование объекта строительства</th>
+                    <th style="width: 200px">Заказчик</th>
+                    <th style="width: 200px">Номер договора Заказчик - Генподрядчик (Заказчик - ТИК)</th>
+                    <th style="width: 250px">Генподрядчик</th>
+                    <th style="width: 200px">Номер договора ТИК - Генподрядчик</th>
+                    <th style="width: 300px">Предмет договора</th>
+                    <th style="width: 150px">Сумма контракта ТИК - Генподрядчик (Заказчик), с НДС (20%)</th>
+                    <th style="width: 100px">Аванс</th>
+                    <th style="width: 100px">Срок контракта</th>
+                    <th style="width: 200px">Руководитель проекта</th>
+                    <th style="width: 200px">Ответственные ПТО</th>
+                    <th style="width: 300px">Куратор от Заказчика</th>
+                    <th style="width: 300px">Адрес/локация производства работ</th>
+                    <th style="width: 300px">Адрес склада</th>
+                    <th style="width: 200px">Ответственный за склад/инструмент</th>
+                    <th style="width: 200px">Ответственные ОМТР</th>
+                    <th style="width: 300px">Сетевая папка с полным проектом</th>
+                    <th style="width: 300px">Комментарий</th>
                 </tr>
                 </thead>
                 <tbody class="body">
@@ -88,26 +88,13 @@
                     <td th:text="${w_obj.valueOfDeposit}">
                     <td th:text="${'Начало: ' + w_obj.dateOfStart + ' Окончание: ' + w_obj.dateOfEnd}">
                     <td th:text="${w_obj.workObjectChief}">
-
-<!--                    <td><span th:each="pto:${w_obj.PTOAUDList}">-->
-<!--                    <span th:text="${pto}"></span><br></span></td>-->
-
                     <td th:text="${w_obj.PTOListString}">
-
                     <td style="white-space: pre-wrap" th:text="${w_obj.chiefOfCustomer}">
                     <td th:text="${w_obj.workObjectLocalAddress}">
                     <td th:text="${w_obj.workObjectStorageAddress}">
-
-<!--                    <td><span th:each="skeep:${w_obj.storeKeeperAUDList}">-->
-<!--                    <span th:text="${skeep}"></span><br></span></td>-->
-
                     <td th:text="${w_obj.storeKeeperString}">
-
-<!--                    <td><span th:each="suppl:${w_obj.supplierAUDList}">-->
-<!--                    <span th:text="${suppl}"></span><br></span></td>-->
-
                     <td th:text="${w_obj.supplierListString}">
-
+                    <td th:text="${w_obj.filePath}">
                     <td style="white-space: pre-wrap" th:text="${w_obj.workObjectComment}">
                 </tbody>
             </table>

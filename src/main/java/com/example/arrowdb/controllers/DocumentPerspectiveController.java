@@ -1,6 +1,8 @@
 package com.example.arrowdb.controllers;
 
+import com.example.arrowdb.auxiliary.ExcelReader;
 import com.example.arrowdb.entity.DocumentPerspective;
+import com.example.arrowdb.entity.PerspectiveObject;
 import com.example.arrowdb.entity.Users;
 import com.example.arrowdb.services.DocumentPerspectiveService;
 import com.example.arrowdb.services.PerspectiveObjectService;
@@ -33,6 +35,7 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 
 import static com.example.arrowdb.auxiliary.FilePathResource.FILES_DIRECTORY;
+import static com.example.arrowdb.auxiliary.FilePathResource.PERSPECTIVE_DIRECTORY;
 import static com.example.arrowdb.auxiliary.KeyGenerator.generateKey;
 
 @Controller
@@ -42,6 +45,7 @@ public class DocumentPerspectiveController {
     private final DocumentPerspectiveService documentPerspectiveService;
     private final PerspectiveObjectService perspectiveObjectService;
     private final UsersService usersService;
+    private final ExcelReader excelReader;
 
     @GetMapping("/general/perspective/perspectiveDocument/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PERSPECTIVE_DOCUMENTS', 'ROLE_PERSPECTIVE_VIEW')")
@@ -55,53 +59,64 @@ public class DocumentPerspectiveController {
 
     @SneakyThrows
     @PostMapping("/general/perspective/perspectiveViewEquip/{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PERSPECTIVE_DOCUMENTS')")
+//    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     public String uploadMultipleFilesEquip(@PathVariable("id") Integer id,
-                                      @RequestParam("files") MultipartFile[] files) {
+                                      @RequestParam("files") MultipartFile file) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
         Users users = usersService.findUsersByUserName(userDetails.getUsername());
-        for (MultipartFile file : files) {
+//        for (MultipartFile file : files) {
             String key = generateKey(file.getName());
             DocumentPerspective documentPerspective = new DocumentPerspective(file.getOriginalFilename(),
                     file.getContentType(), key, users, LocalDateTime.now(), perspectiveObjectService
                     .findPerspectiveObjectById(id), 0);
-            Path path = Paths.get(String.valueOf(new File(FILES_DIRECTORY)), key);
+            Path path = Paths.get(String.valueOf(new File(PERSPECTIVE_DIRECTORY)), key);
             Path filePath = Files.createFile(path);
             try (FileOutputStream stream = new FileOutputStream(filePath.toString())) {
                 stream.write(file.getBytes());
             }
+            PerspectiveObject perspectiveObject = perspectiveObjectService.findPerspectiveObjectById(id);
+            String filePathForParsing = PERSPECTIVE_DIRECTORY + "\\" + key;
             documentPerspectiveService.saveDocument(documentPerspective);
-        }
-        return "redirect:/general/perspective/perspectiveDocument/%d".formatted(id);
+            perspectiveObject.setTotalPrice(excelReader
+                    .getValueOfEquipments(filePathForParsing, 0, 3, 3 ));
+            perspectiveObject.setSuccessCount(excelReader
+                    .getValueOfEquipments(filePathForParsing, 0, 3, 4 ));
+            perspectiveObject.setTotalCount(excelReader
+                    .getValueOfEquipments(filePathForParsing, 0, 3, 5 ));
+            perspectiveObject.setPercentOfSuccess(excelReader
+                    .getValueOfEquipments(filePathForParsing, 0, 3, 6 ));
+            perspectiveObjectService.savePerspectiveObject(perspectiveObject);
+//        }
+        return "redirect:/general/perspective/perspectiveView/%d".formatted(id);
     }
 
     @SneakyThrows
     @PostMapping("/general/perspective/perspectiveViewWork/{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PERSPECTIVE_DOCUMENTS')")
+//    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PERSPECTIVE_DOCUMENTS')")
     public String uploadMultipleFilesWork(@PathVariable("id") Integer id,
-                                           @RequestParam("files") MultipartFile[] files) {
+                                           @RequestParam("files") MultipartFile file) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
         Users users = usersService.findUsersByUserName(userDetails.getUsername());
-        for (MultipartFile file : files) {
+//        for (MultipartFile file : files) {
             String key = generateKey(file.getName());
             DocumentPerspective documentPerspective = new DocumentPerspective(file.getOriginalFilename(),
                     file.getContentType(), key, users, LocalDateTime.now(), perspectiveObjectService
                     .findPerspectiveObjectById(id), 1);
-            Path path = Paths.get(String.valueOf(new File(FILES_DIRECTORY)), key);
+            Path path = Paths.get(String.valueOf(new File(PERSPECTIVE_DIRECTORY)), key);
             Path filePath = Files.createFile(path);
             try (FileOutputStream stream = new FileOutputStream(filePath.toString())) {
                 stream.write(file.getBytes());
-            }
+//            }
             documentPerspectiveService.saveDocument(documentPerspective);
         }
-        return "redirect:/general/perspective/perspectiveDocument/%d".formatted(id);
+        return "redirect:/general/perspective/perspectiveView/%d".formatted(id);
     }
 
     @SneakyThrows
     @PostMapping("/general/perspective/perspectiveViewBonus/{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PERSPECTIVE_DOCUMENTS')")
+//    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PERSPECTIVE_DOCUMENTS')")
     public String uploadMultipleFilesBonus(@PathVariable("id") Integer id,
                                           @RequestParam("files") MultipartFile[] files) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
@@ -112,14 +127,14 @@ public class DocumentPerspectiveController {
             DocumentPerspective documentPerspective = new DocumentPerspective(file.getOriginalFilename(),
                     file.getContentType(), key, users, LocalDateTime.now(), perspectiveObjectService
                     .findPerspectiveObjectById(id), 2);
-            Path path = Paths.get(String.valueOf(new File(FILES_DIRECTORY)), key);
+            Path path = Paths.get(String.valueOf(new File(PERSPECTIVE_DIRECTORY)), key);
             Path filePath = Files.createFile(path);
             try (FileOutputStream stream = new FileOutputStream(filePath.toString())) {
                 stream.write(file.getBytes());
             }
             documentPerspectiveService.saveDocument(documentPerspective);
         }
-        return "redirect:/general/perspective/perspectiveDocument/%d".formatted(id);
+        return "redirect:/general/perspective/perspectiveView/%d".formatted(id);
     }
 
     @GetMapping("/general/documentPerspective/downloadFile/{id}")
@@ -136,26 +151,32 @@ public class DocumentPerspectiveController {
     }
 
     @GetMapping("/general/documentPerspective/documentDeleteEquip/{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PERSPECTIVE_DOCUMENTS')")
+//    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PERSPECTIVE_DOCUMENTS')")
     public String deleteDocumentEquip(@PathVariable("id") Integer id) {
         int depId = documentPerspectiveService.getDocumentById(id).getPerspectiveObject().getPerspectiveId();
+        PerspectiveObject perspectiveObject = perspectiveObjectService.findPerspectiveObjectById(depId);
+        perspectiveObject.setTotalPrice(null);
+        perspectiveObject.setSuccessCount(null);
+        perspectiveObject.setTotalCount(null);
+        perspectiveObject.setPercentOfSuccess(null);
+        perspectiveObjectService.savePerspectiveObject(perspectiveObject);
         documentPerspectiveService.deleteDocumentById(id);
-        return "redirect:/general/perspective/perspectiveDocument/%d".formatted(depId);
+        return "redirect:/general/perspective/perspectiveView/%d".formatted(depId);
     }
 
     @GetMapping("/general/documentPerspective/documentDeleteWork/{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PERSPECTIVE_DOCUMENTS')")
+//    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PERSPECTIVE_DOCUMENTS')")
     public String deleteDocumentWork(@PathVariable("id") Integer id) {
         int depId = documentPerspectiveService.getDocumentById(id).getPerspectiveObject().getPerspectiveId();
         documentPerspectiveService.deleteDocumentById(id);
-        return "redirect:/general/perspective/perspectiveDocument/%d".formatted(depId);
+        return "redirect:/general/perspective/perspectiveView/%d".formatted(depId);
     }
 
     @GetMapping("/general/documentPerspective/documentDeleteBonus/{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PERSPECTIVE_DOCUMENTS')")
+//    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PERSPECTIVE_DOCUMENTS')")
     public String deleteDocumentBonus(@PathVariable("id") Integer id) {
         int depId = documentPerspectiveService.getDocumentById(id).getPerspectiveObject().getPerspectiveId();
         documentPerspectiveService.deleteDocumentById(id);
-        return "redirect:/general/perspective/perspectiveDocument/%d".formatted(depId);
+        return "redirect:/general/perspective/perspectiveView/%d".formatted(depId);
     }
 }

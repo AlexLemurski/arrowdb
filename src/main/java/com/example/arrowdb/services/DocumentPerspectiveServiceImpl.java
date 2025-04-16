@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.example.arrowdb.auxiliary.FilePathResource.FILES_DIRECTORY;
+import static com.example.arrowdb.auxiliary.FilePathResource.PERSPECTIVE_DIRECTORY;
 
 @Service
 @RequiredArgsConstructor
@@ -52,7 +53,7 @@ public class DocumentPerspectiveServiceImpl implements DocumentPerspectiveServic
     @Transactional(rollbackFor = {IOException.class})
     public void deleteDocumentById(Integer id) {
         DocumentPerspective documentPerspective = getDocumentById(id);
-        Path path = Paths.get(new File(FILES_DIRECTORY) + "/" + documentPerspective.getKey());
+        Path path = Paths.get(new File(PERSPECTIVE_DIRECTORY) + "/" + documentPerspective.getKey());
         try {
             Files.delete(path);
         } catch (IOException e) {
@@ -64,7 +65,7 @@ public class DocumentPerspectiveServiceImpl implements DocumentPerspectiveServic
     @Override
     @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public Resource downloadDocumentByKey(String key) throws IOException {
-        Path path = Paths.get(new File(FILES_DIRECTORY) + "/" + key);
+        Path path = Paths.get(new File(PERSPECTIVE_DIRECTORY) + "/" + key);
         Resource resource = new UrlResource(path.toUri());
         if (resource.exists() || resource.isReadable()) {
             return resource;

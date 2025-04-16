@@ -24,6 +24,12 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
 
     @Query("""
             select e from Employee e
+            where e.account.userName=:name
+            """)
+    Employee findEmployeeByUserName(String name);
+
+    @Query("""
+            select e from Employee e
             where e.employeeStatusENUM != 0 and e.employeeStatusENUM != 5
             order by e.empId
             """)

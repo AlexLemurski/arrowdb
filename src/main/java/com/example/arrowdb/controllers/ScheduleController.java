@@ -22,6 +22,7 @@ public class ScheduleController {
                 departmentService.findAllDepartmentsForSchedule());
         model.addAttribute("employeeStatusList",
                 Arrays.stream(EmployeeStatusENUM.values())
+                        .filter(e -> !e.equals(EmployeeStatusENUM.DRAFT))
                         .filter(e -> !e.equals(EmployeeStatusENUM.CLOSED)));
         return "schedule/schedule-menu";
     }

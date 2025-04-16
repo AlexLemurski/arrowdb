@@ -6,92 +6,341 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <title>Arrow</title>
+    <style>
+        .main-table {
+            display: block;
+            width: 100%;
+            height: 750px;
+            border-collapse: separate;
+            border-spacing: 0;
+            overflow-y: scroll;
+            -moz-hyphens: auto;
+            -webkit-hyphens: auto;
+            -ms-hyphens: auto;
+        }
+
+        .head {
+            position: sticky;
+            top: 0;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        /* NAVBAR */
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            background-color: rgb(0, 0, 0);
+        }
+
+        .nav-container > nav > ul {
+            display: flex;
+            list-style: none;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-container > nav > ul > li > a {
+            display: block;
+            border-style: solid;
+            border-width: 0.5px;
+        }
+
+        @media (max-width: 900px) {
+            .nav-container {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 <body>
-<div class="tableContainer m-4" style="font-size: 15px">
-    <div>
-        <a th:href="@{/general}">
-            <button type="button" class="btn btn-outline-warning btn-sm">Главное меню</button>
-        </a>
+<head>
+    <div class="section">
+        <div class="nav-container">
+            <nav>
+                <ul>
+                    <li>
+                        <form th:action="@{/logout}" method="post">
+                            <input type="submit" class="btn btn-danger btn-sm m-2" value="Выход">
+                        </form>
+                    </li>
+                    <li>
+                        <div class="btn-group m-2">
+
+                            <a th:href="@{/general}">
+                                <button type="button" class="btn btn-light btn-sm">Главное меню</button>
+                            </a>
+                            <button type="button" class="btn btn-light btn-sm dropdown-toggle dropdown-toggle-split"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                            </button>
+                            <ul class="dropdown-menu"
+                                style="width: 700px; justify-content: space-between; text-align: center">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-lg-12 col-md-12">
+                                            <div class="content row">
+                                                <div class="column col-lg-4 col-md-6">
+                                                    <div class="name-of-column mb-2">
+                                                        <span>ПЕРСОНАЛ</span>
+                                                    </div>
+                                                    <div
+                                                            sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE_VIEW')">
+                                                        <a th:href="@{/general/employee}">
+                                                            <button style="width: 210px; text-align: center"
+                                                                    type="button"
+                                                                    class="btn btn-outline-success btn-sm">
+                                                                Работники
+                                                            </button>
+                                                        </a>
+                                                    </div>
+                                                    <div
+                                                            sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_PROFESSION_VIEW')">
+                                                        <a th:href="@{/general/profession}">
+                                                            <button style="width: 210px; text-align: center"
+                                                                    type="button"
+                                                                    class="btn btn-outline-success btn-sm">
+                                                                Должности
+                                                            </button>
+                                                        </a>
+                                                    </div>
+                                                    <div
+                                                            sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_DEPARTMENT_VIEW')">
+                                                        <a th:href="@{/general/department}">
+                                                            <button style="width: 210px; text-align: center"
+                                                                    type="button"
+                                                                    class="btn btn-outline-success btn-sm">
+                                                                Структурные подразделения
+                                                            </button>
+                                                        </a>
+                                                    </div>
+                                                    <div
+                                                            sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_SCHEDULE_VIEW')">
+                                                        <a th:href="@{/general/schedule}">
+                                                            <button style="width: 210px; text-align: center"
+                                                                    type="button"
+                                                                    class="btn btn-outline-success btn-sm">
+                                                                Штатное расписание
+                                                            </button>
+                                                        </a>
+                                                    </div>
+                                                    <div
+                                                            sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_VOCATION_VIEW')">
+                                                        <a th:href="@{/general/vocation}">
+                                                            <button style="width: 210px; text-align: center"
+                                                                    type="button"
+                                                                    class="btn btn-outline-success btn-sm">
+                                                                График отпусков
+                                                            </button>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4 col-md-6">
+                                                    <div class="name-of-column mb-2">
+                                                        <span>АКТИВЫ</span>
+                                                    </div>
+                                                    <div
+                                                            sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STORE_PERS_INSTR_VIEW')">
+                                                        <a th:href="@{/general/p_instrument/catalog}">
+                                                            <button style="width: 210px; text-align: center"
+                                                                    type="button"
+                                                                    class="btn btn-outline-success btn-sm">
+                                                                Инструмент персональный
+                                                            </button>
+                                                        </a>
+                                                    </div>
+                                                    <div
+                                                            sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STORE_WORK_INSTR_VIEW')">
+                                                        <a th:href="@{/general/w_instrument/catalog}">
+                                                            <button style="width: 210px; text-align: center"
+                                                                    type="button"
+                                                                    class="btn btn-outline-success btn-sm">
+                                                                Инструмент строительный
+                                                            </button>
+                                                        </a>
+                                                    </div>
+                                                    <div
+                                                            sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STORE_MEAS_INSTR_VIEW')">
+                                                        <a th:href="@{/general/m_instrument/catalog}">
+                                                            <button style="width: 210px; text-align: center"
+                                                                    type="button"
+                                                                    class="btn btn-outline-success btn-sm">
+                                                                Инструмент измерительный
+                                                            </button>
+                                                        </a>
+                                                    </div>
+                                                    <div
+                                                            sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STORE_SCLOTH_VIEW')">
+                                                        <a th:href="@{/general/s_cloth/catalog}">
+                                                            <button style="width: 210px; text-align: center"
+                                                                    type="button"
+                                                                    class="btn btn-outline-success btn-sm">
+                                                                Спецодежда и СИЗ
+                                                            </button>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4 col-md-6">
+                                                    <div class="name-of-column mb-2">
+                                                        <span>ДЕЯТЕЛЬНОСТЬ</span>
+                                                    </div>
+                                                    <div
+                                                            sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_WORK_OBJECT_VIEW')">
+                                                        <a th:href="@{/general/workobject}">
+                                                            <button style="width: 210px; text-align: center"
+                                                                    type="button"
+                                                                    class="btn btn-outline-success btn-sm">
+                                                                Объекты работ
+                                                            </button>
+                                                        </a>
+                                                    </div>
+                                                    <div
+                                                            sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_CONSTR_CONTROL_VIEW')">
+                                                        <a th:href="@{/general/constr_control}">
+                                                            <button style="width: 210px; text-align: center"
+                                                                    type="button"
+                                                                    class="btn btn-outline-success btn-sm">
+                                                                Строительный контроль
+                                                            </button>
+                                                        </a>
+                                                    </div>
+                                                    <div
+                                                            sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_DOCUMENT_VIEW')">
+                                                        <a th:href="@{/general/documentCommunity}">
+                                                            <button style="width: 210px; text-align: center"
+                                                                    type="button"
+                                                                    class="btn btn-outline-success btn-sm">
+                                                                Документация общества
+                                                            </button>
+                                                        </a>
+                                                    </div>
+                                                    <div
+                                                            sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_PERSPECTIVE_VIEW')">
+                                                        <a th:href="@{/general/perspective}">
+                                                            <button style="width: 210px; text-align: center"
+                                                                    type="button"
+                                                                    class="btn btn-outline-success btn-sm">
+                                                                Перспективные объекты
+                                                            </button>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_PERSPECTIVE_CREATE')">
+                            <a th:href="@{/general/perspective/perspectiveCreate}"
+                               class="btn btn-success btn-sm m-2">Создать новый перспективный объект</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </div>
+    <title></title>
+</head>
+<div class="tableContainer m-2">
+    <h5 style="font-weight: 700">Работники</h5>
     <hr>
-    <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_PERSPECTIVE_CREATE')">
-        <a th:href="@{/general/perspective/perspectiveCreate}" class="btn btn-outline-success btn-sm">
-            Создать новый перспективный объект</a>
-    </div>
-    <br>
-    <div class="pageName">
-        <h4>Перспективные объекты</h4>
-    </div>
-    <div>
-        <style>
-            .mainTable{
-                display: block;
-                width: 100%;
-                height: 650px;
-                border-collapse: separate;
-                border-spacing: 0;
-                overflow-y: scroll;
-                -moz-hyphens: auto;
-                -webkit-hyphens: auto;
-                -ms-hyphens: auto;
-            }
-            .head{
-                position: sticky;
-                top: 0;
-                text-align: left; vertical-align: top;
-            }
-        </style>
-        <form th:action="@{/general/perspective}" th:method="get">
-        <table class="table-sm " style="width: 1800px">
+    <form th:action="@{/general/perspective}" th:method="get">
+        <table class="table-sm " style="width: 1835px">
             <tbody class="bodySearch">
             <td style="width: 100px; text-align: left">Поиск...
             <th style="width: 200px; text-align: left">
-                <input type="text" style="width: 120px; height: 27px" id="byLot" onkeyup="myFunctionLOT()">
+                <input type="text" style="width: 150px; height: 27px" id="byLot" onkeyup="myFunctionLOT()">
             </th>
             <th style="width: 400px; text-align: left">
-                <input type="text" style="width: 250px; height: 27px" id="byObject" onkeyup="myFunctionOBJECT()">
+                <input type="text" style="width: 300px; height: 27px" id="byObject" onkeyup="myFunctionOBJECT()">
             </th>
             <th style="width: 200px; text-align: left">
-                <input type="text" style="width: 120px; height: 27px" id="byCustomer" onkeyup="myFunctionCUSTOMER()">
+                <input type="text" style="width: 150px; height: 27px" id="byCustomer" onkeyup="myFunctionCUSTOMER()">
             </th>
             <th style="width: 250px; text-align: left">
-                <input type="text" style="width: 120px; height: 27px" id="byObserve" onkeyup="myFunctionOBSERVE()">
+                <input type="text" style="width: 150px; height: 27px" id="byObserve" onkeyup="myFunctionOBSERVE()">
             </th>
             <th style="width: 250px; text-align: left">
-                <input type="text" style="width: 120px; height: 27px" id="byExec" onkeyup="myFunctionEXEC()">
+                <input type="text" style="width: 150px; height: 27px" id="byExec" onkeyup="myFunctionEXEC()">
             </th>
             <th style="width: 150px; text-align: left">
-                <input type="text" style="width: 120px; height: 27px" id="byStat" onkeyup="myFunctionSTAT()">
-            </th>
             <th style="width: 100px">
+                <input type="text" style="width: 80px; height: 27px" id="byDate" onkeyup="myFunctionDATE()">
+            </th>
             <th style="width: 100px; text-align: center">
-                <button class="btn btn-outline-dark btn-sm" id="resetButton">Очистить</button>
+                <button class="btn btn-outline-dark btn-sm" id="resetFilters">Сбросить</button>
             </tbody>
         </table>
-        </form>
-        <div class="mainTable">
-            <table class="table table-hover table-sm" style="width: 1800px;" id="prof-table">
-                <thead class="head table-group-divider">
-                <tr class="table-secondary" style="width: 150px; text-align: left; vertical-align: top">
-                    <th style="width: 100px; text-align: left">#ID</th>
-                    <th onclick="sortTable(0)" style="width: 200px; text-align: left">Лот №</th>
-                    <th onclick="sortTable(1)" style="width: 400px; text-align: left">Наименование объекта</th>
-                    <th onclick="sortTable(2)" style="width: 200px; text-align: left">Заказчик</th>
-                    <th style="width: 250px; text-align: left">Наблюдатели</th>
-                    <th style="width: 250px; text-align: left">Исполнители</th>
-                    <th onclick="sortTable(5)" style="width: 150px; text-align: left">Статус задания</th>
-                    <th onclick="sortTable(6)" style="width: 100px; text-align: left">Срок выполнения</th>
-                    <th style="width: 100px; text-align: center">Действие</th>
-                </tr>
-                </thead>
-                <tbody class="body table-group-divider">
-                <tr th:each="pers:${perspectiveList}">
-                    <th th:text="${pers.perspectiveId}"/>
-                    <td th:text="${pers.perspectiveLot}"/>
-                    <td th:text="${pers.perspectiveName}"/>
-                    <td th:text="${pers.generalContractor}"/>
-                    <td><span th:with="x=${pers.employeeObserverList.size() != 0}">
+    </form>
+    <div class="main-table">
+        <table class="table table-hover table-sm" style="width: 1835px" id="prof-table">
+            <thead class="head table-group-divider">
+            <tr class="table-secondary" style="width: 150px; text-align: left; vertical-align: top">
+                <th style="width: 100px; text-align: left">#ID</th>
+                <th style="width: 200px">
+                    <button onclick="sortTable(0)" type="button" class="btn btn-outline-dark btn-sm"
+                            style="width: 150px;text-align: left">Лот №
+                    </button>
+                </th>
+                <th style="width: 400px">
+                    <button onclick="sortTable(1)" type="button" class="btn btn-outline-dark btn-sm"
+                            style="width: 300px;text-align: left">Наименование объекта
+                    </button>
+                </th>
+                <th style="width: 200px">
+                    <button onclick="sortTable(2)" type="button" class="btn btn-outline-dark btn-sm"
+                            style="width: 150px;text-align: left">Заказчик
+                    </button>
+                </th>
+                <th style="width: 250px; text-align: left">
+                    <button onclick="sortTable(3)" type="button" class="btn btn-outline-dark btn-sm"
+                            style="width: 150px;text-align: left">Наблюдатели
+                    </button>
+                </th>
+                <th style="width: 250px; text-align: left">
+                    <button onclick="sortTable(4)" type="button" class="btn btn-outline-dark btn-sm"
+                            style="width: 150px;text-align: left">Исполнители
+                    </button>
+                </th>
+                <th style="width: 150px">
+                    <div class="btn-group">
+                        <button onclick="sortTable(5)" type="button" class="btn btn-outline-dark btn-sm"
+                                style="width: 100px; text-align: left">Статус
+                        </button>
+                        <button type="button" class="btn btn-outline-dark btn-sm dropdown-toggle"
+                                data-bs-toggle="dropdown" aria-expanded="false"
+                                data-bs-auto-close="outside">
+                        </button>
+                        <ul class="dropdown-menu" style="width: 200px; justify-content:
+                                    space-between; text-align: left">
+                                    <span th:each="stat:${perspectiveStatusList}">
+                                        <span><label>
+                                            <input th:type="checkbox" name="perspectiveStatusList"
+                                                   class="status-filter mx-2"
+                                                   th:value="${stat.getTitle()}"
+                                                   th:text="${stat.getTitle()}" style="font-size: 14px">
+                                        </label></span><br></span>
+                        </ul>
+                    </div>
+                </th>
+                <th style="width: 100px">
+                    <button onclick="sortTable(6)" type="button" class="btn btn-outline-dark btn-sm"
+                            style="width: 80px;text-align: left">Срок
+                    </button>
+                </th>
+                <th style="width: 100px; text-align: center">Действие</th>
+            </tr>
+            </thead>
+            <tbody class="body table-group-divider">
+            <tr th:each="pers:${perspectiveList}">
+                <th th:text="${pers.perspectiveId}"/>
+                <td th:text="${pers.perspectiveLot}"/>
+                <td th:text="${pers.perspectiveName}"/>
+                <td th:text="${pers.generalContractor}"/>
+                <td><span th:with="x=${pers.employeeObserverList.size() != 0}">
                         <span th:if="${x}">
                     <span th:each="emp:${pers.employeeObserverList}">
                     <a th:href="@{/general/employee/employeeView/{id}(id=${emp.empId})}">
@@ -104,8 +353,8 @@
                             <span style="color: rgba(0,0,0,0.5)" th:text="${'не назначены'}"></span>
                         </span>
                     </span>
-                    </td>
-                    <td>
+                </td>
+                <td>
                         <span th:with="x=${pers.employeeEquipmentList.size() != 0 || pers.employeeWorkList.size() != 0}">
                             <span th:each="emp:${pers.employeeEquipmentList}">
                                 <a th:href="@{/general/employee/employeeView/{id}(id=${emp.empId})}">
@@ -121,8 +370,8 @@
                                 <span style="color: rgba(0,0,0,0.5)" th:text="${'не назначены'}"></span>
                             </span>
                         </span>
-                    </td>
-                    <td><span th:with="x=${pers.perspectiveObjectENUM.getTitle().equals('Завершено')}">
+                </td>
+                <td><span th:with="x=${pers.perspectiveObjectENUM.getTitle().equals('Завершено')}">
                         <span th:if="${x}">
                             <span th:text="${pers.perspectiveObjectENUM.getTitle()} +
                             ${#temporals.format(pers.dateOfEnd, ' dd-MM-yyyy HH:mm:ss')}"></span>
@@ -131,7 +380,7 @@
                             <span th:text="${pers.perspectiveObjectENUM.getTitle()}"></span>
                         </span>
                     </span>
-                    <td><span th:with="x=${pers.dateOfDeadline!= null}">
+                <td><span th:with="x=${pers.dateOfDeadline!= null}">
                         <span th:if="${x}">
                     <span th:text="${#temporals.format(pers.dateOfDeadline, 'dd-MM-yyyy')}"></span>
                         </span>
@@ -139,171 +388,219 @@
                             <span style="color: rgba(0,0,0,0.5)" th:text="${'не задана'}"></span>
                         </span>
                     </span></td>
-                    <td style="width: 100px; text-align: center">
-                        <a th:href="@{/general/perspective/perspectiveView/{id}(id=${pers.perspectiveId})}">
-                        <button type="button" class="btn btn-outline-primary btn-sm">Просмотр</button>
+                <td style="width: 100px; text-align: center">
+                    <a th:href="@{/general/perspective/perspectiveView/{id}(id=${pers.perspectiveId})}">
+                        <button type="button" class="btn btn-primary btn-sm">Просмотр</button>
                     </a>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+            </tr>
+            </tbody>
+        </table>
     </div>
-    <script>
-        function sortTable(n) {
-            let table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-            table = document.getElementById("prof-table");
-            switching = true;
-            dir = "asc";
-            while (switching) {
-                switching = false;
-                rows = table.getElementsByTagName("TR");
-                for (i = 1; i < (rows.length - 1); i++) {
-                    shouldSwitch = false;
-                    x = rows[i].getElementsByTagName("TD")[n];
-                    y = rows[i + 1].getElementsByTagName("TD")[n];
-                    if (dir === "asc") {
-                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-                            shouldSwitch = true;
-                            break;
-                        }
-                    } else if (dir === "desc") {
-                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-                            shouldSwitch = true;
-                            break;
-                        }
-                    }
-                }
-                if (shouldSwitch) {
-                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-                    switching = true;
-                    switchcount++;
-                } else {
-                    if (switchcount === 0 && dir === "asc") {
-                        dir = "desc";
-                        switching = true;
-                    }
-                }
-            }
-        }
-    </script>
-    <script>
-        function myFunctionLOT() {
-            let input, filter, table, tr, td, i;
-            input = document.getElementById("byLot");
-            filter = input.value.toUpperCase();
-            table = document.getElementById("prof-table");
-            tr = table.getElementsByTagName("tr");
-            for (i = 0; i < tr.length; i++) {
-                td = tr[i].getElementsByTagName("td")[0];
-                if (td) {
-                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                        tr[i].style.display = "";
-                    } else {
-                        tr[i].style.display = "none";
-                    }
-                }
-            }
-        }
-    </script>
-    <script>
-        function myFunctionOBJECT() {
-            let input, filter, table, tr, td, i;
-            input = document.getElementById("byObject");
-            filter = input.value.toUpperCase();
-            table = document.getElementById("prof-table");
-            tr = table.getElementsByTagName("tr");
-            for (i = 0; i < tr.length; i++) {
-                td = tr[i].getElementsByTagName("td")[1];
-                if (td) {
-                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                        tr[i].style.display = "";
-                    } else {
-                        tr[i].style.display = "none";
-                    }
-                }
-            }
-        }
-    </script>
-    <script>
-        function myFunctionCUSTOMER() {
-            let input, filter, table, tr, td, i;
-            input = document.getElementById("byCustomer");
-            filter = input.value.toUpperCase();
-            table = document.getElementById("prof-table");
-            tr = table.getElementsByTagName("tr");
-            for (i = 0; i < tr.length; i++) {
-                td = tr[i].getElementsByTagName("td")[2];
-                if (td) {
-                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                        tr[i].style.display = "";
-                    } else {
-                        tr[i].style.display = "none";
-                    }
-                }
-            }
-        }
-    </script>
-    <script>
-        function myFunctionOBSERVE() {
-            let input, filter, table, tr, td, i;
-            input = document.getElementById("byObserve");
-            filter = input.value.toUpperCase();
-            table = document.getElementById("prof-table");
-            tr = table.getElementsByTagName("tr");
-            for (i = 0; i < tr.length; i++) {
-                td = tr[i].getElementsByTagName("td")[3];
-                if (td) {
-                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                        tr[i].style.display = "";
-                    } else {
-                        tr[i].style.display = "none";
-                    }
-                }
-            }
-        }
-    </script>
-    <script>
-        function myFunctionEXEC() {
-            let input, filter, table, tr, td, i;
-            input = document.getElementById("byExec");
-            filter = input.value.toUpperCase();
-            table = document.getElementById("prof-table");
-            tr = table.getElementsByTagName("tr");
-            for (i = 0; i < tr.length; i++) {
-                td = tr[i].getElementsByTagName("td")[4];
-                if (td) {
-                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                        tr[i].style.display = "";
-                    } else {
-                        tr[i].style.display = "none";
-                    }
-                }
-            }
-        }
-    </script>
-    <script>
-        function myFunctionSTAT() {
-            let input, filter, table, tr, td, i;
-            input = document.getElementById("byStat");
-            filter = input.value.toUpperCase();
-            table = document.getElementById("prof-table");
-            tr = table.getElementsByTagName("tr");
-            for (i = 0; i < tr.length; i++) {
-                td = tr[i].getElementsByTagName("td")[5];
-                if (td) {
-                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                        tr[i].style.display = "";
-                    } else {
-                        tr[i].style.display = "none";
-                    }
-                }
-            }
-        }
-    </script>
-    <script>
-        document.getElementById("resetButton").reset();
-    </script>
 </div>
+<script>
+    function sortTable(n) {
+        let table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+        table = document.getElementById("prof-table");
+        switching = true;
+        dir = "asc";
+        while (switching) {
+            switching = false;
+            rows = table.getElementsByTagName("TR");
+            for (i = 1; i < (rows.length - 1); i++) {
+                shouldSwitch = false;
+                x = rows[i].getElementsByTagName("TD")[n];
+                y = rows[i + 1].getElementsByTagName("TD")[n];
+                if (dir === "asc") {
+                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                } else if (dir === "desc") {
+                    if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+            }
+            if (shouldSwitch) {
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+                switchcount++;
+            } else {
+                if (switchcount === 0 && dir === "asc") {
+                    dir = "desc";
+                    switching = true;
+                }
+            }
+        }
+    }
+</script>
+<script>
+    function myFunctionLOT() {
+        let input, filter, table, tr, td, i;
+        input = document.getElementById("byLot");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("prof-table");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+                if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+</script>
+<script>
+    function myFunctionOBJECT() {
+        let input, filter, table, tr, td, i;
+        input = document.getElementById("byObject");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("prof-table");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[1];
+            if (td) {
+                if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+</script>
+<script>
+    function myFunctionCUSTOMER() {
+        let input, filter, table, tr, td, i;
+        input = document.getElementById("byCustomer");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("prof-table");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[2];
+            if (td) {
+                if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+</script>
+<script>
+    function myFunctionOBSERVE() {
+        let input, filter, table, tr, td, i;
+        input = document.getElementById("byObserve");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("prof-table");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[3];
+            if (td) {
+                if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+</script>
+<script>
+    function myFunctionEXEC() {
+        let input, filter, table, tr, td, i;
+        input = document.getElementById("byExec");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("prof-table");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[4];
+            if (td) {
+                if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+</script>
+<script>
+    function myFunctionDATE() {
+        let input, filter, table, tr, td, i;
+        input = document.getElementById("byDate");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("prof-table");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[6];
+            if (td) {
+                if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+</script>
+<script>
+    // Восстанавливаем состояния чекбоксов
+    document.addEventListener('DOMContentLoaded', () => {
+        restoreCheckboxStates();
+        // Добавляем слушателей событий для чекбоксов
+        document.querySelectorAll('.status-filter').forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                updateCheckboxStates();
+                filterTable();
+            });
+        });
+        // Слушатель для кнопки сброса фильтров
+        document.getElementById('resetFilters').addEventListener('click', () => {
+            document.querySelectorAll('.status-filter').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            updateCheckboxStates();
+            filterTable();
+        });
+
+        // Функция фильтрации таблицы
+        function filterTable() {
+            const selectedValues1 = Array.from(document.querySelectorAll('.status-filter:checked'))
+                .map(cb => cb.value);
+            const rows = document.querySelectorAll('#prof-table tbody tr');
+            rows.forEach(row => {
+                const cell1 = row.cells[6].textContent;
+                const showRow = (selectedValues1.length === 0 || selectedValues1.includes(cell1));
+                row.style.display = showRow ? '' : 'none';
+            });
+        }
+
+        // Функция обновления состояния чекбоксов в localStorage
+        function updateCheckboxStates() {
+            const filterStates = {};
+            document.querySelectorAll('.status-filter').forEach(checkbox => {
+                filterStates[checkbox.value] = checkbox.checked;
+            });
+            localStorage.setItem('filterStates', JSON.stringify(filterStates));
+        }
+
+        // Функция восстановления состояния чекбоксов из localStorage
+        function restoreCheckboxStates() {
+            const filterStates = JSON.parse(localStorage.getItem('filterStates') || '{}');
+            document.querySelectorAll('.status-filter').forEach(checkbox => {
+                checkbox.checked = !!filterStates[checkbox.value];
+            });
+            filterTable();
+        }
+    });
+</script>
+<!-- Bootstrap 5.3 JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>

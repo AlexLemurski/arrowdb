@@ -44,7 +44,7 @@ public class PerspectiveObject {
     private String generalContractor;
 
     @NotBlank
-    @Size(min = 2, max = 1000, message = "Кол-во символов от 2 до 100")
+    @Size(min = 2, max = 10000, message = "Кол-во символов от 2 до 10000")
     @Column(name = "target", nullable = false)
     private String target;
 
@@ -57,6 +57,18 @@ public class PerspectiveObject {
     @Column(name = "file_path")
     @Size(max = 1000)
     private String filePath;
+
+    @Column(name = "total_price")
+    private String totalPrice;
+
+    @Column(name = "success_count")
+    private String successCount;
+
+    @Column(name = "total_count")
+    private String totalCount;
+
+    @Column(name = "percent_of_success")
+    private String percentOfSuccess;
 
     @Column(name = "status")
     private PerspectiveObjectENUM perspectiveObjectENUM;

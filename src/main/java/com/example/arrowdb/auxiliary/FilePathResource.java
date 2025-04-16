@@ -22,4 +22,6 @@ public class FilePathResource {
 
     public static String CONSTR_CONTROL_DIRECTORY = "@@@";
 
+    public static String PERSPECTIVE_DIRECTORY = "C:\\Users\\user\\Desktop\\perspective";
+
 }

@@ -27,4 +27,6 @@ public interface EmployeeService {
 
     List<Employee> findEmployeeMailSend();
 
+    Employee findEmployeeByUserName(String name);
+
 }

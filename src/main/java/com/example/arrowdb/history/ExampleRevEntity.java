@@ -1,5 +1,7 @@
 package com.example.arrowdb.history;
 
+import com.example.arrowdb.entity.Employee;
+import com.example.arrowdb.entity.Users;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.envers.RevisionEntity;
@@ -33,7 +35,12 @@ public class ExampleRevEntity {
     @LastModifiedBy
     private String userName;
 
+    @JoinColumn(name = "emp_user")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @LastModifiedBy
+    private Employee employee;
+
     @Column(name = "local_date_time_modified")
-    private LocalDateTime localDateTimeModified = LocalDateTime.now();
+    private LocalDateTime localDateTimeModified;
 
 }

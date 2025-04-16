@@ -97,6 +97,10 @@ public class WorkObjectAUD {
     @Column(name = "store_keeper_list_string")
     private String storeKeeperString;
 
+    @Column(name = "file_path")
+    @Size(max = 1000)
+    private String filePath;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "work_object_chief")
     private Employee workObjectChief;

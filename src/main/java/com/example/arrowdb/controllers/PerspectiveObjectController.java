@@ -5,13 +5,19 @@ import com.example.arrowdb.entity.Employee;
 import com.example.arrowdb.entity.PerspectiveObject;
 import com.example.arrowdb.enums.PerspectiveObjectENUM;
 import com.example.arrowdb.enums.ProfAndDepStatusENUM;
+import com.example.arrowdb.services.DocumentPerspectiveService;
 import com.example.arrowdb.services.EmployeeService;
 import com.example.arrowdb.services.PerspectiveObjectService;
+import com.example.arrowdb.services.UsersService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -37,6 +43,8 @@ public class PerspectiveObjectController {
 
     private final PerspectiveObjectService perspectiveObjectService;
     private final EmployeeService employeeService;
+    private final DocumentPerspectiveService documentPerspectiveService;
+    private final UsersService usersService;
 
     @GetMapping("/general/perspective/perspectiveDocument/path/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PERSPECTIVE_VIEW')")
@@ -97,15 +105,23 @@ public class PerspectiveObjectController {
     @GetMapping("/general/perspective")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PERSPECTIVE_VIEW')")
     public String getPerspectiveList(@NotNull Model model) {
-        List<PerspectiveObject> perspectiveList = perspectiveObjectService.findAllPerspectiveObjects();
-        model.addAttribute("perspectiveList", perspectiveList);
+        model.addAttribute("perspectiveList", perspectiveObjectService.findAllPerspectiveObjects());
+        model.addAttribute("perspectiveStatusList", PerspectiveObjectENUM.values());
         return "perspective/perspective-menu";
     }
 
     @GetMapping("/general/perspective/perspectiveView/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PERSPECTIVE_VIEW')")
-    public String findPerspectiveById(@PathVariable("id") int id, Model model) {
+    public String findPerspectiveById(@PathVariable("id") int id,
+                                      @AuthenticationPrincipal UserDetails userDetails,
+                                      Model model) {
         model.addAttribute("perspectiveObject", perspectiveObjectService.findPerspectiveObjectById(id));
+        model.addAttribute("documentListEquip", documentPerspectiveService.findAllByIndex(0, id));
+        model.addAttribute("documentListWork", documentPerspectiveService.findAllByIndex(1, id));
+        model.addAttribute("documentListBonus", documentPerspectiveService.findAllByIndex(2, id));
+        model.addAttribute("user", usersService.findUsersByUserName(userDetails.getUsername()));
+        model.addAttribute("adminAccept",
+                userDetails.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")));
         return "perspective/perspective-view";
     }
 
@@ -119,7 +135,8 @@ public class PerspectiveObjectController {
 
     @PostMapping("/general/perspective/perspectiveCreate")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PERSPECTIVE_CREATE')")
-    public String createPerspective(@Valid @ModelAttribute PerspectiveObject perspectiveObject,
+    public String createPerspective(@Valid @ModelAttribute(value = "perspectiveObject")
+                                        PerspectiveObject perspectiveObject,
                                    BindingResult bindingResult,
                                    Model model) {
         if (bindingResult.hasErrors()) {

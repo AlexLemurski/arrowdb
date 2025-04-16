@@ -11,6 +11,7 @@ import lombok.Setter;
 import org.hibernate.envers.AuditTable;
 import org.hibernate.envers.Audited;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -73,6 +74,7 @@ public class Employee {
 
     @Audited
     @PastOrPresent
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
     @Column(name = "hire_date")
     private LocalDate hireDate;
 
