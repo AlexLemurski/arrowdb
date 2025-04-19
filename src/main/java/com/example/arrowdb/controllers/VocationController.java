@@ -4,7 +4,9 @@ import com.example.arrowdb.entity.Employee;
 import com.example.arrowdb.entity.Vocation;
 import com.example.arrowdb.enums.EmployeeStatusENUM;
 import com.example.arrowdb.enums.VocationTypeENUM;
+import com.example.arrowdb.services.DepartmentService;
 import com.example.arrowdb.services.EmployeeService;
+import com.example.arrowdb.services.ProfessionService;
 import com.example.arrowdb.services.VocationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,11 +27,15 @@ public class VocationController {
 
     private final EmployeeService employeeService;
     private final VocationService vocationService;
+    private final ProfessionService professionService;
+    private final DepartmentService departmentService;
 
     @GetMapping("general/vocation")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_VOCATION_VIEW')")
     public String vocationList(@ModelAttribute Vocation vocation,
                                Model model) {
+        model.addAttribute("professionList", professionService.findAllActiveProfessions());
+        model.addAttribute("departmentList", departmentService.findAllActiveDepartments());
         model.addAttribute("employeeList", employeeService.findAllEmployeeForVocations());
         model.addAttribute("employeeStatusList", Arrays.stream(EmployeeStatusENUM.values())
                 .toList().stream()

@@ -505,10 +505,11 @@
             const selectedValues3 = Array.from(document.querySelectorAll('.status-filter:checked')).map(cb => cb.value);
             const rows = document.querySelectorAll('#employee-table tbody tr');
             rows.forEach(row => {
-                const cell1 = row.cells[4].textContent;
-                const cell2 = row.cells[5].textContent;
-                const cell3 = row.cells[6].textContent;
-                const showRow = (selectedValues1.length === 0 || selectedValues1.includes(cell1)) &&
+                const cell1 = row.cells[4].innerText;
+                const cell2 = row.cells[5].innerText;
+                const cell3 = row.cells[6].innerText;
+                const showRow =
+                    (selectedValues1.length === 0 || selectedValues1.includes(cell1)) &&
                     (selectedValues2.length === 0 || selectedValues2.includes(cell2)) &&
                     (selectedValues3.length === 0 || selectedValues3.includes(cell3));
                 row.style.display = showRow ? '' : 'none';

@@ -16,4 +16,6 @@ public interface WorkObjectService {
     WorkObject findWorkObjectByIdForConstructionControl(int id);
     List<WorkObject> findAllConstructionControlFoMainMenu();
 
+    List<WorkObject> findAllActiveWorkObject();
+
 }

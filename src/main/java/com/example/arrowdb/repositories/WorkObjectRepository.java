@@ -53,4 +53,11 @@ public interface WorkObjectRepository extends JpaRepository<WorkObject, Integer>
             """)
     List<WorkObject> findAllConstructionControlFoMainMenu();
 
+    @Query("""
+            select w from WorkObject w
+            where w.workObjectStatusENUM != 0 and w.workObjectStatusENUM != 3
+            order by w.workObjectId
+            """)
+    List<WorkObject> findAllActiveWorkObject();
+
 }

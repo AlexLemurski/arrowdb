@@ -178,6 +178,8 @@ public class PerspectiveObjectController {
     public String updatePerspective(@Valid @ModelAttribute PerspectiveObject perspectiveObject,
                                    BindingResult bindingResult,
                                    Model model) {
+        PerspectiveObject perspectiveObjectById = perspectiveObjectService
+                .findPerspectiveObjectById(perspectiveObject.getPerspectiveId());
         if (bindingResult.hasErrors()) {
             model.addAttribute("departmentStatus", ProfAndDepStatusENUM.values());
             model.addAttribute("employeeList", employeeService.findAllActiveEmployees());
@@ -187,6 +189,10 @@ public class PerspectiveObjectController {
                 if(perspectiveObject.getPerspectiveObjectENUM().equals(PerspectiveObjectENUM.ENDED)){
                     perspectiveObject.setDateOfEnd(LocalDateTime.now());
                 }
+                perspectiveObject.setTotalPrice(perspectiveObjectById.getTotalPrice());
+                perspectiveObject.setSuccessCount(perspectiveObjectById.getSuccessCount());
+                perspectiveObject.setTotalCount(perspectiveObjectById.getTotalCount());
+                perspectiveObject.setPercentOfSuccess(perspectiveObjectById.getPercentOfSuccess());
                 perspectiveObjectService.savePerspectiveObject(perspectiveObject);
                 return "redirect:/general/perspective/perspectiveView/%d"
                         .formatted(perspectiveObject.getPerspectiveId());

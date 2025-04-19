@@ -571,12 +571,11 @@
 
         // Функция фильтрации таблицы
         function filterTable() {
-            const selectedValues1 = Array.from(document.querySelectorAll('.status-filter:checked'))
-                .map(cb => cb.value);
+            const selectedValues = Array.from(document.querySelectorAll('.status-filter:checked')).map(cb => cb.value);
             const rows = document.querySelectorAll('#prof-table tbody tr');
             rows.forEach(row => {
-                const cell1 = row.cells[6].textContent;
-                const showRow = (selectedValues1.length === 0 || selectedValues1.includes(cell1));
+                const cell = row.cells[6].innerText;
+                const showRow = (selectedValues.length === 0 || selectedValues.some(e => cell.includes(e)));
                 row.style.display = showRow ? '' : 'none';
             });
         }

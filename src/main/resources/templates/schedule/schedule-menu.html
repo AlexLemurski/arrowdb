@@ -240,26 +240,22 @@
     <h5 style="font-weight: 700">Штатное расписание</h5>
     <hr>
     <div class="main-table">
-        <form th:action="@{/general/schedule}" th:method="get">
+        <form id="filter-form1">
             <table class="table table-hover table-sm" style="margin-bottom: 0">
                 <tbody class="bodySearch">
                 <tr>
                     <td style="width: 100px; text-align: left">Поиск...
-                    <th style="width: 400px">
-                        <input type="text" style="width: 250px; height: 27px" id="byDep"
-                               onkeyup="myFunctionDEP()"></th>
-                    <th style="width: 300px">
+                    <th style="width: 300px"></th>
+                    <th style="width: 250px">
                         <input type="text" style="width: 250px; height: 27px" id="byChief"
                                onkeyup="myFunctionCHIEF()"></th>
-                    <th style="width: 300px">
+                    <th style="width: 250px">
                         <input type="text" style="width: 250px; height: 27px" id="byEmp"
                                onkeyup="myFunctionEMP()"></th>
-                    <th style="width: 350px">
-                        <input type="text" style="width: 250px; height: 27px" id="byProf"
-                               onkeyup="myFunctionPROF()"></th>
+                    <th style="width: 300px"></th>
                     <th style="width: 150px">
                         <button style="width: 80px" class="btn btn-outline-dark btn-sm"
-                                id="resetFilters">Очистить
+                                id="resetFilters">Сбросить
                         </button>
                     </th>
                     <th style="width: 100px; text-align: center"></th>
@@ -267,37 +263,75 @@
                 </tbody>
             </table>
         </form>
+        <form id="filter-form2">
             <table class="table table-hover table-sm" id="schedule-table">
                 <thead>
                 <tr class="table-secondary" style="text-align: left; vertical-align: top">
                     <th style="width: 100px">#ID</th>
-                    <th style="width: 400px">
-                        <button onclick="sortTable(0)" type="button" class="btn btn-outline-dark btn-sm"
-                                style="width: 250px; text-align: left">Структурное подразделение
-                        </button></th>
                     <th style="width: 300px">
-                        <button onclick="sortTable(1)" type="button" class="btn btn-outline-dark btn-sm"
-                                style="width: 250px; text-align: left">Руководитель подразделения
-                        </button></th>
-                    <th style="width: 300px">
-                        <button onclick="sortTable(2)" type="button" class="btn btn-outline-dark btn-sm"
-                                style="width: 250px; text-align: left">Работники подразделения
-                        </button></th>
-                    <th style="width: 350px">
-                        <button onclick="sortTable(3)" type="button" class="btn btn-outline-dark btn-sm"
-                                style="width: 250px; text-align: left">Должность работника
-                        </button></th>
-                    <th style="width: 150px">
                         <div class="btn-group">
-                            <button onclick="sortTable(4)" type="button" class="btn btn-outline-dark btn-sm"
-                                    style="width: 100px;
-                                    text-align: left">Статус
+                            <button onclick="sortTable(0)" type="button" class="btn btn-outline-dark btn-sm"
+                                    style="width: 200px;
+                                    text-align: left">Подразделение
                             </button>
                             <button type="button" class="btn btn-outline-dark btn-sm dropdown-toggle"
                                     data-bs-toggle="dropdown" aria-expanded="false"
                                     data-bs-auto-close="outside">
                             </button>
-                            <ul class="dropdown-menu" style="width: 250px; justify-content:
+                            <ul class="dropdown-menu" style="width: 350px; justify-content:
+                                    space-between; text-align: left">
+                                    <span th:each="dep:${departmentListSort}">
+                                        <span><label>
+                                            <input th:type="checkbox" name="departmentListSort"
+                                                   class="department-filter mx-2"
+                                                   th:value="${dep}"
+                                                   th:text="${dep}" style="font-size: 14px">
+                                        </label></span><br></span>
+                            </ul>
+                        </div>
+                    </th>
+                    <th style="width: 250px">
+                        <button onclick="sortTable(1)" type="button" class="btn btn-outline-dark btn-sm"
+                                style="width: 250px; text-align: left">Руководитель подразделения
+                        </button>
+                    </th>
+                    <th style="width: 250px">
+                        <button onclick="sortTable(2)" type="button" class="btn btn-outline-dark btn-sm"
+                                style="width: 250px; text-align: left">Работники подразделения
+                        </button>
+                    </th>
+                    <th style="width: 300px">
+                        <div class="btn-group">
+                            <button onclick="sortTable(3)" type="button" class="btn btn-outline-dark btn-sm"
+                                    style="width: 200px;
+                                    text-align: left">Должность
+                            </button>
+                            <button type="button" class="btn btn-outline-dark btn-sm dropdown-toggle"
+                                    data-bs-toggle="dropdown" aria-expanded="false"
+                                    data-bs-auto-close="outside">
+                            </button>
+                            <ul class="dropdown-menu" style="width: 350px; justify-content:
+                                    space-between; text-align: left">
+                                    <span th:each="prof:${professionListSort}">
+                                        <span><label>
+                                            <input th:type="checkbox" name="professionListSort"
+                                                   class="profession-filter mx-2"
+                                                   th:value="${prof}"
+                                                   th:text="${prof}" style="font-size: 14px">
+                                        </label></span><br></span>
+                            </ul>
+                        </div>
+                    </th>
+                    <th style="width: 150px">
+                        <div class="btn-group">
+                            <button onclick="sortTable(4)" type="button" class="btn btn-outline-dark btn-sm"
+                                    style="width: 100px; text-align: left">Статус
+                            </button>
+                            <button type="button" class="btn btn-outline-dark btn-sm dropdown-toggle"
+                                    data-bs-toggle="dropdown" aria-expanded="false"
+                                    data-bs-auto-close="outside">
+                            </button>
+                            <ul class="dropdown-menu" style="width: 200px; justify-content:
                                     space-between; text-align: left">
                                     <span th:each="stat:${employeeStatusList}">
                                         <span><label>
@@ -318,43 +352,47 @@
                     <td>
                         <span style="display: none" th:text="${dep.depName}"></span>
                         <a th:href="@{/general/department/departmentView/{id}(id=${dep.depId})}">
-                        <button style="width: 380px; text-align: left"
-                                type="button" class="btn btn-outline-dark btn-sm">
-                            <span th:text="${dep}"></span></button>
-                    </a><br></td>
+                            <button style="width: 290px; text-align: left"
+                                    type="button" class="btn btn-outline-dark btn-sm">
+                                <span th:text="${dep}"></span></button></a>
+                    </td>
                     <td>
                         <span style="display: none" th:text="${dep.departmentChief}"></span>
                         <span th:if="${dep.departmentChief}">
                         <a th:href="@{/general/employee/employeeView/{id}(id=${dep.departmentChief.empId})}">
-                        <button style="width: 280px; text-align: left"
+                        <button style="width: 240px; text-align: left"
                                 type="button" class="btn btn-outline-dark btn-sm">
-                            <span th:text="${dep.departmentChief}"></span></button></a></span></td>
+                            <span th:text="${dep.departmentChief}"></span></button></a></span>
+                    </td>
                     <td>
-                        <span th:each="emp:${dep.personalOfDepartment}">
+                    <span th:each="emp:${dep.personalOfDepartment}">
                             <span style="display: none" th:text="${dep.personalOfDepartment}"></span>
                     <a th:href="@{/general/employee/employeeView/{id}(id=${emp.empId})}">
-                        <button style="text-align: left; width: 280px" type="button"
+                        <button style="text-align: left; width: 240px" type="button"
                                 class="btn btn-outline-dark btn-sm"><span
                                 th:text="${emp}">
-                        </span></button></a><br></span></td>
+                        </span></button></a></span>
+                    </td>
                     <td>
-                        <span th:each="prof:${dep.personalOfDepartment}">
-                            <span style="display: none" th:text="${prof.profession}"></span>
+                    <span th:each="prof:${dep.personalOfDepartment}">
+                            <span style="display: none" th:text="${prof.profession.professionName}"></span>
                     <a th:href="@{/general/profession/professionView/{id}(id=${prof.profession.profId})}">
-                        <button style="text-align: left; width: 340px" type="button"
+                        <button style="text-align: left; width: 290px" type="button"
                                 class="btn btn-outline-dark btn-sm"><span
-                                th:text="${prof.profession}"></span></button></a><br></span>
-
-                    <td><span th:each="stat:${dep.personalOfDepartment}">
-                    <a th:href="@{#}">
-                        <button style="text-align: left; width: 140px" type="button"
-                                class="btn btn-light btn-sm"><span
-                                th:text="${stat.getEmployeeStatusENUM().getTitle()}"></span></button></a><br></span>
+                                th:text="${prof.profession}"></span></button></a></span>
+                    </td>
+                    <td>
+                    <span th:each="stat:${dep.personalOfDepartment}">
+                            <a th:href="@{#}"><button style="width: 140px; text-align: left" type="button"
+                                                      class="btn btn-light btn-sm">
+                                <span th:text="${stat.getEmployeeStatusENUM().getTitle()}"></span></button></a></span>
+                    </td>
                 </tr>
                 </tbody>
             </table>
-        </div>
+        </form>
     </div>
+</div>
 <script>
     function sortTable(n) {
         let table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
@@ -388,25 +426,6 @@
                 if (switchcount === 0 && dir === "asc") {
                     dir = "desc";
                     switching = true;
-                }
-            }
-        }
-    }
-</script>
-<script>
-    function myFunctionDEP() {
-        let input, filter, table, tr, td, i;
-        input = document.getElementById("byDep");
-        filter = input.value.toUpperCase();
-        table = document.getElementById("schedule-table");
-        tr = table.getElementsByTagName("tr");
-        for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[0];
-            if (td) {
-                if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = "";
-                } else {
-                    tr[i].style.display = "none";
                 }
             }
         }
@@ -451,51 +470,41 @@
     }
 </script>
 <script>
-    function myFunctionPROF() {
-        let input, filter, table, tr, td, i;
-        input = document.getElementById("byProf");
-        filter = input.value.toUpperCase();
-        table = document.getElementById("schedule-table");
-        tr = table.getElementsByTagName("tr");
-        for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[3];
-            if (td) {
-                if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = "";
-                } else {
-                    tr[i].style.display = "none";
-                }
-            }
-        }
-    }
-</script>
-<script>
     // Восстанавливаем состояния чекбоксов
     document.addEventListener('DOMContentLoaded', () => {
         restoreCheckboxStates();
         // Добавляем слушателей событий для чекбоксов
-        document.querySelectorAll('.status-filter').forEach(checkbox => {
-            checkbox.addEventListener('change', () => {
-                updateCheckboxStates();
-                filterTable();
+        document.querySelectorAll('.profession-filter, .department-filter, .status-filter, .typeVoc-filter')
+            .forEach(checkbox => {
+                checkbox.addEventListener('change', () => {
+                    updateCheckboxStates();
+                    filterTable();
+                });
             });
-        });
         // Слушатель для кнопки сброса фильтров
         document.getElementById('resetFilters').addEventListener('click', () => {
-            document.querySelectorAll('.status-filter').forEach(checkbox => {
-                checkbox.checked = false;
-            });
+            document.querySelectorAll('.profession-filter, .department-filter, .status-filter, .typeVoc-filter')
+                .forEach(checkbox => {
+                    checkbox.checked = false;
+                });
             updateCheckboxStates();
             filterTable();
         });
 
         // Функция фильтрации таблицы
         function filterTable() {
-            const selectedValues1 = Array.from(document.querySelectorAll('.status-filter:checked')).map(cb => cb.value);
+            const selectedValues1 = Array.from(document.querySelectorAll('.department-filter:checked')).map(cb => cb.value);
+            const selectedValues2 = Array.from(document.querySelectorAll('.profession-filter:checked')).map(cb => cb.value);
+            const selectedValues3 = Array.from(document.querySelectorAll('.status-filter:checked')).map(cb => cb.value);
             const rows = document.querySelectorAll('#schedule-table tbody tr');
             rows.forEach(row => {
-                const cell1 = row.cells[5].innerText;
-                const showRow = (selectedValues1.length === 0 || selectedValues1.includes(cell1));
+                const cell1 = row.cells[1].innerText;
+                const cell2 = row.cells[4].innerText;
+                const cell3 = row.cells[5].innerText;
+                const showRow =
+                    (selectedValues1.length === 0 || selectedValues1.includes(cell1)) &&
+                    (selectedValues2.length === 0 || selectedValues2.some(e => cell2.includes(e))) &&
+                    (selectedValues3.length === 0 || selectedValues3.some(e => cell3.includes(e)));
                 row.style.display = showRow ? '' : 'none';
             });
         }
@@ -503,18 +512,20 @@
         // Функция обновления состояния чекбоксов в localStorage
         function updateCheckboxStates() {
             const filterStates = {};
-            document.querySelectorAll('.status-filter').forEach(checkbox => {
-                filterStates[checkbox.value] = checkbox.checked;
-            });
+            document.querySelectorAll('.profession-filter, .department-filter, .status-filter, .typeVoc-filter')
+                .forEach(checkbox => {
+                    filterStates[checkbox.value] = checkbox.checked;
+                });
             localStorage.setItem('filterStates', JSON.stringify(filterStates));
         }
 
         // Функция восстановления состояния чекбоксов из localStorage
         function restoreCheckboxStates() {
             const filterStates = JSON.parse(localStorage.getItem('filterStates') || '{}');
-            document.querySelectorAll('.status-filter').forEach(checkbox => {
-                checkbox.checked = !!filterStates[checkbox.value];
-            });
+            document.querySelectorAll('.profession-filter, .department-filter, .status-filter, .typeVoc-filter')
+                .forEach(checkbox => {
+                    checkbox.checked = !!filterStates[checkbox.value];
+                });
             filterTable();
         }
     });

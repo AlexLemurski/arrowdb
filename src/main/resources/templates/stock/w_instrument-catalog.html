@@ -640,7 +640,8 @@
                 const cell2 = row.cells[7].textContent;
                 const cell3 = row.cells[8].textContent;
                 const cell4 = row.cells[9].innerText;
-                const showRow = (selectedValues1.length === 0 || selectedValues1.includes(cell1)) &&
+                const showRow =
+                    (selectedValues1.length === 0 || selectedValues1.includes(cell1)) &&
                     (selectedValues2.length === 0 || selectedValues2.includes(cell2)) &&
                     (selectedValues3.length === 0 || selectedValues3.includes(cell3)) &&
                     (selectedValues4.length === 0 || selectedValues4.includes(cell4));

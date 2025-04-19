@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 public interface MeasInstrumentRepository extends JpaRepository<MeasInstrument, Integer> {
 
     @Query("""
-            select m.employee from MeasInstrument m
+            select m.employee.empId from MeasInstrument m
             where m.measInstrId=:id
             """)
     Integer findEmployeeIdByMeasInstId(Integer id);

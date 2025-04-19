@@ -86,11 +86,9 @@
                     <th style="text-align: left">004</th>
                     <td style="text-align: left"><label>Заказчик</label></td>
                     <td style="text-align: left">
-                        <input type="text" style="width: 400px" th:field="${perspectiveObject.generalContractor}"
-                               required
-                               minlength="2" maxlength="100">
-<!--                        <p if="${#fields.hasErrors('middleName')}" th:errors="${employee.middleName}"-->
-<!--                           style="font-size: 13px; color: brown"></p>-->
+                        <input type="text" style="width: 400px" th:field="${perspectiveObject.generalContractor}">
+                        <p if="${#fields.hasErrors('generalContractor')}" th:errors="${perspectiveObject.generalContractor}"
+                           style="font-size: 13px; color: brown"></p>
                 </tr>
                 <tr>
                     <th style="text-align: left">005</th>
@@ -157,47 +155,17 @@
                         </select>
                     <td>
                 </tr>
-                <tr style="display: none">
-                    <th style="text-align: left">010</th>
-                    <td style="text-align: left">Итоговые параметры расценки оборудования и материалов</td>
-                    <td style="text-align: left">
-                        <table>
-                            <tbody>
-                            <tr>
-                                <td style="width: 200px; text-align: left">Сумма итого, б/НДС</td>
-                                <td style="text-align: left">
-                                    <input type="text" th:field="${perspectiveObject.totalPrice}">
-                            </tr>
-                            <tr>
-                                <td style="width: 200px; text-align: left">Кол-во расц. позиций</td>
-                                <td style="text-align: left">
-                                    <input type="text" th:field="${perspectiveObject.successCount}">
-                            </tr>
-                            <tr>
-                                <td style="width: 200px; text-align: left">Общее кол-во позиций</td>
-                                <td style="text-align: left">
-                                    <input type="text" th:field="${perspectiveObject.totalCount}">
-                            </tr>
-                            <tr>
-                                <td style="width: 200px; text-align: left">% расц. позиций</td>
-                                <td style="text-align: left">
-                                    <input type="text" th:field="${perspectiveObject.percentOfSuccess}">
-                            </tr>
-                            </tbody>
-                        </table>
-                    </td>
-                </tr>
-                <tr>
-                    <th style="text-align: left">011</th>
-                    <td style="text-align: left"><label>Сетевая папка с проектом</label></td>
-                    <td style="text-align: left">
-                        <textarea type="text"rows="2" cols="60" style="width: 600px" maxlength="1000"
-                                  placeholder="Указать только точное имя папки в которой содержится документация"
-                                  th:field="${perspectiveObject.filePath}"></textarea>
-                        <p if="${#fields.hasErrors('filePath')}"
-                           th:errors="${perspectiveObject.perspectiveName}"
-                           style="font-size: 13px; color: brown"></p></td>
-                </tr>
+<!--                <tr>-->
+<!--                    <th style="text-align: left">011</th>-->
+<!--                    <td style="text-align: left"><label>Сетевая папка с проектом</label></td>-->
+<!--                    <td style="text-align: left">-->
+<!--                        <textarea type="text"rows="2" cols="60" style="width: 600px" maxlength="1000"-->
+<!--                                  placeholder="Указать только точное имя папки в которой содержится документация"-->
+<!--                                  th:field="${perspectiveObject.filePath}"></textarea>-->
+<!--                        <p if="${#fields.hasErrors('filePath')}"-->
+<!--                           th:errors="${perspectiveObject.perspectiveName}"-->
+<!--                           style="font-size: 13px; color: brown"></p></td>-->
+<!--                </tr>-->
                 </tbody>
             </table>
         </div>

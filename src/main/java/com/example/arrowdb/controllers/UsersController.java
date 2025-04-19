@@ -154,6 +154,10 @@ public class UsersController {
     @PostMapping("/general/users/userUpdate")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String updateUser(Users users) {
+        Users usersById = usersService.findUserById(users.getUserId());
+        users.setUserName(usersById.getUserName());
+        users.setEmployee(usersById.getEmployee());
+        users.setPassword(usersById.getPassword());
         usersService.updateUser(users);
         return "redirect:/general/users/userUpdate/%d".formatted(users.getUserId());
     }

@@ -67,8 +67,15 @@ public class WorkObjectServiceImpl implements WorkObjectService {
     }
 
     @Override
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public List<WorkObject> findAllConstructionControlFoMainMenu() {
         return workObjectRepository.findAllConstructionControlFoMainMenu();
+    }
+
+    @Override
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
+    public List<WorkObject> findAllActiveWorkObject() {
+        return workObjectRepository.findAllActiveWorkObject();
     }
 
 }

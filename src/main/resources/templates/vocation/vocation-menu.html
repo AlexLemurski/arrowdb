@@ -241,7 +241,7 @@
 </head>
 <section>
     <div class="table-content m-2">
-        <h5 style="font-weight: 700">График отпусков</h5>
+        <h5 style="font-weight: 700;">График отпусков</h5>
         <hr>
         <form th:action="@{/general/vocation}" th:method="get">
             <table class="table table-hover table-sm" style="margin-bottom: 0; width: 1835px">
@@ -252,14 +252,8 @@
                         <input type="text" style="width: 150px; height: 27px" id="byName"
                                onkeyup="myFunctionNAME()">
                     </th>
-                    <th style="width: 240px">
-                        <input type="text" style="width: 150px; height: 27px" id="byProf"
-                               onkeyup="myFunctionPROF()">
-                    </th>
-                    <th style="width: 280px">
-                        <input type="text" style="width: 150px; height: 27px" id="byDep"
-                               onkeyup="myFunctionDEP()">
-                    </th>
+                    <th style="width: 240px"></th>
+                    <th style="width: 280px"></th>
                     <th style="width: 120px">
                     </th>
                     <th style="width: 160px">
@@ -296,14 +290,48 @@
                         </button>
                     </th>
                     <th style="width: 240px">
-                        <button onclick="sortTable(1)" type="button" class="btn btn-outline-dark btn-sm"
-                                style="width: 150px; text-align: left">Должность
-                        </button>
+                        <div class="btn-group">
+                            <button onclick="sortTable(1)" type="button" class="btn btn-outline-dark btn-sm"
+                                    style="width: 150px;
+                                    text-align: left">Должность
+                            </button>
+                            <button type="button" class="btn btn-outline-dark btn-sm dropdown-toggle"
+                                    data-bs-toggle="dropdown" aria-expanded="false"
+                                    data-bs-auto-close="outside">
+                            </button>
+                            <ul class="dropdown-menu" style="width: 350px; justify-content:
+                                    space-between; text-align: left">
+                                    <span th:each="prof:${professionList}">
+                                        <span><label>
+                                            <input th:type="checkbox" name="professionList"
+                                                   class="profession-filter mx-2"
+                                                   th:value="${prof}"
+                                                   th:text="${prof}" style="font-size: 14px">
+                                        </label></span><br></span>
+                            </ul>
+                        </div>
                     </th>
                     <th style="width: 280px">
-                        <button onclick="sortTable(2)" type="button" class="btn btn-outline-dark btn-sm"
-                                style="width: 150px; text-align: left">Подразделение
-                        </button>
+                        <div class="btn-group">
+                            <button onclick="sortTable(2)" type="button" class="btn btn-outline-dark btn-sm"
+                                    style="width: 150px;
+                                    text-align: left">Подразделение
+                            </button>
+                            <button type="button" class="btn btn-outline-dark btn-sm dropdown-toggle"
+                                    data-bs-toggle="dropdown" aria-expanded="false"
+                                    data-bs-auto-close="outside">
+                            </button>
+                            <ul class="dropdown-menu" style="width: 350px; justify-content:
+                                    space-between; text-align: left">
+                                    <span th:each="dep:${departmentList}">
+                                        <span><label>
+                                            <input th:type="checkbox" name="departmentList"
+                                                   class="department-filter mx-2"
+                                                   th:value="${dep}"
+                                                   th:text="${dep}" style="font-size: 14px">
+                                        </label></span><br></span>
+                            </ul>
+                        </div>
                     </th>
                     <th style="width: 120px">
                         <div class="btn-group">
@@ -384,7 +412,7 @@
                         <a th:href="@{/general/profession/professionView/{id}(id=${emp.profession.profId})}">
                             <button style="width: 230px; text-align: left"
                                     type="button" class="btn btn-outline-dark btn-sm">
-                                <span th:text="${emp.profession.professionName}">
+                                <span th:text="${emp.profession}">
                                 </span></button>
                         </a>
                     </td>
@@ -393,7 +421,7 @@
                         <a th:href="@{/general/department/departmentView/{id}(id=${emp.department.depId})}">
                             <button style="width: 270px; text-align: left"
                                     type="button" class="btn btn-outline-dark btn-sm">
-                                <span th:text="${emp.department.depName}">
+                                <span th:text="${emp.department}">
                                 </span></button>
                         </a>
                     </td>
@@ -614,7 +642,8 @@
     document.addEventListener('DOMContentLoaded', () => {
         restoreCheckboxStates();
         // Добавляем слушателей событий для чекбоксов
-        document.querySelectorAll('.status-filter, .typeVoc-filter').forEach(checkbox => {
+        document.querySelectorAll('.profession-filter, .department-filter, .status-filter, .typeVoc-filter')
+            .forEach(checkbox => {
             checkbox.addEventListener('change', () => {
                 updateCheckboxStates();
                 filterTable();
@@ -622,7 +651,8 @@
         });
         // Слушатель для кнопки сброса фильтров
         document.getElementById('resetFilters').addEventListener('click', () => {
-            document.querySelectorAll('.status-filter, .typeVoc-filter').forEach(checkbox => {
+            document.querySelectorAll('.profession-filter, .department-filter, .status-filter, .typeVoc-filter')
+                .forEach(checkbox => {
                 checkbox.checked = false;
             });
             updateCheckboxStates();
@@ -631,14 +661,21 @@
 
         // Функция фильтрации таблицы
         function filterTable() {
-            const selectedValues1 = Array.from(document.querySelectorAll('.status-filter:checked')).map(cb => cb.value);
-            const selectedValues2 = Array.from(document.querySelectorAll('.typeVoc-filter:checked')).map(cb => cb.value);
+            const selectedValues1 = Array.from(document.querySelectorAll('.profession-filter:checked')).map(cb => cb.value);
+            const selectedValues2 = Array.from(document.querySelectorAll('.department-filter:checked')).map(cb => cb.value);
+            const selectedValues3 = Array.from(document.querySelectorAll('.status-filter:checked')).map(cb => cb.value);
+            const selectedValues4= Array.from(document.querySelectorAll('.typeVoc-filter:checked')).map(cb => cb.value);
             const rows = document.querySelectorAll('#vocation-table tbody tr');
             rows.forEach(row => {
-                const cell1 = row.cells[4].textContent;
-                const cell2 = row.cells[8].innerText;
-                const showRow = (selectedValues1.length === 0 || selectedValues1.includes(cell1)) &&
-                    (selectedValues2.length === 0 || selectedValues2.includes(cell2));
+                const cell1 = row.cells[2].innerText;
+                const cell2 = row.cells[3].innerText;
+                const cell3 = row.cells[4].innerText;
+                const cell4 = row.cells[8].innerText;
+                const showRow =
+                    (selectedValues1.length === 0 || selectedValues1.includes(cell1)) &&
+                    (selectedValues2.length === 0 || selectedValues2.includes(cell2)) &&
+                    (selectedValues3.length === 0 || selectedValues3.includes(cell3)) &&
+                    (selectedValues4.length === 0 || selectedValues4.some(e => cell4.includes(e)));
                 row.style.display = showRow ? '' : 'none';
             });
         }
@@ -646,7 +683,8 @@
         // Функция обновления состояния чекбоксов в localStorage
         function updateCheckboxStates() {
             const filterStates = {};
-            document.querySelectorAll('.status-filter, .typeVoc-filter').forEach(checkbox => {
+            document.querySelectorAll('.profession-filter, .department-filter, .status-filter, .typeVoc-filter')
+                .forEach(checkbox => {
                 filterStates[checkbox.value] = checkbox.checked;
             });
             localStorage.setItem('filterStates', JSON.stringify(filterStates));
@@ -655,7 +693,8 @@
         // Функция восстановления состояния чекбоксов из localStorage
         function restoreCheckboxStates() {
             const filterStates = JSON.parse(localStorage.getItem('filterStates') || '{}');
-            document.querySelectorAll('.status-filter, .typeVoc-filter').forEach(checkbox => {
+            document.querySelectorAll('.profession-filter, .department-filter, .status-filter, .typeVoc-filter')
+                .forEach(checkbox => {
                 checkbox.checked = !!filterStates[checkbox.value];
             });
             filterTable();

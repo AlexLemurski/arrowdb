@@ -73,7 +73,7 @@ public class Department {
     private Employee departmentChief;
 
     @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "department", fetch = FetchType.LAZY)
-    private Set<Employee> personalOfDepartment = new HashSet<>();
+    private List<Employee> personalOfDepartment = new ArrayList<>();
 
     @Transient
     private List<Employee> personalActiveOfDepartment = new ArrayList<>();

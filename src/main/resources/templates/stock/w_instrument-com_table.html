@@ -364,7 +364,7 @@
                     <a th:href="@{/general/workobject/workobjectView/{id}(id=${w_instr.workObject.workObjectId})}">
                         <button style="text-align: left; width: 190px" type="button"
                                 class="btn btn-outline-dark btn-sm"><span
-                                th:text="${w_instr.workObject}"></span></button></a><br></span>
+                                th:text="${w_instr.workObject.workObjectOrder}"></span></button></a><br></span>
                 </td>
                 <td>
                     <span th:each="w_instr:${emp.workInstrumentList}">
@@ -506,7 +506,7 @@
             const rows = document.querySelectorAll('#instrument-table tbody tr');
             rows.forEach(row => {
                 const cell1 = row.cells[3].textContent;
-                const cell2 = row.cells[4].textContent;
+                const cell2 = row.cells[4].innerText;
                 const showRow = (selectedValues1.length === 0 || selectedValues1.includes(cell1)) &&
                     (selectedValues2.length === 0 || selectedValues2.includes(cell2));
                 row.style.display = showRow ? '' : 'none';
