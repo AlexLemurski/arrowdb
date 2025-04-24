@@ -35,8 +35,7 @@ public interface DepartmentRepository extends JpaRepository<Department, Integer>
 
     @Query("""
             select d from Department d
-            left join fetch d.departmentChief dc
-            left join fetch dc.profession
+            left join fetch d.departmentChief
             left join fetch d.personalOfDepartment pd
             left join fetch pd.profession
             where d.profAndDepStatusENUM != 1

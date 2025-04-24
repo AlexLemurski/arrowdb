@@ -1,8 +1,6 @@
 package com.example.arrowdb.controllers;
 
 import com.example.arrowdb.auxiliary.MailSenderService;
-import com.example.arrowdb.entity.Employee;
-import com.example.arrowdb.entity.Roles;
 import com.example.arrowdb.entity.Users;
 import com.example.arrowdb.enums.EmployeeStatusENUM;
 import com.example.arrowdb.enums.UserStatusENUM;
@@ -12,6 +10,9 @@ import com.example.arrowdb.services.UsersService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 
 import static com.example.arrowdb.auxiliary.Message.ERROR_CREATE_NEW_USER;
 import static com.example.arrowdb.auxiliary.PassGenerator.randomPass;
@@ -35,6 +37,7 @@ public class UsersController {
     private final PasswordEncoder passwordEncoder;
     private final EmployeeService employeeService;
     private final MailSenderService mailSenderService;
+    private final SessionRegistry sessionRegistry;
 
     @GetMapping("/general/users")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
@@ -72,8 +75,8 @@ public class UsersController {
 //                             @ModelAttribute Employee employee,
                              Model model) {
         String login = users.getEmployee().getName().substring(0, 1).toUpperCase()
-                + users.getEmployee().getMiddleName().substring(0, 1).toUpperCase() + "_"
-                + users.getEmployee().getSurName() + "_" + users.getEmployee().getEmpId();
+                       + users.getEmployee().getMiddleName().substring(0, 1).toUpperCase() + "_"
+                       + users.getEmployee().getSurName() + "_" + users.getEmployee().getEmpId();
         users.setUserName(login);
         users.getEmployee().setAccount(users);
         String tempPassword = randomPass();
@@ -85,7 +88,7 @@ public class UsersController {
                     users.getEmployee().getEmail(),
                     "Создание данных для входа в систему",
                     String.format("Логин: %s%nПароль: %s%nСтатус учетной записи: " +
-                                    "%s%nАдрес: http://@@@/login",
+                                  "%s%nАдрес: http://@@@/login",
                             users.getUserName(),
                             tempPassword,
                             users.getUserStatusENUM().getTitle()));
@@ -159,10 +162,21 @@ public class UsersController {
         users.setEmployee(usersById.getEmployee());
         users.setPassword(usersById.getPassword());
         usersService.updateUser(users);
+        for (Object principal : sessionRegistry.getAllPrincipals()) {
+            if (principal instanceof UserDetails && ((UserDetails) principal)
+                    .getUsername().equals(usersById.getUserName())) {
+                List<SessionInformation> sessions =
+                        sessionRegistry.getAllSessions(principal, false);
+                for (SessionInformation sessionInfo : sessions) {
+                    sessionInfo.expireNow();
+                }
+            }
+        }
         return "redirect:/general/users/userUpdate/%d".formatted(users.getUserId());
     }
 
     @GetMapping("/general/users/recovery/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String sendMessage(@PathVariable("id") int id, Model model) {
         Users users = usersService.findUserById(id);
         String tempPassword = randomPass();
@@ -173,8 +187,9 @@ public class UsersController {
                     .sorted(Comparator.comparingInt(Users::getUserId))
                     .toList());
             model.addAttribute("error", "ОШИБКА! У работника " + users.getEmployee() +
-                    ", " + users.getEmployee().getProfession().getProfessionName() + " отсутствует (удален) e-mail, " +
-                    "и/или работник находится в статусе Закрыт, восстановить учетную запись возможности нет");
+                                        ", " + users.getEmployee().getProfession().getProfessionName() +
+                                        " отсутствует (удален) e-mail, и/или работник находится в статусе Закрыт, " +
+                                        "восстановить учетную запись возможности нет");
             return "user/user-menu";
         }
         try {
@@ -182,7 +197,7 @@ public class UsersController {
                     users.getEmployee().getEmail(),
                     "Восстановление данных для входа в систему",
                     String.format("Логин: %s%nПароль: %s%nСтатус учетной записи: " +
-                                    "%s%nАдрес: http://@@@/login",
+                                  "%s%nАдрес: http://@@@/login",
                             users.getUserName(),
                             tempPassword,
                             users.getUserStatusENUM().getTitle()));
@@ -192,9 +207,55 @@ public class UsersController {
                     .sorted(Comparator.comparingInt(Users::getUserId))
                     .toList());
             model.addAttribute("error", "ОШИБКА! У работника " + users.getEmployee() +
-                    ", " + users.getEmployee().getProfession().getProfessionName() + " отсутствует (удален) e-mail, " +
-                    "и/или работник находится в статусе Закрыт, восстановить учетную запись возможности нет");
+                                        ", " + users.getEmployee().getProfession().getProfessionName() +
+                                        " отсутствует (удален) e-mail, и/или работник находится в статусе Закрыт, " +
+                                        "восстановить учетную запись возможности нет");
             return "user/user-menu";
+        }
+        return "redirect:/general/users";
+    }
+
+    @GetMapping("/general/users/logoutUser/{username}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public String logoutUser(@PathVariable String username) {
+        for (Object principal : sessionRegistry.getAllPrincipals()) {
+            if (principal instanceof UserDetails && ((UserDetails) principal).getUsername().equals(username)) {
+                List<SessionInformation> sessions = sessionRegistry.getAllSessions(principal, false);
+                for (SessionInformation sessionInfo : sessions) {
+                    sessionInfo.expireNow();
+                }
+            }
+        }
+        return "redirect:/general/users";
+    }
+
+    @GetMapping("/general/users/logoutAllUser")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public String logoutAllUser() {
+        for (Object principal : sessionRegistry.getAllPrincipals()) {
+            if (principal instanceof UserDetails && !((UserDetails) principal).getUsername().equals("admin")) {
+                List<SessionInformation> sessions = sessionRegistry.getAllSessions(principal, false);
+                for (SessionInformation sessionInfo : sessions) {
+                    sessionInfo.expireNow();
+                }
+            }
+        }
+        return "redirect:/general/users";
+    }
+
+    @GetMapping("/general/users/disableAllUser")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public String disableAllUserGet() {
+        return "user/user-menu";
+    }
+
+    @PostMapping("/general/users/disableAllUser")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public String disableAllUser() {
+        List<Users> usersList = usersService.findAllUsers();
+        for (Users user : usersList) {
+            user.setUserStatusENUM(UserStatusENUM.OFF);
+            usersService.updateUser(user);
         }
         return "redirect:/general/users";
     }

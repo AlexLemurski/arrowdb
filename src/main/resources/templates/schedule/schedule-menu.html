@@ -280,7 +280,7 @@
                             </button>
                             <ul class="dropdown-menu" style="width: 350px; justify-content:
                                     space-between; text-align: left">
-                                    <span th:each="dep:${departmentListSort}">
+                                    <span th:each="dep:${departmentList}">
                                         <span><label>
                                             <input th:type="checkbox" name="departmentListSort"
                                                    class="department-filter mx-2"
@@ -312,7 +312,7 @@
                             </button>
                             <ul class="dropdown-menu" style="width: 350px; justify-content:
                                     space-between; text-align: left">
-                                    <span th:each="prof:${professionListSort}">
+                                    <span th:each="prof:${professionList}">
                                         <span><label>
                                             <input th:type="checkbox" name="professionListSort"
                                                    class="profession-filter mx-2"

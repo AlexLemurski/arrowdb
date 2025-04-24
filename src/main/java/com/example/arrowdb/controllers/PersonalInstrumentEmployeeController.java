@@ -3,6 +3,7 @@ package com.example.arrowdb.controllers;
 import com.example.arrowdb.entity.Employee;
 import com.example.arrowdb.entity.PersonalInstrument;
 import com.example.arrowdb.entity.PersonalInstrumentCondition;
+import com.example.arrowdb.enums.EmployeeStatusENUM;
 import com.example.arrowdb.enums.PersonalConditionENUM;
 import com.example.arrowdb.services.EmployeeService;
 import com.example.arrowdb.services.PersonalInstrumentConditionService;
@@ -33,6 +34,9 @@ public class PersonalInstrumentEmployeeController {
                                                    @ModelAttribute PersonalInstrument personalInstrument,
                                                    @NotNull Model model) {
         Employee employee = employeeService.findEmployeeById(id);
+        if(!employee.getEmployeeStatusENUM().equals(EmployeeStatusENUM.ACTIVE)) {
+            return "redirect:/general/p_instrument";
+        }
         List<PersonalInstrument> personalInstrumentList = personalInstrumentService
                 .findAllActiveAndFreePersonalInstrument();
         model.addAttribute("personalInstrumentList", personalInstrumentList);

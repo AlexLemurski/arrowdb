@@ -372,7 +372,7 @@
                             </div>
                             <div id="issuePanelEmp">
                                 <hr>
-                                <select class="livesearch" style="width: 400px" name="employee">
+                                <select class="livesearch" style="width: 400px" name="employee" id="employee">
                                     <option th:each="emp:${employeeList}"
                                             th:field="${workInstrument.employee}"
                                             th:value="${emp.empId}"

@@ -5,6 +5,7 @@ import com.example.arrowdb.entity.Employee;
 import com.example.arrowdb.entity.WorkInstrument;
 import com.example.arrowdb.entity.WorkInstrumentCondition;
 import com.example.arrowdb.entity.WorkObject;
+import com.example.arrowdb.enums.EmployeeStatusENUM;
 import com.example.arrowdb.enums.TechnicalConditionENUM;
 import com.example.arrowdb.enums.WorkConditionENUM;
 import com.example.arrowdb.enums.WorkObjectStatusENUM;
@@ -34,11 +35,14 @@ public class WorkInstrumentEmployeeController {
 
     @GetMapping("/general/w_instrument/w_instrument-emp_update/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_STORE_WORK_INSTR_UPDATE')")
-    public String updatePersonalInstrumentEmployee(@PathVariable("id") int id,
+    public String updatePersonalInstrumentEmployeeForm(@PathVariable("id") int id,
                                                    @ModelAttribute WorkInstrument workInstrument,
                                                    @ModelAttribute TempIssueDate tempIssueDate,
                                                    Model model) {
         Employee employee = employeeService.findEmployeeById(id);
+        if(!employee.getEmployeeStatusENUM().equals(EmployeeStatusENUM.ACTIVE)) {
+            return "redirect:/general/w_instrument";
+        }
         List<Employee> employeeList = new ArrayList<>(employeeService.findAllActiveEmployees());
         employeeList.remove(employee);
         List<WorkInstrument> workInstrumentList = workInstrumentService
@@ -58,7 +62,7 @@ public class WorkInstrumentEmployeeController {
 
     @PostMapping("/general/w_instrument/w_instrumentCreate_employee/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_STORE_WORK_INSTR_UPDATE')")
-    public String createPersonalInstrumentEmployeeForm(@PathVariable("id") int id,
+    public String createPersonalInstrumentEmployee(@PathVariable("id") int id,
                                                        @RequestParam
                                                        @ModelAttribute List<WorkInstrument> workInstrumentListAdd,
                                                        @ModelAttribute WorkObject workObject,

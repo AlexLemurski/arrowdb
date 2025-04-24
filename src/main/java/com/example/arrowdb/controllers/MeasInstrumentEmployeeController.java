@@ -5,6 +5,7 @@ import com.example.arrowdb.entity.Employee;
 import com.example.arrowdb.entity.MeasInstrument;
 import com.example.arrowdb.entity.MeasInstrumentCondition;
 import com.example.arrowdb.entity.WorkObject;
+import com.example.arrowdb.enums.EmployeeStatusENUM;
 import com.example.arrowdb.enums.TechnicalConditionENUM;
 import com.example.arrowdb.enums.WorkConditionENUM;
 import com.example.arrowdb.enums.WorkObjectStatusENUM;
@@ -33,11 +34,14 @@ public class MeasInstrumentEmployeeController {
 
     @GetMapping("/general/m_instrument/m_instrument-emp_update/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_STORE_MEAS_INSTR_UPDATE')")
-    public String updatePersonalInstrumentEmployee(@PathVariable("id") int id,
+    public String updatePersonalInstrumentEmployeeForm(@PathVariable("id") int id,
                                                    @ModelAttribute MeasInstrument measInstrument,
                                                    @ModelAttribute TempIssueDate tempIssueDate,
                                                    Model model) {
         Employee employee = employeeService.findEmployeeById(id);
+        if(!employee.getEmployeeStatusENUM().equals(EmployeeStatusENUM.ACTIVE)) {
+            return "redirect:/general/m_instrument";
+        }
         List<Employee> employeeList = new ArrayList<>(employeeService.findAllActiveEmployees());
         employeeList.remove(employee);
         List<MeasInstrument> measInstrumentList = measInstrumentService
@@ -57,7 +61,7 @@ public class MeasInstrumentEmployeeController {
 
     @PostMapping("/general/m_instrument/m_instrumentCreate_employee/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_STORE_MEAS_INSTR_UPDATE')")
-    public String createSpecialClothEmployeeForm(@PathVariable("id") int id,
+    public String createSpecialClothEmployee(@PathVariable("id") int id,
                                                  @RequestParam
                                                  @ModelAttribute List<MeasInstrument> measInstrumentListAdd,
                                                  @ModelAttribute WorkObject workObject,

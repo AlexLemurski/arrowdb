@@ -9,6 +9,7 @@ public interface EmployeeService {
     Employee findEmployeeById(Integer id);
     void saveEmployee(Employee employee);
     void deleteEmployeeById(Integer id);
+
     List<Employee> findEmployeeForCreateAccount();
 
     List<Employee> findAllEmployeeForVocations();
@@ -26,7 +27,5 @@ public interface EmployeeService {
     void changeEmployeeStatusOnActive();
 
     List<Employee> findEmployeeMailSend();
-
-    Employee findEmployeeByUserName(String name);
 
 }

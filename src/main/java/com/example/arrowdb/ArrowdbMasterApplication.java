@@ -9,5 +9,4 @@ public class ArrowdbMasterApplication {
     public static void main(String[] args) {
         SpringApplication.run(ArrowdbMasterApplication.class, args);
     }
-
 }

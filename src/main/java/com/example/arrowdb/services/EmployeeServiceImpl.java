@@ -121,10 +121,4 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeRepository.findEmployeeMailSend();
     }
 
-    @Override
-    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
-    public Employee findEmployeeByUserName(String name) {
-        return employeeRepository.findEmployeeByUserName(name);
-    }
-
 }

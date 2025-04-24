@@ -233,10 +233,24 @@
                     <li>
                         <div>
                             <a th:href="@{/general/users/userCreate}">
-                                <button type="button" class="btn btn-success btn-sm m-2">Создать нового пользователя</button>
+                                <button type="button" class="btn btn-success btn-sm m-2">Создать нового пользователя
+                                </button>
                             </a>
                         </div>
                     </li>
+                    <div>
+                        <a th:href="@{/general/users/logoutAllUser}">
+                            <button type="button" class="btn btn-danger btn-sm m-2">Logout всех пользователейй</button>
+                        </a>
+                    </div>
+                    <div>
+                        <form th:action="@{/general/users/disableAllUser}" method="post">
+                            <a th:href="@{/general/users/disableAllUser}">
+                                <button type="submit" class="btn btn-danger btn-sm m-2">Отключить всех пользователейй
+                                </button>
+                            </a>
+                        </form>
+                    </div>
                 </ul>
             </nav>
         </div>
@@ -247,7 +261,7 @@
     <h5 style="font-weight: 700">Пользователи</h5>
     <hr>
     <form th:action="@{/general/users}" th:method="get">
-        <table class="table table-hover table-sm" style="margin-bottom: 0; width: 1400px">
+        <table class="table table-hover table-sm" style="margin-bottom: 0; width: 1600px">
             <tbody class="bodySearch">
             <tr>
                 <td style="width: 100px; text-align: left">Поиск...
@@ -258,7 +272,7 @@
                     <input type="text" style="width: 300px; height: 27px" id="byName"
                            onkeyup="myFunctionNAME()"></th>
                 <th style="width: 200px"></th>
-                <th style="width: 300px; text-align: center">
+                <th style="width: 500px; text-align: center">
                     <button style="width: 90px" class="btn btn-outline-dark btn-sm"
                             id="resetFilters">Сбросить
                     </button>
@@ -268,18 +282,20 @@
         </table>
     </form>
     <div class="main-table">
-        <table class="table table-hover table-sm" style="width: 1400px" id="employee-table">
+        <table class="table table-hover table-sm" style="width: 1600px" id="employee-table">
             <thead class="head">
             <tr class="table-secondary" style="text-align: left; vertical-align: top">
                 <th style="width: 100px">#ID</th>
                 <th style="width: 300px">
                     <button onclick="sortTable(0)" type="button" class="btn btn-outline-dark btn-sm"
                             style="width: 150px; text-align: left">Учетная запись
-                    </button></th>
+                    </button>
+                </th>
                 <th style="width: 500px">
                     <button onclick="sortTable(1)" type="button" class="btn btn-outline-dark btn-sm"
                             style="width: 300px; text-align: left">Работник
-                    </button></th>
+                    </button>
+                </th>
                 <th style="width: 200px">
                     <div class="btn-group">
                         <button onclick="sortTable(2)" type="button" class="btn btn-outline-dark btn-sm"
@@ -302,7 +318,7 @@
                         </ul>
                     </div>
                 </th>
-                <th style="width: 300px; text-align: center">Действие</th>
+                <th style="width: 500px; text-align: center">Действие</th>
             </tr>
             </thead>
             <tbody>
@@ -312,7 +328,8 @@
                 <td><a th:href="@{/general/employee/employeeView/{id}(id=${usr.employee.empId})}">
                     <button style="width: 400px; text-align: left" type="button" class="btn btn-outline-dark btn-sm">
                         <span th:text="${usr.employee} +
-                         ${', ' + usr.employee.profession.getProfessionName}"></span></button></a>
+                         ${', ' + usr.employee.profession.getProfessionName}"></span></button>
+                </a>
                 </td>
                 <td th:text="${usr.userStatusENUM.getTitle()}">
                 <td style="text-align: center">
@@ -322,9 +339,13 @@
                     <a th:href="@{/general/users/recovery/{id}(id=${usr.userId})}">
                         <button type="button" class="btn btn-primary btn-sm">Восст. доступ</button>
                     </a>
+                    <a th:href="@{/general/users/logoutUser/{username}(username=${usr.userName})}">
+                        <button type="button" class="btn btn-danger btn-sm">Logout</button>
+                    </a>
                     <a th:href="@{/general/users/userDelete/{id}(id=${usr.userId})}">
                         <button onclick="return confirm('Вы действительно хотите безвозвратно удалить эти данные?');"
-                                type="button" class="btn btn-danger btn-sm">Удалить</button>
+                                type="button" class="btn btn-danger btn-sm">Удалить
+                        </button>
                     </a>
             </tr>
             </tbody>
