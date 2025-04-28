@@ -11,7 +11,7 @@
         .main-table {
             display: block;
             width: 100%;
-            height: 750px;
+            height: 700px;
             border-collapse: separate;
             border-spacing: 0;
             overflow-y: scroll;
@@ -249,24 +249,20 @@
                 <tr>
                     <td style="width: 100px; text-align: left">Поиск...
                     <th style="width: 240px">
-                        <input type="text" style="width: 150px; height: 27px" id="byName"
-                               onkeyup="myFunctionNAME()">
+                        <input type="text" style="width: 150px; height: 27px" id="byEmployee">
                     </th>
                     <th style="width: 240px"></th>
                     <th style="width: 280px"></th>
                     <th style="width: 120px">
                     </th>
                     <th style="width: 160px">
-                        <input type="text" style="width: 130px; height: 27px" id="byVocStart"
-                               onkeyup="myFunctionVOCSTART()">
+                        <input type="text" style="width: 130px; height: 27px" id="byVocStart">
                     </th>
                     <th style="width: 180px">
-                        <input type="text" style="width: 130px; height: 27px" id="byDays"
-                               onkeyup="myFunctionDAYS()">
+                        <input type="text" style="width: 130px; height: 27px" id="byVocEnd">
                     </th>
                     <th style="width: 210px">
-                        <input type="text" style="width: 150px; height: 27px" id="byTempEmp"
-                               onkeyup="myFunctionTEMPEMP()">
+                        <input type="text" style="width: 150px; height: 27px" id="byTempEmployee">
                     </th>
                     <th style="width: 180px">
                     </th>
@@ -524,182 +520,209 @@
     }
 </script>
 <script>
-    function myFunctionNAME() {
-        let input, filter, table, tr, td, i;
-        input = document.getElementById("byName");
-        filter = input.value.toUpperCase();
-        table = document.getElementById("vocation-table");
-        tr = table.getElementsByTagName("tr");
-        for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[0];
-            if (td) {
-                if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = "";
-                } else {
-                    tr[i].style.display = "none";
-                }
-            }
-        }
+    // Ключи для localStorage
+    const STORAGE_KEYS = {
+        //input search
+        employeeFilter: 'employeeFilter',
+        vocStartFilter: 'vocStartFilter',
+        vocEndFilter: 'vocEndFilter',
+        tempEmployeeFilter: 'middleNameFilter',
+        //checkboxes
+        professionFilters: 'professionFilters',
+        departmentFilters: 'departmentFilters',
+        statusFilters: 'statusFilters',
+        vocTypeFilters: 'vocTypeFilters'
+    };
+
+    const filters = {
+        employee: document.getElementById('byEmployee'),
+        vocStart: document.getElementById('byVocStart'),
+        vocEnd: document.getElementById('byVocEnd'),
+        tempEmployee: document.getElementById('byTempEmployee'),
+        professionCheckboxes: document.querySelectorAll('.profession-filter'),
+        departmentCheckboxes: document.querySelectorAll('.department-filter'),
+        statusCheckboxes: document.querySelectorAll('.status-filter'),
+        vocTypeCheckboxes: document.querySelectorAll('.typeVoc-filter')
+    };
+
+    const tableBody = document.querySelector('#vocation-table tbody');
+    const resetButton = document.getElementById('resetFilters');
+
+    function saveState() {
+        localStorage.setItem(STORAGE_KEYS.employeeFilter, filters.employee.value);
+        localStorage.setItem(STORAGE_KEYS.vocStartFilter, filters.vocStart.value);
+        localStorage.setItem(STORAGE_KEYS.vocEndFilter, filters.vocEnd.value);
+        localStorage.setItem(STORAGE_KEYS.tempEmployeeFilter, filters.tempEmployee.value);
+        const professionValues = Array.from(filters.professionCheckboxes)
+            .filter(checkbox => checkbox.checked)
+            .map(checkbox => checkbox.value);
+        const departmentValues = Array.from(filters.departmentCheckboxes)
+            .filter(checkbox => checkbox.checked)
+            .map(checkbox => checkbox.value);
+        const statusValues = Array.from(filters.statusCheckboxes)
+            .filter(checkbox => checkbox.checked)
+            .map(checkbox => checkbox.value);
+        const vocTypeValues = Array.from(filters.vocTypeCheckboxes)
+            .filter(checkbox => checkbox.checked)
+            .map(checkbox => checkbox.value);
+        localStorage.setItem(STORAGE_KEYS.professionFilters, JSON.stringify(professionValues));
+        localStorage.setItem(STORAGE_KEYS.departmentFilters, JSON.stringify(departmentValues));
+        localStorage.setItem(STORAGE_KEYS.statusFilters, JSON.stringify(statusValues));
+        localStorage.setItem(STORAGE_KEYS.vocTypeFilters, JSON.stringify(vocTypeValues));
     }
-</script>
-<script>
-    function myFunctionPROF() {
-        let input, filter, table, tr, td, i;
-        input = document.getElementById("byProf");
-        filter = input.value.toUpperCase();
-        table = document.getElementById("vocation-table");
-        tr = table.getElementsByTagName("tr");
-        for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[1];
-            if (td) {
-                if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = "";
-                } else {
-                    tr[i].style.display = "none";
-                }
-            }
+
+    function loadState() {
+        const savedEmployeeFilter = localStorage.getItem(STORAGE_KEYS.employeeFilter);
+        const savedVocStartFilter = localStorage.getItem(STORAGE_KEYS.vocStartFilter);
+        const savedTempEmployeeNameFilter = localStorage.getItem(STORAGE_KEYS.vocEndFilter);
+        const savedTempEmployeeFilter = localStorage.getItem(STORAGE_KEYS.tempEmployeeFilter);
+        if (savedEmployeeFilter) {
+            filters.employee.value = savedEmployeeFilter;
         }
-    }
-</script>
-<script>
-    function myFunctionDEP() {
-        let input, filter, table, tr, td, i;
-        input = document.getElementById("byDep");
-        filter = input.value.toUpperCase();
-        table = document.getElementById("vocation-table");
-        tr = table.getElementsByTagName("tr");
-        for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[2];
-            if (td) {
-                if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = "";
-                } else {
-                    tr[i].style.display = "none";
-                }
-            }
+        if (savedVocStartFilter) {
+            filters.vocStart.value = savedVocStartFilter;
         }
-    }
-</script>
-<script>
-    function myFunctionVOCSTART() {
-        let input, filter, table, tr, td, i;
-        input = document.getElementById("byVocStart");
-        filter = input.value.toUpperCase();
-        table = document.getElementById("vocation-table");
-        tr = table.getElementsByTagName("tr");
-        for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[4];
-            if (td) {
-                if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = "";
-                } else {
-                    tr[i].style.display = "none";
-                }
-            }
+        if (savedTempEmployeeNameFilter) {
+            filters.vocEnd.value = savedTempEmployeeNameFilter;
         }
-    }
-</script>
-<script>
-    function myFunctionDAYS() {
-        let input, filter, table, tr, td, i;
-        input = document.getElementById("byDays");
-        filter = input.value.toUpperCase();
-        table = document.getElementById("vocation-table");
-        tr = table.getElementsByTagName("tr");
-        for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[5];
-            if (td) {
-                if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = "";
-                } else {
-                    tr[i].style.display = "none";
-                }
-            }
+        if (savedTempEmployeeFilter) {
+            filters.tempEmployee.value = savedTempEmployeeFilter;
         }
-    }
-</script>
-<script>
-    function myFunctionTEMPEMP() {
-        let input, filter, table, tr, td, i;
-        input = document.getElementById("byTempEmp");
-        filter = input.value.toUpperCase();
-        table = document.getElementById("vocation-table");
-        tr = table.getElementsByTagName("tr");
-        for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[6];
-            if (td) {
-                if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = "";
-                } else {
-                    tr[i].style.display = "none";
-                }
-            }
-        }
-    }
-</script>
-<script>
-    // Восстанавливаем состояния чекбоксов
-    document.addEventListener('DOMContentLoaded', () => {
-        restoreCheckboxStates();
-        // Добавляем слушателей событий для чекбоксов
-        document.querySelectorAll('.profession-filter, .department-filter, .status-filter, .typeVoc-filter')
-            .forEach(checkbox => {
-            checkbox.addEventListener('change', () => {
-                updateCheckboxStates();
-                filterTable();
-            });
+        const savedProfessionFilters = JSON.parse(localStorage.getItem(STORAGE_KEYS.professionFilters)) || [];
+        const savedDepartmentFilters = JSON.parse(localStorage.getItem(STORAGE_KEYS.departmentFilters)) || [];
+        const savedStatusFilters = JSON.parse(localStorage.getItem(STORAGE_KEYS.statusFilters)) || [];
+        const savedVocTypeFilters = JSON.parse(localStorage.getItem(STORAGE_KEYS.vocTypeFilters)) || [];
+        filters.professionCheckboxes.forEach(checkbox => {
+            checkbox.checked = savedProfessionFilters.includes(checkbox.value);
         });
-        // Слушатель для кнопки сброса фильтров
-        document.getElementById('resetFilters').addEventListener('click', () => {
-            document.querySelectorAll('.profession-filter, .department-filter, .status-filter, .typeVoc-filter')
-                .forEach(checkbox => {
-                checkbox.checked = false;
-            });
-            updateCheckboxStates();
-            filterTable();
+        filters.departmentCheckboxes.forEach(checkbox => {
+            checkbox.checked = savedDepartmentFilters.includes(checkbox.value);
         });
+        filters.statusCheckboxes.forEach(checkbox => {
+            checkbox.checked = savedStatusFilters.includes(checkbox.value);
+        });
+        filters.vocTypeCheckboxes.forEach(checkbox => {
+            checkbox.checked = savedVocTypeFilters.includes(checkbox.value);
+        });
+    }
 
-        // Функция фильтрации таблицы
-        function filterTable() {
-            const selectedValues1 = Array.from(document.querySelectorAll('.profession-filter:checked')).map(cb => cb.value);
-            const selectedValues2 = Array.from(document.querySelectorAll('.department-filter:checked')).map(cb => cb.value);
-            const selectedValues3 = Array.from(document.querySelectorAll('.status-filter:checked')).map(cb => cb.value);
-            const selectedValues4= Array.from(document.querySelectorAll('.typeVoc-filter:checked')).map(cb => cb.value);
-            const rows = document.querySelectorAll('#vocation-table tbody tr');
-            rows.forEach(row => {
-                const cell1 = row.cells[2].innerText;
-                const cell2 = row.cells[3].innerText;
-                const cell3 = row.cells[4].innerText;
-                const cell4 = row.cells[8].innerText;
-                const showRow =
-                    (selectedValues1.length === 0 || selectedValues1.includes(cell1)) &&
-                    (selectedValues2.length === 0 || selectedValues2.includes(cell2)) &&
-                    (selectedValues3.length === 0 || selectedValues3.includes(cell3)) &&
-                    (selectedValues4.length === 0 || selectedValues4.some(e => cell4.includes(e)));
-                row.style.display = showRow ? '' : 'none';
-            });
-        }
+    function filterTable() {
+        const rows = tableBody.querySelectorAll('tr');
+        rows.forEach(row => {
+            const cells = row.querySelectorAll('td');
+            // Проверяем каждую колонку
+            let showRow = true;
+            // Фильтр по работнику
+            const employeeVal = cells[0].innerText.toLowerCase();
+            const employeeFilterVal = filters.employee.value.toLowerCase();
+            if (employeeFilterVal && !employeeVal.includes(employeeFilterVal)) showRow = false;
+            // Фильтр по началу отпуска
+            if (showRow) {
+                const vocStartVal = cells[4].innerText.toLowerCase();
+                const vocStartFilterVal = filters.vocStart.value.toLowerCase();
+                if (vocStartFilterVal && !vocStartVal.includes(vocStartFilterVal)) showRow = false;
+            }
+            // Фильтр по концу отпуска
+            if (showRow) {
+                const vocEndNameVal = cells[5].innerText.toLowerCase();
+                const vocEndFilterVal = filters.vocEnd.value.toLowerCase();
+                if (vocEndFilterVal && !vocEndNameVal.includes(vocEndFilterVal)) showRow = false;
+            }
+            // Фильтр по заместителю
+            if (showRow) {
+                const tempEmployeeNameVal = cells[6].innerText.toLowerCase();
+                const tempEmployeeFilterVal = filters.tempEmployee.value.toLowerCase();
+                if (tempEmployeeFilterVal && !tempEmployeeNameVal.includes(tempEmployeeFilterVal)) showRow = false;
+            }
+            // Фильтр по должности
+            if (showRow) {
+                const professionVal = cells[1].innerText;
+                const selectedProfessionValues = Array.from(filters.professionCheckboxes)
+                    .filter(checkbox => checkbox.checked)
+                    .map(checkbox => checkbox.value);
+                if (selectedProfessionValues.length > 0 && !selectedProfessionValues
+                    .some(e => professionVal.includes(e))) showRow = false;
+            }
+            // Фильтр по подразделению
+            if (showRow) {
+                const departmentVal = cells[2].innerText;
+                const selectedDepartmentValues = Array.from(filters.departmentCheckboxes)
+                    .filter(checkbox => checkbox.checked)
+                    .map(checkbox => checkbox.value);
+                if (selectedDepartmentValues.length > 0 && !selectedDepartmentValues
+                    .some(e => departmentVal.includes(e))) showRow = false;
+            }
+            // Фильтр по статусу
+            if (showRow) {
+                const statusVal = cells[3].innerText;
+                const selectedStatusValues = Array.from(filters.statusCheckboxes)
+                    .filter(checkbox => checkbox.checked)
+                    .map(checkbox => checkbox.value);
+                if (selectedStatusValues.length > 0 && !selectedStatusValues
+                    .some(e => statusVal.includes(e))) showRow = false;
+            }
+            // Фильтр по типу отпуска
+            if (showRow) {
+                const typeVal = cells[7].innerText;
+                const selectedStatusValues = Array.from(filters.vocTypeCheckboxes)
+                    .filter(checkbox => checkbox.checked)
+                    .map(checkbox => checkbox.value);
+                if (selectedStatusValues.length > 0 && !selectedStatusValues
+                    .some(e => typeVal.includes(e))) showRow = false;
+            }
+            row.style.display = showRow ? '' : 'none';
+        });
+    }
 
-        // Функция обновления состояния чекбоксов в localStorage
-        function updateCheckboxStates() {
-            const filterStates = {};
-            document.querySelectorAll('.profession-filter, .department-filter, .status-filter, .typeVoc-filter')
-                .forEach(checkbox => {
-                filterStates[checkbox.value] = checkbox.checked;
-            });
-            localStorage.setItem('filterStates', JSON.stringify(filterStates));
-        }
+    function onInputChange() {
+        saveState();
+        filterTable();
+    }
 
-        // Функция восстановления состояния чекбоксов из localStorage
-        function restoreCheckboxStates() {
-            const filterStates = JSON.parse(localStorage.getItem('filterStates') || '{}');
-            document.querySelectorAll('.profession-filter, .department-filter, .status-filter, .typeVoc-filter')
-                .forEach(checkbox => {
-                checkbox.checked = !!filterStates[checkbox.value];
-            });
-            filterTable();
-        }
-    });
+    // Сброс всех фильтров
+    function resetFilters() {
+        filters.employee.value = '';
+        filters.vocStart.value = '';
+        filters.vocEnd.value = '';
+        filters.tempEmployee.value = '';
+        filters.professionCheckboxes.forEach(checkbox => checkbox.checked = false);
+        filters.departmentCheckboxes.forEach(checkbox => checkbox.checked = false);
+        filters.statusCheckboxes.forEach(checkbox => checkbox.checked = false);
+        filters.vocTypeCheckboxes.forEach(checkbox => checkbox.checked = false);
+        localStorage.removeItem(STORAGE_KEYS.employeeFilter);
+        localStorage.removeItem(STORAGE_KEYS.vocStartFilter);
+        localStorage.removeItem(STORAGE_KEYS.vocEndFilter);
+        localStorage.removeItem(STORAGE_KEYS.tempEmployeeFilter);
+        localStorage.removeItem(STORAGE_KEYS.professionFilters);
+        localStorage.removeItem(STORAGE_KEYS.departmentFilters);
+        localStorage.removeItem(STORAGE_KEYS.statusFilters);
+        localStorage.removeItem(STORAGE_KEYS.vocTypeFilters);
+        filterTable(); // Обновляем таблицу после сброса
+    }
+
+    // Инициализация
+    loadState();
+    filterTable();
+    // Навешиваем обработчики на текстовые поля ввода
+    filters.employee.addEventListener('input', onInputChange);
+    filters.vocStart.addEventListener('input', onInputChange);
+    filters.vocEnd.addEventListener('input', onInputChange);
+    filters.tempEmployee.addEventListener('input', onInputChange);
+    // Навешиваем обработчики на чекбоксы
+    filters.professionCheckboxes.forEach(checkbox =>
+        checkbox.addEventListener('change', () => { saveState(); filterTable(); })
+    );
+    filters.departmentCheckboxes.forEach(checkbox =>
+        checkbox.addEventListener('change', () => { saveState(); filterTable(); })
+    );
+    filters.statusCheckboxes.forEach(checkbox =>
+        checkbox.addEventListener('change', () => { saveState(); filterTable(); })
+    );
+    filters.vocTypeCheckboxes.forEach(checkbox =>
+        checkbox.addEventListener('change', () => { saveState(); filterTable(); })
+    );
+    // Обработчик для кнопки сброса
+    resetButton.addEventListener('click', resetFilters);
 </script>
 <!-- Bootstrap 5.3 JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

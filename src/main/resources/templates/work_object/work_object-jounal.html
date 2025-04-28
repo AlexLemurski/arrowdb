@@ -72,7 +72,19 @@
                 </thead>
                 <tbody class="body">
                 <tr th:each="w_obj:${workObjectAUDList}">
-                    <td th:text="${w_obj.exampleRevEntity.userName}">
+                    <td>
+                    <span th:with="x=${w_obj.exampleRevEntity.employee != null}">
+                        <span th:if="${x}">
+                            <a th:href="@{/general/employee/employeeView/{id}(id=${w_obj.exampleRevEntity.employee.empId})}">
+                                <button style="width: 140px; text-align: left" type="button"
+                                        class="btn btn-outline-dark btn-sm">
+                                    <span th:text="${w_obj.exampleRevEntity.employee}">
+                                    </span></button></a>
+                        </span>
+                        <span th:unless="${x}"><span th:text="${'Администратор'}"></span>
+                        </span>
+                    </span>
+                    </td>
                     <td th:text="${#temporals.format(w_obj.exampleRevEntity.localDateTimeModified,
                     'dd-MM-yyyy HH:mm:ss')}">
                     <td th:text="${w_obj.workObjectStatusENUM.getTitle()}">

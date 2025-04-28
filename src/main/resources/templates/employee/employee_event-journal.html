@@ -272,7 +272,19 @@
             </thead>
             <tbody class="body table-group-divider">
             <tr th:each="emp:${employeeAUDList}">
-                <td th:text="${emp.exampleRevEntity.userName}">
+                <td>
+                    <span th:with="x=${emp.exampleRevEntity.employee != null}">
+                        <span th:if="${x}">
+                            <a th:href="@{/general/employee/employeeView/{id}(id=${emp.exampleRevEntity.employee.empId})}">
+                                <button style="width: 140px; text-align: left" type="button"
+                                        class="btn btn-outline-dark btn-sm">
+                                    <span th:text="${emp.exampleRevEntity.employee}">
+                                    </span></button></a>
+                        </span>
+                        <span th:unless="${x}"><span th:text="${'Администратор'}"></span>
+                        </span>
+                    </span>
+                </td>
                 <td th:text="${#temporals.format(emp.exampleRevEntity.localDateTimeModified,
                     'dd-MM-yyyy HH:mm:ss')}">
                 <td th:text="${emp.employeeStatusENUM.getTitle()}">

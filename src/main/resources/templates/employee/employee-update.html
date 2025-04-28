@@ -387,10 +387,6 @@
                         <td style="text-align: left"><label>Фамилия</label></td>
                         <td style="text-align: left">
                             <input type="text" style="width: 350px" th:field="${employee.surName}">
-                            <!--                                   required-->
-                            <!--                                   minlength="2" maxlength="45"-->
-                            <!--                                   placeholder="только - алфавит: Кириллица"-->
-                            <!--                                   pattern="[а-яА-ЯёЁ]+$" title="только - алфавит: Кириллица">-->
                             <p if="${#fields.hasErrors('surName')}" th:errors="${employee.surName}"
                                style="font-size: 13px; color: brown"></p>
                     </tr>
@@ -399,10 +395,6 @@
                         <td style="text-align: left"><label>Имя</label></td>
                         <td style="text-align: left">
                             <input type="text" style="width: 350px" th:field="${employee.name}">
-                            <!--                                   required-->
-                            <!--                                   minlength="2" maxlength="45"-->
-                            <!--                                   placeholder="только - алфавит: Кириллица"-->
-                            <!--                                   pattern="[а-яА-ЯёЁ]+$" title="только - алфавит: Кириллица">-->
                             <p if="${#fields.hasErrors('name')}" th:errors="${employee.name}"
                                style="font-size: 13px; color: brown"></p>
                     </tr>
@@ -411,10 +403,6 @@
                         <td style="text-align: left"><label>Отчество</label></td>
                         <td style="text-align: left">
                             <input type="text" style="width: 350px" th:field="${employee.middleName}">
-                            <!--                                   required-->
-                            <!--                                   minlength="2" maxlength="45"-->
-                            <!--                                   placeholder="только - алфавит: Кириллица"-->
-                            <!--                                   pattern="[а-яА-ЯёЁ]+$" title="только - алфавит: Кириллица">-->
                             <p if="${#fields.hasErrors('middleName')}" th:errors="${employee.middleName}"
                                style="font-size: 13px; color: brown"></p>
                     </tr>
@@ -452,8 +440,6 @@
                         <td style="text-align: left">
                             <input type="text" th:field="${employee.phoneNumber}"
                                    id="phoneNumber" placeholder="+7(___)___-__-__">
-                            <!--                                   pattern=".{16,16}"-->
-                            <!--                                   title="Номер телефона должен состоять из 16 знаков в формате +7(000)000-00-00">-->
                             <script>
                                 let inputPhone = document.getElementById("phoneNumber");
                                 inputPhone.oninput = () => phoneMask(inputPhone)
@@ -484,7 +470,6 @@
                         <td style="text-align: left">
                             <input type="email" style="width: 350px"
                                    th:field="${employee.email}" placeholder="name@example.com">
-                            <!--                                   pattern="^\S+@\S+\.\S+$" title="только - формат ввода: name@example.com">-->
                             <p if="${#fields.hasErrors('email')}"
                                th:errors="${employee.email}" style="font-size: 13px; color: brown"></p>
                     </tr>
@@ -603,7 +588,6 @@
                                         <td style="width: 130px; text-align: left">Почта</td>
                                         <td><input type="email" style="width: 350px"
                                                    th:field="${employee.emailPersonal}" placeholder="name@example.com">
-                                            <!--                                               pattern="^\S+@\S+\.\S+$" title="только - формат ввода: name@example.com">-->
                                             <p if="${#fields.hasErrors('emailPersonal')}"
                                                th:errors="${employee.emailPersonal}"
                                                style="font-size: 13px; color: brown"></p>
@@ -668,7 +652,7 @@
                                     </tr>
                                     <tr>
                                         <td style="width: 200px; text-align: left">Ежемесячная премия, %</td>
-                                        <td><input type="number" style="width: 100px;"
+                                        <td><input type="number" style="width: 100px"
                                                    th:field="${employee.percentOfBonus}" min="0" max="999"
                                                    placeholder="000">
                                             <p if="${#fields.hasErrors('percentOfBonus')}"

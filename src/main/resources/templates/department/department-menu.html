@@ -253,18 +253,16 @@
                 <tr>
                     <td style="width: 100px; text-align: left">Поиск...
                     <th style="width: 500px; text-align: left">
-                        <input type="text" style="width: 300px; height: 27px"
-                               id="byDep" onkeyup="myFunctionDEP()">
+                        <input type="text" style="width: 300px; height: 27px" id="byDepartment">
                     </th>
                     <th style="width: 300px; text-align: left">
-                        <input type="text" style="width: 250px; height: 27px"
-                               id="byChief" onkeyup="myFunctionCHIEF()">
+                        <input type="text" style="width: 250px; height: 27px" id="byChief">
                     </th>
                     <th style="width: 200px">
                     <th style="width: 200px">
                     <th style="width: 100px; text-align: center">
                         <button class="btn btn-outline-dark btn-sm"
-                                id="resetFilters">Очистить
+                                id="resetFilters">Сбросить
                         </button>
                 </tr>
                 </tbody>
@@ -371,92 +369,105 @@
     }
 </script>
 <script>
-    function myFunctionDEP() {
-        let input, filter, table, tr, td, i;
-        input = document.getElementById("byDep");
-        filter = input.value.toUpperCase();
-        table = document.getElementById("dep-table");
-        tr = table.getElementsByTagName("tr");
-        for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[0];
-            if (td) {
-                if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = "";
-                } else {
-                    tr[i].style.display = "none";
-                }
-            }
-        }
+    // Ключи для localStorage
+    const STORAGE_KEYS = {
+        //input search
+        departmentFilter: 'departmentFilter',
+        chiefFilter: 'chiefFilter',
+        //checkboxes
+        statusFilters: 'statusFilters'
+    };
+
+    const filters = {
+        department: document.getElementById('byDepartment'),
+        chief: document.getElementById('byChief'),
+        statusCheckboxes: document.querySelectorAll('.status-filter')
+    };
+
+    const tableBody = document.querySelector('#dep-table tbody');
+    const resetButton = document.getElementById('resetFilters');
+
+    function saveState() {
+        localStorage.setItem(STORAGE_KEYS.departmentFilter, filters.department.value);
+        localStorage.setItem(STORAGE_KEYS.chiefFilter, filters.chief.value);
+        const statusValues = Array.from(filters.statusCheckboxes)
+            .filter(checkbox => checkbox.checked)
+            .map(checkbox => checkbox.value);
+        localStorage.setItem(STORAGE_KEYS.statusFilters, JSON.stringify(statusValues));
     }
-</script>
-<script>
-    function myFunctionCHIEF() {
-        let input, filter, table, tr, td, i;
-        input = document.getElementById("byChief");
-        filter = input.value.toUpperCase();
-        table = document.getElementById("dep-table");
-        tr = table.getElementsByTagName("tr");
-        for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[1];
-            if (td) {
-                if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = "";
-                } else {
-                    tr[i].style.display = "none";
-                }
-            }
+
+    function loadState() {
+        const savedDepartmentFilter = localStorage.getItem(STORAGE_KEYS.departmentFilter);
+        const savedChiefFilter = localStorage.getItem(STORAGE_KEYS.chiefFilter);
+        if (savedDepartmentFilter) {
+            filters.department.value = savedDepartmentFilter;
         }
+        if (savedChiefFilter) {
+            filters.chief.value = savedChiefFilter;
+        }
+        const savedStatusFilters = JSON.parse(localStorage.getItem(STORAGE_KEYS.statusFilters)) || [];
+        filters.statusCheckboxes.forEach(checkbox => {
+            checkbox.checked = savedStatusFilters.includes(checkbox.value);
+        });
     }
-</script>
-<script>
-    // Восстанавливаем состояния чекбоксов
-    document.addEventListener('DOMContentLoaded', () => {
-        restoreCheckboxStates();
-        // Добавляем слушателей событий для чекбоксов
-        document.querySelectorAll('.status-filter').forEach(checkbox => {
-            checkbox.addEventListener('change', () => {
-                updateCheckboxStates();
-                filterTable();
-            });
+
+    function filterTable() {
+        const rows = tableBody.querySelectorAll('tr');
+        rows.forEach(row => {
+            const cells = row.querySelectorAll('td');
+            // Проверяем каждую колонку
+            let showRow = true;
+            // Фильтр по подразделению
+            const departmentVal = cells[0].textContent.toLowerCase();
+            const departmentFilterVal = filters.department.value.toLowerCase();
+            if (departmentFilterVal && !departmentVal.includes(departmentFilterVal)) showRow = false;
+            // Фильтр по руководителю
+            if (showRow) {
+                const chiefVal = cells[1].textContent.toLowerCase();
+                const chiefFilterVal = filters.chief.value.toLowerCase();
+                if (chiefFilterVal && !chiefVal.includes(chiefFilterVal)) showRow = false;
+            }
+            // Фильтр по статусу
+            if (showRow) {
+                const statusVal = cells[3].textContent;
+                const selectedStatusValues = Array.from(filters.statusCheckboxes)
+                    .filter(checkbox => checkbox.checked)
+                    .map(checkbox => checkbox.value);
+                if (selectedStatusValues.length > 0 && !selectedStatusValues
+                    .includes(statusVal)) showRow = false;
+            }
+            row.style.display = showRow ? '' : 'none';
         });
-        // Слушатель для кнопки сброса фильтров
-        document.getElementById('resetFilters').addEventListener('click', () => {
-            document.querySelectorAll('.status-filter').forEach(checkbox => {
-                checkbox.checked = false;
-            });
-            updateCheckboxStates();
-            filterTable();
-        });
+    }
 
-        // Функция фильтрации таблицы
-        function filterTable() {
-            const selectedValues1 = Array.from(document.querySelectorAll('.status-filter:checked')).map(cb => cb.value);
-            const rows = document.querySelectorAll('#dep-table tbody tr');
-            rows.forEach(row => {
-                const cell1 = row.cells[4].textContent;
-                const showRow = (selectedValues1.length === 0 || selectedValues1.includes(cell1));
-                row.style.display = showRow ? '' : 'none';
-            });
-        }
+    function onInputChange() {
+        saveState();
+        filterTable();
+    }
 
-        // Функция обновления состояния чекбоксов в localStorage
-        function updateCheckboxStates() {
-            const filterStates = {};
-            document.querySelectorAll('.status-filter').forEach(checkbox => {
-                filterStates[checkbox.value] = checkbox.checked;
-            });
-            localStorage.setItem('filterStates', JSON.stringify(filterStates));
-        }
+    // Сброс всех фильтров
+    function resetFilters() {
+        filters.department.value = '';
+        filters.chief.value = '';
+        filters.statusCheckboxes.forEach(checkbox => checkbox.checked = false);
+        localStorage.removeItem(STORAGE_KEYS.departmentFilter);
+        localStorage.removeItem(STORAGE_KEYS.chiefFilter);
+        localStorage.removeItem(STORAGE_KEYS.statusFilters);
+        filterTable(); // Обновляем таблицу после сброса
+    }
 
-        // Функция восстановления состояния чекбоксов из localStorage
-        function restoreCheckboxStates() {
-            const filterStates = JSON.parse(localStorage.getItem('filterStates') || '{}');
-            document.querySelectorAll('.status-filter').forEach(checkbox => {
-                checkbox.checked = !!filterStates[checkbox.value];
-            });
-            filterTable();
-        }
-    });
+    // Инициализация
+    loadState();
+    filterTable();
+    // Навешиваем обработчики на текстовые поля ввода
+    filters.department.addEventListener('input', onInputChange);
+    filters.chief.addEventListener('input', onInputChange);
+    // Навешиваем обработчики на чекбоксы
+    filters.statusCheckboxes.forEach(checkbox =>
+        checkbox.addEventListener('change', () => { saveState(); filterTable(); })
+    );
+    // Обработчик для кнопки сброса
+    resetButton.addEventListener('click', resetFilters);
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"

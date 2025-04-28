@@ -45,7 +45,7 @@
     </ul>
 </header>
 <section>
-    <table style="text-align: center; margin: 20px auto auto;">
+    <table style="text-align: center; margin: 20px auto auto">
         <thead style="text-align: center">
         <th>ПЕРСОНАЛ</th>
         <th>АКТИВЫ</th>
@@ -90,14 +90,6 @@
                     <button style="width: 300px; text-align: center" type="button"
                             class="btn btn-outline-success btn-lg">
                         График отпусков
-                    </button>
-                </a>
-            </div>
-            <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_REPORT_CART_VIEW')">
-                <a th:href="@{/general/report_card}">
-                    <button style="width: 300px; text-align: center" type="button"
-                            class="btn btn-outline-success btn-lg">
-                        Производственный табель
                     </button>
                 </a>
             </div>

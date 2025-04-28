@@ -247,22 +247,19 @@
     <div class="tableContainer m-2">
         <h5 style="font-weight: 700">Должности</h5>
         <hr>
-        <!--        <div class="main-table">-->
         <form th:action="@{/general/profession}" th:method="get">
             <table class="table-search table-hover table-sm" style="margin-bottom: 0; width: 1300px">
                 <tbody class="bodySearch">
                 <tr>
                     <td style="width: 100px; text-align: left">Поиск...
                     <th style="width: 500px; text-align: left">
-                        <input type="text" style="width: 300px; height: 27px"
-                               id="byProfession" onkeyup="myFunctionPROFESSION()">
-                    </th>
+                        <input type="text" style="width: 300px; height: 27px" id="byProfession"></th>
                     <th style="width: 200px">
                     <th style="width: 200px">
                     <th style="width: 200px">
                     <th style="width: 100px; text-align: center">
                         <button class="btn btn-outline-dark btn-sm"
-                                id="resetFilters">Очистить
+                                id="resetFilters">Сбросить
                         </button>
                 </tr>
                 </tbody>
@@ -369,73 +366,89 @@
     }
 </script>
 <script>
-    function myFunctionPROFESSION() {
-        let input, filter, table, tr, td, i;
-        input = document.getElementById("byProfession");
-        filter = input.value.toUpperCase();
-        table = document.getElementById("prof-table");
-        tr = table.getElementsByTagName("tr");
-        for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[0];
-            if (td) {
-                if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = "";
-                } else {
-                    tr[i].style.display = "none";
-                }
-            }
-        }
+    // Ключи для localStorage
+    const STORAGE_KEYS = {
+        //input search
+        professionFilter: 'professionFilter',
+        //checkboxes
+        statusFilters: 'statusFilters'
+    };
+
+    const filters = {
+        profession: document.getElementById('byProfession'),
+        statusCheckboxes: document.querySelectorAll('.status-filter')
+    };
+
+    const tableBody = document.querySelector('#prof-table tbody');
+    const resetButton = document.getElementById('resetFilters');
+
+    function saveState() {
+        localStorage.setItem(STORAGE_KEYS.professionFilter, filters.profession.value);
+        const statusValues = Array.from(filters.statusCheckboxes)
+            .filter(checkbox => checkbox.checked)
+            .map(checkbox => checkbox.value);
+        localStorage.setItem(STORAGE_KEYS.statusFilters, JSON.stringify(statusValues));
     }
-</script>
-<script>
-    // Восстанавливаем состояния чекбоксов
-    document.addEventListener('DOMContentLoaded', () => {
-        restoreCheckboxStates();
-        // Добавляем слушателей событий для чекбоксов
-        document.querySelectorAll('.status-filter').forEach(checkbox => {
-            checkbox.addEventListener('change', () => {
-                updateCheckboxStates();
-                filterTable();
-            });
+
+    function loadState() {
+        const savedProfessionFilter = localStorage.getItem(STORAGE_KEYS.professionFilter);
+        if (savedProfessionFilter) {
+            filters.profession.value = savedProfessionFilter;
+        }
+        const savedStatusFilters = JSON.parse(localStorage.getItem(STORAGE_KEYS.statusFilters)) || [];
+        filters.statusCheckboxes.forEach(checkbox => {
+            checkbox.checked = savedStatusFilters.includes(checkbox.value);
         });
-        // Слушатель для кнопки сброса фильтров
-        document.getElementById('resetFilters').addEventListener('click', () => {
-            document.querySelectorAll('.status-filter').forEach(checkbox => {
-                checkbox.checked = false;
-            });
-            updateCheckboxStates();
-            filterTable();
+    }
+
+    function filterTable() {
+        const rows = tableBody.querySelectorAll('tr');
+        rows.forEach(row => {
+            const cells = row.querySelectorAll('td');
+            // Проверяем каждую колонку
+            let showRow = true;
+            // Фильтр по профессии
+            const professionVal = cells[0].textContent.toLowerCase();
+            const professionFilterVal = filters.profession.value.toLowerCase();
+            if (professionFilterVal && !professionVal.includes(professionFilterVal)) showRow = false;
+            // Фильтр по статусу
+            if (showRow) {
+                const statusVal = cells[3].textContent;
+                const selectedStatusValues = Array.from(filters.statusCheckboxes)
+                    .filter(checkbox => checkbox.checked)
+                    .map(checkbox => checkbox.value);
+                if (selectedStatusValues.length > 0 && !selectedStatusValues
+                    .includes(statusVal)) showRow = false;
+            }
+            row.style.display = showRow ? '' : 'none';
         });
+    }
 
-        // Функция фильтрации таблицы
-        function filterTable() {
-            const selectedValues1 = Array.from(document.querySelectorAll('.status-filter:checked')).map(cb => cb.value);
-            const rows = document.querySelectorAll('#prof-table tbody tr');
-            rows.forEach(row => {
-                const cell1 = row.cells[4].textContent;
-                const showRow = (selectedValues1.length === 0 || selectedValues1.includes(cell1));
-                row.style.display = showRow ? '' : 'none';
-            });
-        }
+    function onInputChange() {
+        saveState();
+        filterTable();
+    }
 
-        // Функция обновления состояния чекбоксов в localStorage
-        function updateCheckboxStates() {
-            const filterStates = {};
-            document.querySelectorAll('.status-filter').forEach(checkbox => {
-                filterStates[checkbox.value] = checkbox.checked;
-            });
-            localStorage.setItem('filterStates', JSON.stringify(filterStates));
-        }
+    // Сброс всех фильтров
+    function resetFilters() {
+        filters.profession.value = '';
+        filters.statusCheckboxes.forEach(checkbox => checkbox.checked = false);
+        localStorage.removeItem(STORAGE_KEYS.professionFilter);
+        localStorage.removeItem(STORAGE_KEYS.statusFilters);
+        filterTable(); // Обновляем таблицу после сброса
+    }
 
-        // Функция восстановления состояния чекбоксов из localStorage
-        function restoreCheckboxStates() {
-            const filterStates = JSON.parse(localStorage.getItem('filterStates') || '{}');
-            document.querySelectorAll('.status-filter').forEach(checkbox => {
-                checkbox.checked = !!filterStates[checkbox.value];
-            });
-            filterTable();
-        }
-    });
+    // Инициализация
+    loadState();
+    filterTable();
+    // Навешиваем обработчики на текстовые поля ввода
+    filters.profession.addEventListener('input', onInputChange);
+    // Навешиваем обработчики на чекбоксы
+    filters.statusCheckboxes.forEach(checkbox =>
+        checkbox.addEventListener('change', () => { saveState(); filterTable(); })
+    );
+    // Обработчик для кнопки сброса
+    resetButton.addEventListener('click', resetFilters);
 </script>
 <!-- Bootstrap 5.3 JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

@@ -2,7 +2,7 @@ package com.example.arrowdb.auxiliary;
 
 public class FilePathResource {
 
-    public static String FILES_DIRECTORY = "@@@";
+    public static String FILES_DIRECTORY = "C:\\Users\\user\\Desktop\\files";
 
     public static String BASE_DIRECTORY_WORK_OBJECT = "@@@";
 

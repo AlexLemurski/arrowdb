@@ -2,6 +2,7 @@ package com.example.arrowdb.controllers;
 
 import com.example.arrowdb.auxiliary.MailSenderService;
 import com.example.arrowdb.entity.Users;
+import com.example.arrowdb.entity_service.UserServiceEntity;
 import com.example.arrowdb.enums.EmployeeStatusENUM;
 import com.example.arrowdb.enums.UserStatusENUM;
 import com.example.arrowdb.services.EmployeeService;
@@ -38,6 +39,7 @@ public class UsersController {
     private final EmployeeService employeeService;
     private final MailSenderService mailSenderService;
     private final SessionRegistry sessionRegistry;
+    private final UserServiceEntity userServiceEntity;
 
     @GetMapping("/general/users")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
@@ -51,20 +53,8 @@ public class UsersController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String createUserForm(@ModelAttribute(value = "users") Users users,
                                  Model model) {
+        userServiceEntity.getRoles(model, roleService);
         model.addAttribute("employeeList", employeeService.findEmployeeForCreateAccount());
-        model.addAttribute("employee", roleService.findRolesByMenuName("employee"));
-        model.addAttribute("profession", roleService.findRolesByMenuName("profession"));
-        model.addAttribute("department", roleService.findRolesByMenuName("department"));
-        model.addAttribute("schedule", roleService.findRolesByMenuName("schedule"));
-        model.addAttribute("vocation", roleService.findRolesByMenuName("vocation"));
-        model.addAttribute("store_personal", roleService.findRolesByMenuName("store_personal"));
-        model.addAttribute("store_work", roleService.findRolesByMenuName("store_work"));
-        model.addAttribute("store_meas", roleService.findRolesByMenuName("store_meas"));
-        model.addAttribute("store_scloth", roleService.findRolesByMenuName("store_scloth"));
-        model.addAttribute("activity_work", roleService.findRolesByMenuName("activity_work"));
-        model.addAttribute("activity_control", roleService.findRolesByMenuName("activity_control"));
-        model.addAttribute("activity_doc", roleService.findRolesByMenuName("activity_doc"));
-        model.addAttribute("perspective_doc", roleService.findRolesByMenuName("perspective_doc"));
         model.addAttribute("statusList", UserStatusENUM.values());
         return "user/user-create";
     }
@@ -72,11 +62,12 @@ public class UsersController {
     @PostMapping("/general/users/userCreate")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String createUser(@Valid @ModelAttribute Users users,
-//                             @ModelAttribute Employee employee,
                              Model model) {
-        String login = users.getEmployee().getName().substring(0, 1).toUpperCase()
-                       + users.getEmployee().getMiddleName().substring(0, 1).toUpperCase() + "_"
-                       + users.getEmployee().getSurName() + "_" + users.getEmployee().getEmpId();
+        String login = String.format("%s%s_%s_%s",
+                users.getEmployee().getName().substring(0, 1).toUpperCase(),
+                users.getEmployee().getMiddleName().substring(0, 1).toUpperCase(),
+                users.getEmployee().getSurName(),
+                users.getEmployee().getEmpId());
         users.setUserName(login);
         users.getEmployee().setAccount(users);
         String tempPassword = randomPass();
@@ -88,7 +79,7 @@ public class UsersController {
                     users.getEmployee().getEmail(),
                     "Создание данных для входа в систему",
                     String.format("Логин: %s%nПароль: %s%nСтатус учетной записи: " +
-                                  "%s%nАдрес: http://@@@/login",
+                                  "%s%nАдрес: https://@@@/login",
                             users.getUserName(),
                             tempPassword,
                             users.getUserStatusENUM().getTitle()));
@@ -96,20 +87,8 @@ public class UsersController {
             users.setPassword(null);
             users.getEmployee().setAccount(null);
             usersService.deleteUser(users.getUserId());
+            userServiceEntity.getRoles(model, roleService);
             model.addAttribute("employeeList", employeeService.findEmployeeForCreateAccount());
-            model.addAttribute("employee", roleService.findRolesByMenuName("employee"));
-            model.addAttribute("profession", roleService.findRolesByMenuName("profession"));
-            model.addAttribute("department", roleService.findRolesByMenuName("department"));
-            model.addAttribute("schedule", roleService.findRolesByMenuName("schedule"));
-            model.addAttribute("vocation", roleService.findRolesByMenuName("vocation"));
-            model.addAttribute("store_personal", roleService.findRolesByMenuName("store_personal"));
-            model.addAttribute("store_work", roleService.findRolesByMenuName("store_work"));
-            model.addAttribute("store_meas", roleService.findRolesByMenuName("store_meas"));
-            model.addAttribute("store_scloth", roleService.findRolesByMenuName("store_scloth"));
-            model.addAttribute("activity_work", roleService.findRolesByMenuName("activity_work"));
-            model.addAttribute("activity_control", roleService.findRolesByMenuName("activity_control"));
-            model.addAttribute("activity_doc", roleService.findRolesByMenuName("activity_doc"));
-            model.addAttribute("perspective_doc", roleService.findRolesByMenuName("perspective_doc"));
             model.addAttribute("statusList", UserStatusENUM.values());
             model.addAttribute("error", ERROR_CREATE_NEW_USER);
             return "user/user-create";
@@ -131,20 +110,8 @@ public class UsersController {
     public String updateUserForm(@PathVariable("id") int id,
                                  Model model) {
         Users users = usersService.findUserById(id);
+        userServiceEntity.getRoles(model, roleService);
         model.addAttribute("users", users);
-        model.addAttribute("employee", roleService.findRolesByMenuName("employee"));
-        model.addAttribute("profession", roleService.findRolesByMenuName("profession"));
-        model.addAttribute("department", roleService.findRolesByMenuName("department"));
-        model.addAttribute("schedule", roleService.findRolesByMenuName("schedule"));
-        model.addAttribute("vocation", roleService.findRolesByMenuName("vocation"));
-        model.addAttribute("store_personal", roleService.findRolesByMenuName("store_personal"));
-        model.addAttribute("store_work", roleService.findRolesByMenuName("store_work"));
-        model.addAttribute("store_meas", roleService.findRolesByMenuName("store_meas"));
-        model.addAttribute("store_scloth", roleService.findRolesByMenuName("store_scloth"));
-        model.addAttribute("activity_work", roleService.findRolesByMenuName("activity_work"));
-        model.addAttribute("activity_control", roleService.findRolesByMenuName("activity_control"));
-        model.addAttribute("activity_doc", roleService.findRolesByMenuName("activity_doc"));
-        model.addAttribute("perspective_doc", roleService.findRolesByMenuName("perspective_doc"));
         if (users.getEmployee().getEmployeeStatusENUM().equals(EmployeeStatusENUM.CLOSED)) {
             model.addAttribute("statusList", Arrays.stream(UserStatusENUM.values())
                     .filter(e -> !e.equals(UserStatusENUM.ON)));
@@ -197,7 +164,7 @@ public class UsersController {
                     users.getEmployee().getEmail(),
                     "Восстановление данных для входа в систему",
                     String.format("Логин: %s%nПароль: %s%nСтатус учетной записи: " +
-                                  "%s%nАдрес: http://@@@/login",
+                                  "%s%nАдрес: https://@@@/login",
                             users.getUserName(),
                             tempPassword,
                             users.getUserStatusENUM().getTitle()));

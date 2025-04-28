@@ -269,7 +269,19 @@
             </thead>
             <tbody class="body table-group-divider">
             <tr th:each="pInstr:${personalInstrumentAUDList}">
-                <td th:text="${pInstr.exampleRevEntity.userName}">
+                <td>
+                    <span th:with="x=${pInstr.exampleRevEntity.employee != null}">
+                        <span th:if="${x}">
+                            <a th:href="@{/general/employee/employeeView/{id}(id=${pInstr.exampleRevEntity.employee.empId})}">
+                                <button style="width: 140px; text-align: left" type="button"
+                                        class="btn btn-outline-dark btn-sm">
+                                    <span th:text="${pInstr.exampleRevEntity.employee}">
+                                    </span></button></a>
+                        </span>
+                        <span th:unless="${x}"><span th:text="${'Администратор'}"></span>
+                        </span>
+                    </span>
+                </td>
                 <td th:text="${#temporals.format(pInstr.exampleRevEntity.localDateTimeModified,
                     'dd-MM-yyyy HH:mm:ss')}">
                 <td th:text="${pInstr.personalOneCNumber}">

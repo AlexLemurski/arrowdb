@@ -28,13 +28,14 @@ public class EventsController {
     private final ConstructionControlAUDRepository constructionControlAUDRepository;
     private final WorkObjectService workObjectService;
     private final WorkObjectAUDRepository workObjectAUDRepository;
+    private final UsersService usersService;
 
     @GetMapping("/general/employee/employeeJournal/{id}")
     public String getEmployeeJournal(@PathVariable("id") int id, Model model) {
         model.addAttribute("employee", employeeService
                 .findEmployeeById(id));
-        model.addAttribute("employeeAUDList", employeeAUDRepository
-                .findAllEmployeeAUDById(id));
+        model.addAttribute("employeeAUDList",
+                employeeAUDRepository.findAllEmployeeAUDById(id));
         return "employee/employee_event-journal";
     }
 

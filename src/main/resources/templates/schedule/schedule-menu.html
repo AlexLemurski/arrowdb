@@ -10,7 +10,7 @@
         .main-table {
             display: block;
             width: 100%;
-            height: 800px;
+            height: 750px;
             border-collapse: separate;
             border-spacing: 0;
             overflow-y: scroll;
@@ -247,11 +247,9 @@
                     <td style="width: 100px; text-align: left">Поиск...
                     <th style="width: 300px"></th>
                     <th style="width: 250px">
-                        <input type="text" style="width: 250px; height: 27px" id="byChief"
-                               onkeyup="myFunctionCHIEF()"></th>
+                        <input type="text" style="width: 250px; height: 27px" id="byChief"></th>
                     <th style="width: 250px">
-                        <input type="text" style="width: 250px; height: 27px" id="byEmp"
-                               onkeyup="myFunctionEMP()"></th>
+                        <input type="text" style="width: 250px; height: 27px" id="byEmployee"></th>
                     <th style="width: 300px"></th>
                     <th style="width: 150px">
                         <button style="width: 80px" class="btn btn-outline-dark btn-sm"
@@ -432,103 +430,153 @@
     }
 </script>
 <script>
-    function myFunctionCHIEF() {
-        let input, filter, table, tr, td, i;
-        input = document.getElementById("byChief");
-        filter = input.value.toUpperCase();
-        table = document.getElementById("schedule-table");
-        tr = table.getElementsByTagName("tr");
-        for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[1];
-            if (td) {
-                if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = "";
-                } else {
-                    tr[i].style.display = "none";
-                }
-            }
-        }
+    // Ключи для localStorage
+    const STORAGE_KEYS = {
+        //input search
+        chiefFilter: 'chiefFilter',
+        employeeFilter: 'employeeFilter',
+        //checkboxes
+        departmentFilters: 'departmentFilters',
+        professionFilters: 'professionFilters',
+        statusFilters: 'statusFilters'
+    };
+
+    const filters = {
+        chief: document.getElementById('byChief'),
+        employee: document.getElementById('byEmployee'),
+        departmentCheckboxes: document.querySelectorAll('.department-filter'),
+        professionCheckboxes: document.querySelectorAll('.profession-filter'),
+        statusCheckboxes: document.querySelectorAll('.status-filter')
+    };
+
+    const tableBody = document.querySelector('#schedule-table tbody');
+    const resetButton = document.getElementById('resetFilters');
+
+    function saveState() {
+        localStorage.setItem(STORAGE_KEYS.chiefFilter, filters.chief.value);
+        localStorage.setItem(STORAGE_KEYS.employeeFilter, filters.employee.value);
+        const departmentValues = Array.from(filters.departmentCheckboxes)
+            .filter(checkbox => checkbox.checked)
+            .map(checkbox => checkbox.value);
+        const professionValues = Array.from(filters.professionCheckboxes)
+            .filter(checkbox => checkbox.checked)
+            .map(checkbox => checkbox.value);
+        const statusValues = Array.from(filters.statusCheckboxes)
+            .filter(checkbox => checkbox.checked)
+            .map(checkbox => checkbox.value);
+        localStorage.setItem(STORAGE_KEYS.departmentFilters, JSON.stringify(departmentValues));
+        localStorage.setItem(STORAGE_KEYS.professionFilters, JSON.stringify(professionValues));
+        localStorage.setItem(STORAGE_KEYS.statusFilters, JSON.stringify(statusValues));
     }
-</script>
-<script>
-    function myFunctionEMP() {
-        let input, filter, table, tr, td, i;
-        input = document.getElementById("byEmp");
-        filter = input.value.toUpperCase();
-        table = document.getElementById("schedule-table");
-        tr = table.getElementsByTagName("tr");
-        for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[2];
-            if (td) {
-                if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = "";
-                } else {
-                    tr[i].style.display = "none";
-                }
-            }
+
+    function loadState() {
+        const savedChiefFilter = localStorage.getItem(STORAGE_KEYS.chiefFilter);
+        const savedEmployeeFilter = localStorage.getItem(STORAGE_KEYS.employeeFilter);
+        if (savedChiefFilter) {
+            filters.chief.value = savedChiefFilter;
         }
-    }
-</script>
-<script>
-    // Восстанавливаем состояния чекбоксов
-    document.addEventListener('DOMContentLoaded', () => {
-        restoreCheckboxStates();
-        // Добавляем слушателей событий для чекбоксов
-        document.querySelectorAll('.profession-filter, .department-filter, .status-filter, .typeVoc-filter')
-            .forEach(checkbox => {
-                checkbox.addEventListener('change', () => {
-                    updateCheckboxStates();
-                    filterTable();
-                });
-            });
-        // Слушатель для кнопки сброса фильтров
-        document.getElementById('resetFilters').addEventListener('click', () => {
-            document.querySelectorAll('.profession-filter, .department-filter, .status-filter, .typeVoc-filter')
-                .forEach(checkbox => {
-                    checkbox.checked = false;
-                });
-            updateCheckboxStates();
-            filterTable();
+        if (savedEmployeeFilter) {
+            filters.employee.value = savedEmployeeFilter;
+        }
+        const savedDepartmentFilters = JSON.parse(localStorage.getItem(STORAGE_KEYS.departmentFilters)) || [];
+        const savedProfessionFilters = JSON.parse(localStorage.getItem(STORAGE_KEYS.professionFilters)) || [];
+        const savedStatusFilters = JSON.parse(localStorage.getItem(STORAGE_KEYS.statusFilters)) || [];
+        filters.professionCheckboxes.forEach(checkbox => {
+            checkbox.checked = savedDepartmentFilters.includes(checkbox.value);
         });
+        filters.departmentCheckboxes.forEach(checkbox => {
+            checkbox.checked = savedProfessionFilters.includes(checkbox.value);
+        });
+        filters.statusCheckboxes.forEach(checkbox => {
+            checkbox.checked = savedStatusFilters.includes(checkbox.value);
+        });
+    }
 
-        // Функция фильтрации таблицы
-        function filterTable() {
-            const selectedValues1 = Array.from(document.querySelectorAll('.department-filter:checked')).map(cb => cb.value);
-            const selectedValues2 = Array.from(document.querySelectorAll('.profession-filter:checked')).map(cb => cb.value);
-            const selectedValues3 = Array.from(document.querySelectorAll('.status-filter:checked')).map(cb => cb.value);
-            const rows = document.querySelectorAll('#schedule-table tbody tr');
-            rows.forEach(row => {
-                const cell1 = row.cells[1].innerText;
-                const cell2 = row.cells[4].innerText;
-                const cell3 = row.cells[5].innerText;
-                const showRow =
-                    (selectedValues1.length === 0 || selectedValues1.includes(cell1)) &&
-                    (selectedValues2.length === 0 || selectedValues2.some(e => cell2.includes(e))) &&
-                    (selectedValues3.length === 0 || selectedValues3.some(e => cell3.includes(e)));
-                row.style.display = showRow ? '' : 'none';
-            });
-        }
+    function filterTable() {
+        const rows = tableBody.querySelectorAll('tr');
+        rows.forEach(row => {
+            const cells = row.querySelectorAll('td');
+            // Проверяем каждую колонку
+            let showRow = true;
+            // Фильтр по руководителю
+            const chiefVal = cells[1].innerText.toLowerCase();
+            const chiefFilterVal = filters.chief.value.toLowerCase();
+            if (chiefFilterVal && !chiefVal.includes(chiefFilterVal)) showRow = false;
+            // Фильтр по работнику
+            if (showRow) {
+                const employeeVal = cells[2].innerText.toLowerCase();
+                const employeeFilterVal = filters.employee.value.toLowerCase();
+                if (employeeFilterVal && !employeeVal.includes(employeeFilterVal)) showRow = false;
+            }
+            // Фильтр по департаменту
+            if (showRow) {
+                const departmentVal = cells[0].innerText;
+                const selectedDepartmentValues = Array.from(filters.departmentCheckboxes)
+                    .filter(checkbox => checkbox.checked)
+                    .map(checkbox => checkbox.value);
+                if (selectedDepartmentValues.length > 0 && !selectedDepartmentValues
+                    .some(e => departmentVal.includes(e))) showRow = false;
+            }
+            // Фильтр по профессии
+            if (showRow) {
+                const professionVal = cells[3].innerText;
+                const selectedProfessionValues = Array.from(filters.professionCheckboxes)
+                    .filter(checkbox => checkbox.checked)
+                    .map(checkbox => checkbox.value);
+                if (selectedProfessionValues.length > 0 && !selectedProfessionValues
+                    .some(e => professionVal.includes(e))) showRow = false;
+            }
+            // Фильтр по статусу
+            if (showRow) {
+                const statusVal = cells[4].innerText;
+                const selectedStatusValues = Array.from(filters.statusCheckboxes)
+                    .filter(checkbox => checkbox.checked)
+                    .map(checkbox => checkbox.value);
+                if (selectedStatusValues.length > 0 && !selectedStatusValues
+                    .some(e => statusVal.includes(e))) showRow = false;
+            }
+            row.style.display = showRow ? '' : 'none';
+        });
+    }
 
-        // Функция обновления состояния чекбоксов в localStorage
-        function updateCheckboxStates() {
-            const filterStates = {};
-            document.querySelectorAll('.profession-filter, .department-filter, .status-filter, .typeVoc-filter')
-                .forEach(checkbox => {
-                    filterStates[checkbox.value] = checkbox.checked;
-                });
-            localStorage.setItem('filterStates', JSON.stringify(filterStates));
-        }
+    function onInputChange() {
+        saveState();
+        filterTable();
+    }
 
-        // Функция восстановления состояния чекбоксов из localStorage
-        function restoreCheckboxStates() {
-            const filterStates = JSON.parse(localStorage.getItem('filterStates') || '{}');
-            document.querySelectorAll('.profession-filter, .department-filter, .status-filter, .typeVoc-filter')
-                .forEach(checkbox => {
-                    checkbox.checked = !!filterStates[checkbox.value];
-                });
-            filterTable();
-        }
-    });
+    // Сброс всех фильтров
+    function resetFilters() {
+        filters.chief.value = '';
+        filters.employee.value = '';
+        filters.departmentCheckboxes.forEach(checkbox => checkbox.checked = false);
+        filters.professionCheckboxes.forEach(checkbox => checkbox.checked = false);
+        filters.statusCheckboxes.forEach(checkbox => checkbox.checked = false);
+        localStorage.removeItem(STORAGE_KEYS.chiefFilter);
+        localStorage.removeItem(STORAGE_KEYS.employeeFilter);
+        localStorage.removeItem(STORAGE_KEYS.departmentFilters);
+        localStorage.removeItem(STORAGE_KEYS.professionFilters);
+        localStorage.removeItem(STORAGE_KEYS.statusFilters);
+        filterTable(); // Обновляем таблицу после сброса
+    }
+
+    // Инициализация
+    loadState();
+    filterTable();
+    // Навешиваем обработчики на текстовые поля ввода
+    filters.chief.addEventListener('input', onInputChange);
+    filters.employee.addEventListener('input', onInputChange);
+    // Навешиваем обработчики на чекбоксы
+    filters.departmentCheckboxes.forEach(checkbox =>
+        checkbox.addEventListener('change', () => { saveState(); filterTable(); })
+    );
+    filters.professionCheckboxes.forEach(checkbox =>
+        checkbox.addEventListener('change', () => { saveState(); filterTable(); })
+    );
+    filters.statusCheckboxes.forEach(checkbox =>
+        checkbox.addEventListener('change', () => { saveState(); filterTable(); })
+    );
+    // Обработчик для кнопки сброса
+    resetButton.addEventListener('click', resetFilters);
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"

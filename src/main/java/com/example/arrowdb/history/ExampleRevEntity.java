@@ -30,10 +30,6 @@ public class ExampleRevEntity {
     @RevisionTimestamp
     private long timeStamp;
 
-    @Column(name = "user_name")
-    @LastModifiedBy
-    private String userName;
-
     @JoinColumn(name = "emp_user")
     @ManyToOne(fetch = FetchType.LAZY)
     @LastModifiedBy

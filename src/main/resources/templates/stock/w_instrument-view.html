@@ -460,7 +460,19 @@
                 </thead>
                 <tbody class="body">
                 <tr th:each="wInstr:${workInstrumentConditionAUD}">
-                    <td th:text="${wInstr.exampleRevEntity.userName}">
+                    <td>
+                    <span th:with="x=${wInstr.exampleRevEntity.employee != null}">
+                        <span th:if="${x}">
+                            <a th:href="@{/general/employee/employeeView/{id}(id=${wInstr.exampleRevEntity.employee.empId})}">
+                                <button style="width: 140px; text-align: left" type="button"
+                                        class="btn btn-outline-dark btn-sm">
+                                    <span th:text="${wInstr.exampleRevEntity.employee}">
+                                    </span></button></a>
+                        </span>
+                        <span th:unless="${x}"><span th:text="${'Администратор'}"></span>
+                        </span>
+                    </span>
+                    </td>
                     <td th:text="${#temporals.format(wInstr.exampleRevEntity.localDateTimeModified,
                     'dd-MM-yyyy HH:mm:ss')}">
                     <td>

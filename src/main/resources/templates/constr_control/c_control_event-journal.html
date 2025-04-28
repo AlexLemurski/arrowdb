@@ -63,7 +63,19 @@
                 </thead>
                 <tbody class="body">
                 <tr th:each="c_contr:${constructionControlAUDList}">
-                    <td th:text="${c_contr.exampleRevEntity.userName}">
+                    <td>
+                    <span th:with="x=${emp.exampleRevEntity.employee != null}">
+                        <span th:if="${x}">
+                            <a th:href="@{/general/employee/employeeView/{id}(id=${emp.exampleRevEntity.employee.empId})}">
+                                <button style="width: 140px; text-align: left" type="button"
+                                        class="btn btn-outline-dark btn-sm">
+                                    <span th:text="${emp.exampleRevEntity.employee}">
+                                    </span></button></a>
+                        </span>
+                        <span th:unless="${x}"><span th:text="${'Администратор'}"></span>
+                        </span>
+                    </span>
+                    </td>
                     <td th:text="${#temporals.format(c_contr.exampleRevEntity.localDateTimeModified,
                     'dd-MM-yyyy HH:mm:ss')}">
                     <td th:text="${c_contr.workObject}">

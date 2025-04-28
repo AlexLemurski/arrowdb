@@ -3,9 +3,9 @@ package com.example.arrowdb.entity_service;
 import com.example.arrowdb.auxiliary.Auxiliary;
 import com.example.arrowdb.entity.WorkObject;
 import com.example.arrowdb.enums.WorkObjectStatusENUM;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 public class WorkObjectServiceEntity extends Auxiliary {
     
     public final void addCollectionEmployeeToEnvers(WorkObject workObject){

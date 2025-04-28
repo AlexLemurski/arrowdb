@@ -10,7 +10,7 @@ import com.example.arrowdb.services.UsersService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +18,7 @@ import java.util.List;
 import static com.example.arrowdb.enums.EmployeeStatusENUM.*;
 import static com.example.arrowdb.enums.UserStatusENUM.OFF;
 
-@Component
+@Service
 public class EmployeeServiceEntity extends Auxiliary {
 
     public final String getAccountOfEmployee(@NotNull Employee employee) {
