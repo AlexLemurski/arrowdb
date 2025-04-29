@@ -694,8 +694,7 @@
                                     employee.responsibleFromSKContractorList.size() != 0 ||
                                     employee.employeeEquipmentList.size() != 0 ||
                                     employee.employeeWorkList.size() != 0 ||
-                                    employee.employeeObserverList.size() != 0
-                                    }">
+                                    employee.employeeObserverList.size() != 0}">
                                         <span th:if="${x}">
                                     <div th:each="wObjCh:${employee.workObjectChiefList}">
                                         <span></span>
@@ -703,8 +702,7 @@
                                             <a th:href="@{/general/workobject/workobjectView/{id}(id=${wObjCh.workObjectId})}">
                                                 <button style="text-align: left; width: 400px" type="button"
                                                         class="btn btn-outline-dark btn-sm">
-                                            <span th:text="${wObjCh}">
-                                        </span></button></a> - Руководитель проекта</span>
+                                            <span th:text="${wObjCh}"></span></button></a> - Руководитель проекта</span>
                                     </div>
                                     <div th:each="wObjPto:${employee.workObjectPTOList}">
                                         <span></span>
@@ -712,8 +710,7 @@
                                             <a th:href="@{/general/workobject/workobjectView/{id}(id=${wObjPto.workObjectId})}">
                                                 <button style="text-align: left; width: 400px" type="button"
                                                         class="btn btn-outline-dark btn-sm">
-                                            <span th:text="${wObjPto}">
-                                        </span></button></a> - Ответственные ПТО</span>
+                                            <span th:text="${wObjPto}"></span></button></a> - Ответственные ПТО</span>
                                     </div>
                                     <div th:each="wObjSp:${employee.workObjectSupplierList}">
                                         <span></span>
@@ -721,8 +718,7 @@
                                             <a th:href="@{/general/workobject/workobjectView/{id}(id=${wObjSp.workObjectId})}">
                                                 <button style="text-align: left; width: 400px" type="button"
                                                         class="btn btn-outline-dark btn-sm">
-                                            <span th:text="${wObjSp}">
-                                        </span></button></a> - Ответственные ОМТР</span>
+                                            <span th:text="${wObjSp}"></span></button></a> - Ответственные ОМТР</span>
                                     </div>
                                     <div th:each="wObjSk:${employee.workObjectStoreKeeperList}">
                                         <span></span>
@@ -730,8 +726,7 @@
                                             <a th:href="@{/general/workobject/workobjectView/{id}(id=${wObjSk.workObjectId})}">
                                                 <button style="text-align: left; width: 400px" type="button"
                                                         class="btn btn-outline-dark btn-sm">
-                                            <span th:text="${wObjSk}">
-                                        </span></button></a> - Ответственный за склад/инструмент</span>
+                                            <span th:text="${wObjSk}"></span></button></a> - Ответственный за склад/инструмент</span>
                                     </div>
 
                                     <div th:each="cContr:${employee.responsibleFromContractorList}">
