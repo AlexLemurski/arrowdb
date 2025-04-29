@@ -247,9 +247,9 @@
                     <td style="width: 100px; text-align: left">Поиск...
                     <th style="width: 300px"></th>
                     <th style="width: 250px">
-                        <input type="text" style="width: 250px; height: 27px" id="byChief"></th>
+                        <input type="text" style="width: 240px; height: 27px" id="byChief"></th>
                     <th style="width: 250px">
-                        <input type="text" style="width: 250px; height: 27px" id="byEmployee"></th>
+                        <input type="text" style="width: 240px; height: 27px" id="byEmployee"></th>
                     <th style="width: 300px"></th>
                     <th style="width: 150px">
                         <button style="width: 80px" class="btn btn-outline-dark btn-sm"
@@ -269,7 +269,7 @@
                     <th style="width: 300px">
                         <div class="btn-group">
                             <button onclick="sortTable(0)" type="button" class="btn btn-outline-dark btn-sm"
-                                    style="width: 200px;
+                                    style="width: 260px;
                                     text-align: left">Подразделение
                             </button>
                             <button type="button" class="btn btn-outline-dark btn-sm dropdown-toggle"
@@ -290,18 +290,18 @@
                     </th>
                     <th style="width: 250px">
                         <button onclick="sortTable(1)" type="button" class="btn btn-outline-dark btn-sm"
-                                style="width: 250px; text-align: left">Руководитель подразделения
+                                style="width: 240px; text-align: left">Руководитель подразделения
                         </button>
                     </th>
                     <th style="width: 250px">
                         <button onclick="sortTable(2)" type="button" class="btn btn-outline-dark btn-sm"
-                                style="width: 250px; text-align: left">Работники подразделения
+                                style="width: 240px; text-align: left">Работники подразделения
                         </button>
                     </th>
                     <th style="width: 300px">
                         <div class="btn-group">
                             <button onclick="sortTable(3)" type="button" class="btn btn-outline-dark btn-sm"
-                                    style="width: 200px;
+                                    style="width: 260px;
                                     text-align: left">Должность
                             </button>
                             <button type="button" class="btn btn-outline-dark btn-sm dropdown-toggle"
@@ -323,7 +323,7 @@
                     <th style="width: 150px">
                         <div class="btn-group">
                             <button onclick="sortTable(4)" type="button" class="btn btn-outline-dark btn-sm"
-                                    style="width: 100px; text-align: left">Статус
+                                    style="width: 110px; text-align: left">Статус
                             </button>
                             <button type="button" class="btn btn-outline-dark btn-sm dropdown-toggle"
                                     data-bs-toggle="dropdown" aria-expanded="false"
@@ -369,7 +369,8 @@
                         <button style="text-align: left; width: 240px" type="button"
                                 class="btn btn-outline-dark btn-sm"><span
                                 th:text="${emp}">
-                        </span></button></a></span>
+                        </span></button></a>
+                    </span>
                     </td>
                     <td>
                     <span th:each="prof:${dep.personalOfDepartment}">
@@ -380,9 +381,8 @@
                                 th:text="${prof.profession}"></span></button></a></span>
                     </td>
                     <td>
-                    <span th:each="stat:${dep.personalOfDepartment}">
-                            <a th:href="@{#}"><button style="width: 140px; text-align: left" type="button"
-                                                      class="btn btn-light btn-sm">
+                    <span th:each="stat:${dep.personalOfDepartment}"><a th:href="@{#}">
+                        <button style="width: 140px; text-align: left" type="button" class="btn btn-light btn-sm">
                                 <span th:text="${stat.getEmployeeStatusENUM().getTitle()}"></span></button></a></span>
                     </td>
                 </tr>
